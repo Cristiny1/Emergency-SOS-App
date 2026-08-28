@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Emergency SOS App</string>
+
+    <!-- Common -->
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="edit">Edit</string>
+    <string name="back">Back</string>
+    <string name="completed">Completed</string>
+    <string name="in_progress">In Progress...</string>
+    <string name="search">Search</string>
+    <string name="ok">OK</string>
+    <string name="add_label">Add</string>
+    <string name="save_label">Save</string>
+    <string name="edit_label">Edit</string>
+    <string name="fire_fighter">Fire Fighter</string>
+
+    <!-- Welcome Screen -->
+    <string name="welcome_title">Welcome to Emergency SOS</string>
+    <string name="welcome_subtitle">Get instant help in emergencies with one tap. Fast, reliable, and always by your side.</string>
+    <string name="get_started">Get Started</string>
+
+    <!-- Login Screen -->
+    <string name="welcome_back_title">Welcome Back</string>
+    <string name="welcome_back_subtitle">Log in to your account to continue.</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Password</string>
+    <string name="enter_email">Enter your email</string>
+    <string name="enter_password">Enter your password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="sign_in">Sign In</string>
+    <string name="dont_have_account">Don\'t have an account? </string>
+    <string name="sign_up">Sign Up</string>
+    <string name="invalid_credentials">Invalid Email or Password</string>
+    <string name="login_success">Login Successful</string>
+
+    <!-- Signup Screen -->
+    <string name="create_account_title">Create Account</string>
+    <string name="create_account_subtitle">Sign up to get started with your emergency dashboard.</string>
+    <string name="full_name_label">Full Name</string>
+    <string name="enter_name">Enter your name</string>
+    <string name="create_password">Create a password</string>
+    <string name="create_account">Create Account</string>
+    <string name="already_have_account">Already have an account? </string>
+    <string name="sign_in_link">Sign In</string>
+    <string name="verify_via">Verify via</string>
+    <string name="phone_sms">Phone (SMS)</string>
+    <string name="gmail_email">Gmail (Email)</string>
+    <string name="name_required">Full Name is required</string>
+    <string name="email_required">Email is required</string>
+    <string name="invalid_email">Invalid Email</string>
+    <string name="phone_required">Phone Number is required</string>
+    <string name="invalid_phone">Invalid Phone Number</string>
+    <string name="password_min_length">Password must be at least 6 characters</string>
+    <string name="enter_phone">Enter phone number</string>
+
+    <string name="or_divider">Or</string>
+    <string name="continue_google">Continue with Google</string>
+    <string name="continue_apple">Continue with Apple</string>
+    <string name="continue_facebook">Continue with Facebook</string>
+
+    <!-- OTP Verification -->
+    <string name="otp_title">Verification</string>
+    <string name="otp_subtitle">Enter the 6-digit code sent to \n%1$s</string>
+    <string name="verify_button">Verify</string>
+    <string name="resend_code">Resend Code</string>
+    <string name="resend_in">Resend code in %1$ds</string>
+    <string name="invalid_otp">Invalid verification code</string>
+    <string name="try_another_way">Try another way</string>
+    <string name="verification_success">Verification Successful!</string>
+
+    <!-- Forgot Password -->
+    <string name="forgot_password_title">Forgot Password</string>
+    <string name="forgot_password_subtitle">Enter your registered phone number or email to receive a verification code.</string>
+    <string name="reset_password_title">Reset Password</string>
+    <string name="reset_password_subtitle">Create a new secure password for your account.</string>
+    <string name="new_password_label">New Password</string>
+    <string name="confirm_password_label">Confirm Password</string>
+    <string name="reset_button">Reset Password</string>
+    <string name="password_mismatch">Passwords do not match</string>
+    <string name="password_reset_success">Password updated successfully. Please log in.</string>
+    <string name="phone_not_registered">This phone number is not registered</string>
+    <string name="email_not_registered">This email is not registered</string>
+
+    <!-- Dashboard Screen -->
+    <string name="dashboard_greeting">Hello, %1$s</string>
+    <string name="dashboard_subtitle">Stay safe. Help is one tap away.</string>
+    <string name="switch_language">Switch Language</string>
+    <string name="open_chatbot">Open Chatbot</string>
+    <string name="my_location_label">MY LOCATION</string>
+    <string name="detecting_location">Detecting location...</string>
+    <string name="searching_gps">Searching GPS...</string>
+    <string name="please_turn_on_gps">Please turn ON GPS</string>
+    <string name="dashboard_placeholder_greeting">Hello, Alex</string>
+    <string name="dashboard_placeholder_subtitle">Are you in an emergency?</string>
+    <string name="hold_to_request_assistance">HOLD SOS FOR 3 SECONDS</string>
+    <string name="keep_holding">Keep Holding...</string>
+    <string name="family_card">Family</string>
+    <string name="medical_card">Medical</string>
+    <string name="police_card">Police</string>
+    <string name="report_card">Report</string>
+    <string name="calendar_card">Calendar</string>
+    <string name="dashboard_blood_label">Blood</string>
+    <string name="dashboard_allergies_label">Allergies</string>
+    <string name="dashboard_unit_status">Unit Status</string>
+    <string name="location_locked">Location Locked</string>
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+    <string name="emergency_call_title">Emergency Call</string>
+    <string name="emergency_call_message">Call %1$s services immediately?</string>
+    <string name="call_now">Call Now</string>
+    <string name="family_number_prompt">Set up family number in Profile</string>
+    <string name="default_blood_group">O+</string>
+    <string name="default_allergies">None</string>
+    <string name="default_contact">No Contact</string>
+    <string name="default_user_name">User</string>
+    <string name="sos_button_text">SOS</string>
+
+    <!-- SOS Workflow -->
+    <string name="sos_tracking_title">SOS Tracking</string>
+    <string name="active_sos_header">ACTIVE SOS</string>
+    <string name="confirm_location">Confirm Location</string>
+    <string name="victims_need_help">Victims Need Help</string>
+    <string name="send_sos_signal">SEND SOS SIGNAL</string>
+    <string name="waiting_for_gps">WAITING FOR GPS...</string>
+    <string name="low_gps_accuracy">Low GPS Accuracy (%1$.0fm). Move to open area.</string>
+    <string name="broadcasting_signal">Broadcasting Help Signal...</string>
+    <string name="rescue_on_the_way">Rescue is on the way!</string>
+    <string name="cancel_sos_countdown">CANCEL SOS (%1$ds)</string>
+    <string name="cancel_emergency">CANCEL EMERGENCY</string>
+    <string name="return_to_dashboard">RETURN TO DASHBOARD</string>
+    <string name="emergency_assisted_closed">Emergency Assisted &amp; Closed</string>
+    <string name="quick_actions">Quick actions</string>
+    <string name="share_location_btn">Share location</string>
+    <string name="call_emergency_btn">Call emergency</string>
+    <string name="open_directions_btn">Open directions</string>
+
+    <!-- SOS Timeline Steps -->
+    <string name="step_signal_sent">Signal Sent</string>
+    <string name="step_responder_assigned">Responder Assigned</string>
+    <string name="step_help_enroute">Help is en-route</string>
+    <string name="step_arrived">Arrived at scene</string>
+    <string name="tracking_default_agent_name">Ambulance Unit 01</string>
+    <string name="tracking_distance_km">Distance: %.1f km</string>
+    <string name="tracking_arriving_now">Arriving now</string>
+    <string name="tracking_arrival_in_minutes">Arrival in ~%1$d min</string>
+    <string name="tracking_rescue_on_the_way">Rescue is on the way!</string>
+    <string name="tracking_help_arrived">Help has Arrived!</string>
+    <string name="tracking_arrival_confirmed">Arrival confirmed</string>
+    <string name="tracking_map_layers_message">Map layers handled by Leaflet</string>
+
+    <!-- Emergency Directory -->
+    <string name="emergency_directory_title">Emergency Directory</string>
+    <string name="emergency_facilities">Emergency Facilities</string>
+    <string name="nearest_hospital">Nearest Medical Facility</string>
+    <string name="distance_km">%1$.1f km</string>
+    <string name="arrival_mins">%1$d mins</string>
+
+    <!-- Report Danger Screen -->
+    <string name="report_danger_title">Report a Danger</string>
+    <string name="report_danger_intro">Notify the SOS Center about dangerous situations in your area. Add evidence and location to help responders.</string>
+    <string name="severity_label">Severity Level</string>
+    <string name="severity_critical">Critical</string>
+    <string name="severity_high">High</string>
+    <string name="severity_medium">Medium</string>
+    <string name="severity_low">Low</string>
+    <string name="critical_warning">This appears to be an immediate emergency. Please use the SOS button for instant rescue.</string>
+    <string name="anonymous_label">Send anonymously</string>
+    <string name="voice_description">Voice Description</string>
+    <string name="report_description_label">Description</string>
+    <string name="report_description_hint">Provide details about the location and problem</string>
+    <string name="report_location_label">Location of Issue</string>
+    <string name="report_evidence_label">Evidence (Photo)</string>
+    <string name="report_upload_photo_hint">Tap to upload photo</string>
+    <string name="report_submit_button">Submit Report</string>
+    <string name="report_submitting">Submitting report…</string>
+    <string name="report_processing_message">Your report is being prepared and sent.</string>
+    <string name="report_submitted_success">Report submitted with location to Siem Reap Authorities</string>
+    <string name="report_submitted_center">Report sent to SOS Center successfully.</string>
+    <string name="report_description_required">Please describe the issue</string>
+    <string name="report_issue_category">Issue Category</string>
+    <string name="report_detecting_location">Detecting location...</string>
+    <string name="report_in_process">Report in process: %1$s</string>
+    <string name="report_status_pending">Status: Pending</string>
+    <string name="report_cleared_toast">Report status cleared from dashboard</string>
+
+    <!-- AI Safety Assistant -->
+    <string name="chatbot_title">Safety Assistant</string>
+    <string name="chatbot_intro">Hello! I am your AI Safety Assistant. How can I help you today?</string>
+    <string name="chatbot_hint">Ask safety assistant...</string>
+    <string name="chatbot_thinking">AI Assistant is thinking...</string>
+    <string name="ai_brain_online">AI Safety Brain Online</string>
+    <string name="activate_sos_btn">🚨 ACTIVATE SOS</string>
+    <string name="call_emergency_ai">📞 CALL EMERGENCY</string>
+    <string name="ai_offline_error">I am having trouble connecting to my AI brain. Please use the SOS button if you are in danger.</string>
+    <string name="send">Send</string>
+
+    <!-- Family Circle -->
+    <string name="family_title">Family Circle</string>
+    <string name="family_members">Family Members</string>
+    <string name="everything_ok">Everything OK?</string>
+    <string name="send_location_family">Send your location to your family</string>
+    <string name="quick_checkin">QUICK CHECK-IN</string>
+    <string name="no_family_added">No family members added</string>
+    <string name="pick_from_contacts">Select Contact</string>
+    <string name="add_manually">Add Manually</string>
+    <string name="relationship_label">Relationship</string>
+    <string name="family_circle_updated">Family circle updated</string>
+
+    <!-- SOS History -->
+    <string name="sos_history_title">SOS History</string>
+    <string name="no_sos_history">No SOS History</string>
+    <string name="history_empty_desc">Your past emergency alerts will appear here.</string>
+    <string name="event_deleted">Event deleted</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="language_label">Language</string>
+    <string name="notifications_label">Notifications</string>
+    <string name="account_label">Account</string>
+    <string name="app_preferences">App Preferences</string>
+    <string name="realtime_notifications">Real-time Notifications</string>
+    <string name="simulation_mode">Simulation Mode (Demo)</string>
+    <string name="information_label">Information</string>
+    <string name="privacy_security">Privacy &amp; Security</string>
+    <string name="help_support">Help &amp; Support</string>
+    <string name="clear_history">Clear Emergency History</string>
+    <string name="log_out_btn">LOG OUT</string>
+
+    <!-- Profile -->
+    <string name="profile_title">Profile</string>
+    <string name="medical_id_title">Medical ID</string>
+    <string name="personal_info">Personal Information</string>
+    <string name="phone_label">Phone Number</string>
+    <string name="blood_group_label">Blood Group</string>
+    <string name="medical_notes">Medical Notes</string>
+    <string name="section_personal_information">PERSONAL INFORMATION</string>
+    <string name="section_medical_details">MEDICAL DETAILS</string>
+    <string name="edit_personal_info_desc">Edit personal information</string>
+    <string name="profile_photo_desc">Profile photo</string>
+    <string name="edit_blood_group_desc">Edit blood group</string>
+    <string name="edit_pregnancy_desc">Edit pregnancy status</string>
+    <string name="pregnancy_label">Pregnancy</string>
+    <string name="medications_label">Medications</string>
+    <string name="allergies_label">Allergies</string>
+    <string name="emergency_contacts_label">Emergency Contacts</string>
+    <string name="conditions_label">Conditions</string>
+    <string name="photo_updated">Photo updated</string>
+    <string name="edit_field_title">Edit %1$s</string>
+    <string name="full_name_field">Full Name</string>
+    <string name="age_hint">Age (e.g. 41 years old)</string>
+    <string name="language_hint">Language</string>
+
+    <!-- Calendar -->
+    <string name="medical_calendar_title">Medical Calendar</string>
+    <string name="todays_reminders">Today\'s Reminders</string>
+    <string name="add_reminder">+ ADD REMINDER</string>
+    <string name="no_reminders_date">No reminders for this date.</string>
+    <string name="reminder_removed">Reminder removed</string>
+    <string name="reminder_label">Reminder</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_sos_button">SOS Button</string>
+    <string name="cd_profile_header">View profile</string>
+    <string name="cd_menu_button">Open menu</string>
+    <string name="cd_language_flag">Language flag</string>
+    <string name="select_language">English (En) / Khmer (KH)</string>
+    <string name="back_button_desc">Back</string>
+    <string name="cd_family_action">Call family</string>
+    <string name="cd_medical_action">Request medical assistance</string>
+    <string name="cd_police_action">Request police assistance</string>
+
+    <!-- Placeholder/Dynamic -->
+    <string name="news_title_placeholder">News Title</string>
+    <string name="news_summary_placeholder">News description summary...</string>
+    <string name="news_category_placeholder">News Category</string>
+    <string name="official_news_title">Official News</string>
+    <string name="sos_center_title">SOS CENTER MONITORING</string>
+    <string name="realtime_console">Real-time Emergency Console</string>
+    <string name="active_sos_alert">ACTIVE SOS ALERT</string>
+    <string name="operation_logs">Operation Logs</string>
+    <string name="close_console">Close Console</string>
+    <string name="assign_team">Assign Team</string>
+    <string name="resolve_case">Resolve Case</string>
+    <string name="edit_medications_desc">Edit medications</string>
+    <string name="edit_allergies_desc">Edit allergies</string>
+    <string name="edit_contacts_desc">Edit emergency contacts</string>
+    <string name="edit_conditions_desc">Edit medical conditions</string>
+    <string name="medical_id_footer">When you use Emergency SOS to call emergency services, your phone can share your Medical ID. This can help emergency responders provide better care.</string>
+    <string name="medical_disclaimer">This information is only shared with emergency responders when you trigger an SOS.</string>
+    <string name="tracking_title">SOS Tracking</string>
+    <string name="tracking_status_searching">Searching for Responder...</string>
+    <string name="tracking_eta_calculating">Calculating arrival time...</string>
+    <string name="tracking_distance_placeholder">Distance: 2.3 km</string>
+    <string name="tracking_cancel_button">CANCEL SOS</string>
+</resources>

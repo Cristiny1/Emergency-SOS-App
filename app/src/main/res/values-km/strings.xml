@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">កម្មវិធីសង្គ្រោះ SOS</string>
+
+    <!-- ទូទៅ -->
+    <string name="cancel">បោះបង់</string>
+    <string name="save">រក្សាទុក</string>
+    <string name="delete">លុប</string>
+    <string name="edit">កែសម្រួល</string>
+    <string name="back">ត្រឡប់ក្រោយ</string>
+    <string name="completed">បានបញ្ចប់</string>
+    <string name="in_progress">កំពុងដំណើរការ...</string>
+    <string name="search">ស្វែងរក</string>
+    <string name="ok">យល់ព្រម</string>
+    <string name="add_label">បន្ថែម</string>
+    <string name="save_label">រក្សាទុក</string>
+    <string name="edit_label">កែសម្រួល</string>
+    <string name="fire_fighter">ពន្លត់អគ្គីភ័យ</string>
+
+    <!-- ស្វាគមន៍ -->
+    <string name="welcome_title">ស្វាគមន៍មកកាន់ Emergency SOS</string>
+    <string name="welcome_subtitle">ទទួលបានជំនួយភ្លាមៗក្នុងពេលមានអាសន្នដោយគ្រាន់តែចុចតែម្តង។ លឿន ជឿជាក់ និងនៅក្បែរអ្នកជានិច្ច។</string>
+    <string name="get_started">ចាប់ផ្តើម</string>
+
+    <!-- ចូលគណនី -->
+    <string name="welcome_back_title">ស្វាគមន៍ត្រឡប់មកវិញ</string>
+    <string name="welcome_back_subtitle">ចូលទៅក្នុងគណនីរបស់អ្នកដើម្បីបន្ត។</string>
+    <string name="email_label">អ៊ីមែល</string>
+    <string name="password_label">ពាក្យសម្ងាត់</string>
+    <string name="enter_email">បញ្ចូលអ៊ីមែលរបស់អ្នក</string>
+    <string name="enter_password">បញ្ចូលពាក្យសម្ងាត់របស់អ្នក</string>
+    <string name="remember_me">ចងចាំខ្ញុំ</string>
+    <string name="forgot_password">ភ្លេចពាក្យសម្ងាត់?</string>
+    <string name="sign_in">ចូល</string>
+    <string name="dont_have_account">មិនទាន់មានគណនី? </string>
+    <string name="sign_up">ចុះឈ្មោះ</string>
+    <string name="invalid_credentials">អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ</string>
+    <string name="login_success">ការចូលប្រើទទួលបានជោគជ័យ</string>
+
+    <!-- ចុះឈ្មោះ -->
+    <string name="create_account_title">បង្កើតគណនី</string>
+    <string name="create_account_subtitle">ចុះឈ្មោះដើម្បីចាប់ផ្តើមប្រើប្រាស់ផ្ទាំងបញ្ជាអាសន្នរបស់អ្នក។</string>
+    <string name="full_name_label">ឈ្មោះពេញ</string>
+    <string name="enter_name">បញ្ចូលឈ្មោះរបស់អ្នក</string>
+    <string name="create_password">បង្កើតពាក្យសម្ងាត់</string>
+    <string name="create_account">បង្កើតគណនី</string>
+    <string name="already_have_account">មានគណនីរួចហើយ? </string>
+    <string name="sign_in_link">ចូល</string>
+    <string name="verify_via">ផ្ទៀងផ្ទាត់តាមរយៈ</string>
+    <string name="phone_sms">ទូរស័ព្ទ (SMS)</string>
+    <string name="gmail_email">Gmail (អ៊ីមែល)</string>
+    <string name="name_required">ឈ្មោះពេញគឺចាំបាច់</string>
+    <string name="email_required">អ៊ីមែលគឺចាំបាច់</string>
+    <string name="invalid_email">អ៊ីមែលមិនត្រឹមត្រូវ</string>
+    <string name="phone_required">លេខទូរស័ព្ទគឺចាំបាច់</string>
+    <string name="invalid_phone">លេខទូរស័ព្ទមិនត្រឹមត្រូវ</string>
+    <string name="password_min_length">ពាក្យសម្ងាត់ត្រូវមានយ៉ាងហោចណាស់ ៦ ខ្ទង់</string>
+    <string name="enter_phone">បញ្ចូលលេខទូរស័ព្ទ</string>
+
+    <string name="or_divider">ឬ</string>
+    <string name="continue_google">បន្តជាមួយ Google</string>
+    <string name="continue_apple">បន្តជាមួយ Apple</string>
+    <string name="continue_facebook">បន្តជាមួយ Facebook</string>
+
+    <!-- ការផ្ទៀងផ្ទាត់ OTP -->
+    <string name="otp_title">ការផ្ទៀងផ្ទាត់</string>
+    <string name="otp_subtitle">បញ្ចូលលេខកូដ ៦ ខ្ទង់ដែលបានផ្ញើទៅកាន់ \n%1$s</string>
+    <string name="verify_button">ផ្ទៀងផ្ទាត់</string>
+    <string name="resend_code">ផ្ញើលេខកូដឡើងវិញ</string>
+    <string name="resend_in">ផ្ញើលេខកូដឡើងវិញក្នុង %1$d វិនាទី</string>
+    <string name="invalid_otp">លេខកូដផ្ទៀងផ្ទាត់មិនត្រឹមត្រូវ</string>
+    <string name="try_another_way">សាកល្បងវិធីផ្សេង</string>
+    <string name="verification_success">ការផ្ទៀងផ្ទាត់ជោគជ័យ!</string>
+
+    <!-- ភ្លេចពាក្យសម្ងាត់ -->
+    <string name="forgot_password_title">ភ្លេចពាក្យសម្ងាត់</string>
+    <string name="forgot_password_subtitle">បញ្ចូលលេខទូរស័ព្ទ ឬអ៊ីមែលដែលបានចុះឈ្មោះដើម្បីទទួលបានលេខកូដផ្ទៀងផ្ទាត់។</string>
+    <string name="reset_password_title">កំណត់ពាក្យសម្ងាត់ឡើងវិញ</string>
+    <string name="reset_password_subtitle">បង្កើតពាក្យសម្ងាត់សុវត្ថិភាពថ្មីសម្រាប់គណនីរបស់អ្នក។</string>
+    <string name="new_password_label">ពាក្យសម្ងាត់ថ្មី</string>
+    <string name="confirm_password_label">បញ្ជាក់ពាក្យសម្ងាត់</string>
+    <string name="reset_button">កំណត់ឡើងវិញ</string>
+    <string name="password_mismatch">ពាក្យសម្ងាត់មិនត្រូវគ្នាទេ</string>
+    <string name="password_reset_success">បានធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់ដោយជោគជ័យ។ សូមចូលគណនី។</string>
+    <string name="phone_not_registered">លេខទូរស័ព្ទនេះមិនទាន់បានចុះឈ្មោះទេ</string>
+    <string name="email_not_registered">អ៊ីមែលនេះមិនទាន់បានចុះឈ្មោះទេ</string>
+
+    <!-- ផ្ទាំងបញ្ជា (Dashboard) -->
+    <string name="dashboard_greeting">សួស្តី, %1$s</string>
+    <string name="dashboard_subtitle">រក្សាសុវត្ថិភាព។ ជំនួយគឺនៅជិតអ្នកបំផុត។</string>
+    <string name="switch_language">ប្តូរភាសា</string>
+    <string name="open_chatbot">បើក Chatbot</string>
+    <string name="my_location_label">ទីតាំងរបស់ខ្ញុំ</string>
+    <string name="detecting_location">កំពុងស្វែងរកទីតាំង...</string>
+    <string name="searching_gps">កំពុងស្វែងរក GPS...</string>
+    <string name="please_turn_on_gps">សូមបើក GPS</string>
+    <string name="dashboard_placeholder_greeting">សួស្តី, Alex</string>
+    <string name="dashboard_placeholder_subtitle">តើអ្នកកំពុងស្ថិតក្នុងគ្រាអាសន្នមែនទេ?</string>
+    <string name="hold_to_request_assistance">ចុច SOS ឱ្យជាប់រយៈពេល ៣ វិនាទី</string>
+    <string name="keep_holding">បន្តចុចឱ្យជាប់...</string>
+    <string name="family_card">គ្រួសារ</string>
+    <string name="medical_card">វេជ្ជសាស្ត្រ</string>
+    <string name="police_card">ប៉ូលីស</string>
+    <string name="report_card">រាយការណ៍</string>
+    <string name="calendar_card">ប្រតិទិន</string>
+    <string name="dashboard_blood_label">ឈាម</string>
+    <string name="dashboard_allergies_label">អាឡែស៊ី</string>
+    <string name="dashboard_unit_status">ស្ថានភាពយូនីត</string>
+    <string name="location_locked">ទីតាំងត្រូវបានចាក់សោ</string>
+    <string name="status_online">អនឡាញ</string>
+    <string name="status_offline">បិទ</string>
+    <string name="emergency_call_title">ការហៅទូរស័ព្ទអាសន្ន</string>
+    <string name="emergency_call_message">ហៅទៅកាន់សេវា %1$s ភ្លាមៗ?</string>
+    <string name="call_now">ហៅឥឡូវនេះ</string>
+    <string name="family_number_prompt">កំណត់លេខគ្រួសារក្នុងប្រវត្តិរូប</string>
+    <string name="default_blood_group">O+</string>
+    <string name="default_allergies">គ្មាន</string>
+    <string name="default_contact">គ្មានទំនាក់ទំនង</string>
+    <string name="default_user_name">អ្នកប្រើប្រាស់</string>
+    <string name="sos_button_text">SOS</string>
+
+    <!-- ដំណើរការ SOS -->
+    <string name="sos_tracking_title">ការតាមដាន SOS</string>
+    <string name="active_sos_header">SOS កំពុងដំណើរការ</string>
+    <string name="confirm_location">បញ្ជាក់ទីតាំង</string>
+    <string name="victims_need_help">ជនរងគ្រោះត្រូវការជំនួយ</string>
+    <string name="send_sos_signal">ផ្ញើសញ្ញាសង្គ្រោះ SOS</string>
+    <string name="waiting_for_gps">កំពុងរង់ចាំ GPS...</string>
+    <string name="low_gps_accuracy">ភាពត្រឹមត្រូវ GPS ទាប (%1$.0f ម៉ែត្រ)។ សូមទៅកន្លែងវាល។</string>
+    <string name="broadcasting_signal">កំពុងផ្សព្វផ្សាយសញ្ញាជំនួយ...</string>
+    <string name="rescue_on_the_way">Rescue is on the way!</string>
+    <string name="cancel_sos_countdown">បោះបង់ SOS (%1$d វិនាទី)</string>
+    <string name="cancel_emergency">បោះបង់អាសន្ន</string>
+    <string name="return_to_dashboard">ត្រឡប់ទៅផ្ទាំងបញ្ជាវិញ</string>
+    <string name="emergency_assisted_closed">Emergency Assisted &amp; Closed</string>
+    <string name="quick_actions">សកម្មភាពរហ័ស</string>
+    <string name="share_location_btn">ចែកចាយទីតាំង</string>
+    <string name="call_emergency_btn">ហៅទៅផ្នែកអាសន្ន</string>
+    <string name="open_directions_btn">បើកទិសដៅ</string>
+
+    <!-- ជំហាន SOS -->
+    <string name="step_signal_sent">បានផ្ញើសញ្ញា</string>
+    <string name="step_responder_assigned">បានចាត់តាំងអ្នកឆ្លើយតប</string>
+    <string name="step_help_enroute">ជំនួយកំពុងធ្វើដំណើរមក</string>
+    <string name="step_arrived">បានមកដល់កន្លែងកើតហេតុ</string>
+    <string name="tracking_default_agent_name">ឡានពេទ្យយូនីត ០១</string>
+    <string name="tracking_distance_km">ចម្ងាយ: %.1f គីឡូម៉ែត្រ</string>
+    <string name="tracking_arriving_now">កំពុងទៅដល់</string>
+    <string name="tracking_arrival_in_minutes">មកដល់ក្នុងរយៈពេលប្រហែល %1$d នាទី</string>
+    <string name="tracking_rescue_on_the_way">Rescue is on the way!</string>
+    <string name="tracking_help_arrived">Help has Arrived!</string>
+    <string name="tracking_arrival_confirmed">Arrival confirmed</string>
+    <string name="tracking_map_layers_message">ស្រទាប់ផែនទីត្រូវបានគ្រប់គ្រងដោយ Leaflet</string>
+
+    <!-- បញ្ជីលេខទូរស័ព្ទអាសន្ន -->
+    <string name="emergency_directory_title">បញ្ជីលេខទូរស័ព្ទអាសន្ន</string>
+    <string name="emergency_facilities">កន្លែងសង្គ្រោះបន្ទាន់</string>
+    <string name="nearest_hospital">កន្លែងវេជ្ជសាស្ត្រដែលនៅជិតបំផុត</string>
+    <string name="distance_km">%1$.1f គីឡូម៉ែត្រ</string>
+    <string name="arrival_mins">%1$d នាទី</string>
+
+    <!-- រាយការណ៍គ្រោះថ្នាក់ -->
+    <string name="report_danger_title">រាយការណ៍អំពីគ្រោះថ្នាក់</string>
+    <string name="report_danger_intro">ជូនដំណឹងដល់មជ្ឈមណ្ឌល SOS អំពីស្ថានភាពគ្រោះថ្នាក់នៅក្នុងតំបន់របស់អ្នក។ បន្ថែមភស្តុតាង និងទីតាំងដើម្បីជួយអ្នកសង្គ្រោះ។</string>
+    <string name="severity_label">កម្រិតភាពធ្ងន់ធ្ងរ</string>
+    <string name="severity_critical">សំខាន់បំផុត</string>
+    <string name="severity_high">ខ្ពស់</string>
+    <string name="severity_medium">មធ្យម</string>
+    <string name="severity_low">ទាប</string>
+    <string name="critical_warning">នេះហាក់ដូចជាគ្រាអាសន្នភ្លាមៗ។ សូមប្រើប៊ូតុង SOS សម្រាប់ការសង្គ្រោះបន្ទាន់។</string>
+    <string name="anonymous_label">ផ្ញើដោយអនាមិក</string>
+    <string name="voice_description">ការពិពណ៌នាដោយសំឡេង</string>
+    <string name="report_description_label">ការពិពណ៌នា</string>
+    <string name="report_description_hint">ផ្តល់ព័ត៌មានលម្អិតអំពីទីតាំង និងបញ្ហា</string>
+    <string name="report_location_label">ទីតាំងនៃបញ្ហា</string>
+    <string name="report_evidence_label">ភស្តុតាង (រូបថត)</string>
+    <string name="report_upload_photo_hint">ចុចដើម្បីបង្ហោះរូបថត</string>
+    <string name="report_submit_button">ដាក់ស្នើរាយការណ៍</string>
+    <string name="report_submitting">កំពុងដាក់ស្នើរាយការណ៍…</string>
+    <string name="report_processing_message">ការរាយការណ៍របស់អ្នកកំពុងត្រូវបានរៀបចំ និងផ្ញើ។</string>
+    <string name="report_submitted_success">បានដាក់ស្នើរាយការណ៍ជាមួយទីតាំងទៅអាជ្ញាធរសៀមរាប</string>
+    <string name="report_submitted_center">របាយការណ៍ត្រូវបានផ្ញើទៅមជ្ឈមណ្ឌល SOS ដោយជោគជ័យ។</string>
+    <string name="report_description_required">សូមពិពណ៌នាបញ្ហា</string>
+    <string name="report_issue_category">ប្រភេទបញ្ហា</string>
+    <string name="report_detecting_location">កំពុងរកទីតាំង...</string>
+    <string name="report_in_process">ការរាយការណ៍កំពុងដំណើរការ: %1$s</string>
+    <string name="report_status_pending">ស្ថានភាព: កំពុងរង់ចាំ</string>
+    <string name="report_cleared_toast">ស្ថានភាពរាយការណ៍ត្រូវបានសម្អាតពីផ្ទាំងបញ្ជា</string>
+
+    <!-- ជំនួយការ AI -->
+    <string name="chatbot_title">ជំនួយការសុវត្ថិភាព</string>
+    <string name="chatbot_intro">សួស្តី! ខ្ញុំគឺជាជំនួយការសុវត្ថិភាព AI របស់អ្នក។ តើខ្ញុំអាចជួយអ្វីអ្នកបានខ្លះថ្ងៃនេះ?</string>
+    <string name="chatbot_hint">សួរជំនួយការសុវត្ថិភាព...</string>
+    <string name="chatbot_thinking">ជំនួយការ AI កំពុងគិត...</string>
+    <string name="ai_brain_online">AI Safety Brain Online</string>
+    <string name="activate_sos_btn">🚨 ដំណើរការ SOS</string>
+    <string name="call_emergency_ai">📞 ហៅទៅផ្នែកអាសន្ន</string>
+    <string name="ai_offline_error">ខ្ញុំមានបញ្ហាក្នុងការភ្ជាប់ទៅខួរក្បាល AI របស់ខ្ញុំ។ សូមប្រើប៊ូតុង SOS ប្រសិនបើអ្នកមានគ្រោះថ្នាក់។</string>
+    <string name="send">ផ្ញើ</string>
+
+    <!-- គ្រួសារ -->
+    <string name="family_title">រង្វង់គ្រួសារ</string>
+    <string name="family_members">សមាជិកគ្រួសារ</string>
+    <string name="everything_ok">អ្វីៗធម្មតាមែនទេ?</string>
+    <string name="send_location_family">ផ្ញើទីតាំងរបស់អ្នកទៅគ្រួសារ</string>
+    <string name="quick_checkin">ការរាយការណ៍រហ័ស</string>
+    <string name="no_family_added">មិនទាន់បានបន្ថែមសមាជិកគ្រួសារទេ</string>
+    <string name="pick_from_contacts">Select Contact</string>
+    <string name="add_manually">បន្ថែមដោយផ្ទាល់</string>
+    <string name="relationship_label">ទំនាក់ទំនង</string>
+    <string name="family_circle_updated">បានធ្វើបច្ចុប្បន្នភាពរង្វង់គ្រួសារ</string>
+
+    <!-- ប្រវត្តិ SOS -->
+    <string name="sos_history_title">ប្រវត្តិ SOS</string>
+    <string name="no_sos_history">មិនមានប្រវត្តិ SOS ទេ</string>
+    <string name="history_empty_desc">ការជូនដំណឹងអាសន្នពីមុនរបស់អ្នកនឹងបង្ហាញនៅទីនេះ។</string>
+    <string name="event_deleted">បានលុបព្រឹត្តិការណ៍</string>
+
+    <!-- ការកំណត់ -->
+    <string name="settings_title">ការកំណត់</string>
+    <string name="language_label">ភាសា</string>
+    <string name="notifications_label">ការជូនដំណឹង</string>
+    <string name="account_label">គណនី</string>
+    <string name="app_preferences">ចំណូលចិត្តកម្មវិធី</string>
+    <string name="realtime_notifications">ការជូនដំណឹងភ្លាមៗ</string>
+    <string name="simulation_mode">របៀបសាកល្បង (Demo)</string>
+    <string name="information_label">ព័ត៌មាន</string>
+    <string name="privacy_security">ឯកជនភាព និងសុវត្ថិភាព</string>
+    <string name="help_support">ជំនួយ និងការគាំទ្រ</string>
+    <string name="clear_history">សម្អាតប្រវត្តិអាសន្ន</string>
+    <string name="log_out_btn">LOG OUT</string>
+
+    <!-- ប្រវត្តិរូប -->
+    <string name="profile_title">ប្រវត្តិរូប</string>
+    <string name="medical_id_title">អត្តសញ្ញាណវេជ្ជសាស្ត្រ</string>
+    <string name="personal_info">ព័ត៌មានផ្ទាល់ខ្លួន</string>
+    <string name="phone_label">លេខទូរស័ព្ទ</string>
+    <string name="blood_group_label">ក្រុមឈាម</string>
+    <string name="medical_notes">កំណត់ចំណាំវេជ្ជសាស្ត្រ</string>
+    <string name="section_personal_information">ព័ត៌មានផ្ទាល់ខ្លួន</string>
+    <string name="section_medical_details">ព័ត៌មានលម្អិតវេជ្ជសាស្ត្រ</string>
+    <string name="edit_personal_info_desc">កែសម្រួលព័ត៌មានផ្ទាល់ខ្លួន</string>
+    <string name="profile_photo_desc">រូបថតប្រវត្តិរូប</string>
+    <string name="edit_blood_group_desc">កែសម្រួលក្រុមឈាម</string>
+    <string name="edit_pregnancy_desc">កែសម្រួលស្ថានភាពមានផ្ទៃពោះ</string>
+    <string name="pregnancy_label">ការមានផ្ទៃពោះ</string>
+    <string name="medications_label">ថ្នាំសង្គ្រោះ</string>
+    <string name="allergies_label">អាឡែស៊ី</string>
+    <string name="emergency_contacts_label">លេខទូរស័ព្ទអាសន្ន</string>
+    <string name="conditions_label">ស្ថានភាពសុខភាព</string>
+    <string name="photo_updated">បានធ្វើបច្ចុប្បន្នភាពរូបថត</string>
+    <string name="edit_field_title">កែសម្រួល %1$s</string>
+    <string name="full_name_field">ឈ្មោះពេញ</string>
+    <string name="age_hint">អាយុ (ឧទាហរណ៍ ៤១ ឆ្នាំ)</string>
+    <string name="language_hint">ភាសា</string>
+
+    <!-- ប្រតិទិន -->
+    <string name="medical_calendar_title">ប្រតិទិនវេជ្ជសាស្ត្រ</string>
+    <string name="todays_reminders">ការរំលឹកថ្ងៃនេះ</string>
+    <string name="add_reminder">+ បន្ថែមការរំលឹក</string>
+    <string name="no_reminders_date">មិនមានការរំលឹកសម្រាប់ថ្ងៃនេះទេ។</string>
+    <string name="reminder_removed">បានលុបការរំលឹក</string>
+    <string name="reminder_label">ការរំលឹក</string>
+
+    <!-- ការពិពណ៌នាខ្លឹមសារ -->
+    <string name="cd_sos_button">ប៊ូតុង SOS</string>
+    <string name="cd_profile_header">មើលប្រវត្តិរូប</string>
+    <string name="cd_menu_button">បើកម៉ឺនុយ</string>
+    <string name="cd_language_flag">ទង់ជាតិភាសា</string>
+    <string name="select_language">អង់គ្លេស (En) / ខ្មែរ (KH)</string>
+    <string name="back_button_desc">ត្រឡប់ក្រោយ</string>
+    <string name="cd_family_action">ហៅទៅគ្រួសារ</string>
+    <string name="cd_medical_action">ស្នើសុំជំនួយវេជ្ជសាស្ត្រ</string>
+    <string name="cd_police_action">ស្នើសុំជំនួយប៉ូលីស</string>
+
+    <!-- Placeholder/Dynamic -->
+    <string name="news_title_placeholder">ចំណងជើងព័ត៌មាន</string>
+    <string name="news_summary_placeholder">សេចក្តីសង្ខេបព័ត៌មាន...</string>
+    <string name="news_category_placeholder">ប្រភេទព័ត៌មាន</string>
+    <string name="official_news_title">ព័ត៌មានផ្លូវការ</string>
+    <string name="sos_center_title">ការត្រួតពិនិត្យមជ្ឈមណ្ឌល SOS</string>
+    <string name="realtime_console">ផ្ទាំងគ្រប់គ្រងអាសន្នភ្លាមៗ</string>
+    <string name="active_sos_alert">ការជូនដំណឹង SOS កំពុងដំណើរការ</string>
+    <string name="operation_logs">កំណត់ត្រាប្រតិបត្តិការ</string>
+    <string name="close_console">បិទផ្ទាំងគ្រប់គ្រង</string>
+    <string name="assign_team">ចាត់តាំងក្រុម</string>
+    <string name="resolve_case">ដោះស្រាយករណី</string>
+    <string name="edit_medications_desc">កែសម្រួលថ្នាំសង្គ្រោះ</string>
+    <string name="edit_allergies_desc">កែសម្រួលអាឡែស៊ី</string>
+    <string name="edit_contacts_desc">កែសម្រួលលេខទូរស័ព្ទអាសន្ន</string>
+    <string name="edit_conditions_desc">កែសម្រួលស្ថានភាពសុខភាព</string>
+    <string name="medical_id_footer">នៅពេលអ្នកប្រើ Emergency SOS ដើម្បីហៅទៅសេវាសង្គ្រោះបន្ទាន់ ទូរស័ព្ទរបស់អ្នកអាចចែករំលែកអត្តសញ្ញាណវេជ្ជសាស្ត្ររបស់អ្នក។ នេះអាចជួយអ្នកសង្គ្រោះបន្ទាន់ផ្តល់ការថែទាំបានកាន់តែល្អប្រសើរ។</string>
+    <string name="medical_disclaimer">ព័ត៌មាននេះត្រូវបានចែករំលែកជាមួយអ្នកសង្គ្រោះបន្ទាន់តែនៅពេលអ្នកចុច SOS ប៉ុណ្ណោះ។</string>
+    <string name="tracking_title">ការតាមដាន SOS</string>
+    <string name="tracking_status_searching">កំពុងស្វែងរកអ្នកឆ្លើយតប...</string>
+    <string name="tracking_eta_calculating">កំពុងគណនាលក្ខខណ្ឌមកដល់...</string>
+    <string name="tracking_distance_placeholder">ចម្ងាយ: 2.3 គីឡូម៉ែត្រ</string>
+    <string name="tracking_cancel_button">បោះបង់ SOS</string>
+</resources>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="40"
+    android:viewportHeight="40">
+    <!-- Orange Circle -->
+    <path
+        android:fillColor="@color/passapp_orange"
+        android:pathData="M20,2a14,14 0,1 0,0 28a14,14 0,1 0,0 -28z" />
+    <!-- White Person Icon -->
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M20,16c2.21,0 4,-1.79 4,-4s-1.79,-4 -4,-4s-4,1.79 -4,4S17.79,16 20,16z M20,18c-2.67,0 -8,1.34 -8,4v2h16v-2C28,19.34 22.67,18 20,18z" />
+    <!-- Pin Tail -->
+    <path
+        android:fillColor="@color/passapp_orange"
+        android:pathData="M20,40L14,30L26,30Z" />
+</vector>

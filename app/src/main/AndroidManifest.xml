@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Location -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Notifications -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Vibration -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/logo"
+        android:roundIcon="@mipmap/logo"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.EmergencySOSApp"
+        android:usesCleartextTraffic="true">
+
+        <!-- App entry point -->
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".WelcomeActivity"
+            android:exported="false" />
+
+        <!-- Main screens -->
+        <activity
+            android:name=".DashboardActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
+        <!-- Authentication -->
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".SignupActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".OtpVerificationActivity"
+            android:exported="false" />
+
+        <!-- Profile / Settings -->
+        <activity
+            android:name=".ProfileActivity"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".SettingsDetailActivity"
+            android:exported="false" />
+
+        <!-- SOS -->
+        <activity
+            android:name=".SosWorkflowActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".SosCenterActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <activity
+            android:name=".SosHistoryActivity"
+            android:exported="false" />
+
+        <!-- Emergency / Citizen -->
+        <activity
+            android:name=".CitizenReportActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".EmergencyDirectoryActivity"
+            android:exported="false" />
+
+        <!-- Tracking -->
+        <activity
+            android:name=".TrackingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <!-- News / Chatbot -->
+        <activity
+            android:name=".NewsActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
+        <activity
+            android:name=".ChatbotActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AlertsActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
+        <activity
+            android:name=".FamilyActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
+        <activity
+            android:name=".CalendarActivity"
+            android:exported="false"
+            android:launchMode="singleTop" />
+
+<!--        &lt;!&ndash; Google Maps API Key &ndash;&gt;-->
+<!--        <meta-data-->
+<!--            android:name="com.google.android.geo.API_KEY"-->
+<!--            android:value="YOUR_MAPS_API_KEY_HERE" />-->
+
+    </application>
+
+</manifest>
+

@@ -1,0 +1,11 @@
+- [x] Define "Murgency" palette in `colors.xml`
+- [x] Create vector icons and circular backgrounds for action grid
+- [x] Redesign `activity_dashboard.xml` (Top Bar, Hero, Grid, Bottom Nav)
+- [x] Implement `DashboardActivity.java` logic for the new UI
+- [x] Align `ProfileActivity` with the new professional style
+- [x] Clean & Functional Dashboard Overhaul
+    - [x] Create `bg_hero_gradient.xml` and `bg_status_card.xml`
+    - [x] Refine `activity_dashboard.xml` with Material Cards and Status Section
+    - [x] Update `DashboardActivity.java` with animations and haptics
+    - [x] Implement Dynamic Greeting logic
+- [x] Verify the full redesign

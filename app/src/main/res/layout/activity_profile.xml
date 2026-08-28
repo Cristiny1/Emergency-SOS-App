@@ -1,0 +1,445 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollMedicalId"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/spacing_screen_horizontal"
+            android:paddingEnd="@dimen/spacing_screen_horizontal"
+            android:paddingTop="@dimen/spacing_medium"
+            android:paddingBottom="@dimen/spacing_xxlarge">
+
+            <!-- Top bar -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/btnBack"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_circle_white"
+                    android:elevation="4dp"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_chevron_right"
+                    android:rotation="180"
+                    android:contentDescription="Back" />
+
+                <LinearLayout
+                    android:id="@+id/titleGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toTopOf="@id/btnBack"
+                    app:layout_constraintBottom_toBottomOf="@id/btnBack"
+                    app:layout_constraintStart_toEndOf="@id/btnBack"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:accessibilityHeading="true"
+                        android:text="@string/medical_id_title"
+                        android:textColor="@color/text_dark"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Section: Personal Info -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/MedicalId.SectionHeader"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/section_personal_information" />
+
+                <TextView
+                    android:id="@+id/editPhotoInfo"
+                    style="@style/MedicalId.EditAction"
+                    android:text="@string/edit_label" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardPhotoInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:background="@drawable/bg_card_modern"
+                android:foreground="?attr/selectableItemBackground"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="@dimen/spacing_medium"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="@string/edit_personal_info_desc">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvMedName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="Danny Rico"
+                        android:textColor="@color/text_dark"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvMedAge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        tools:text="41 years old"
+                        android:textColor="@color/text_gray"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvMedLanguage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        tools:text="Spanish · Español"
+                        android:textColor="@color/text_gray"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/ivMedPhoto"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:src="@drawable/ic_personal"
+                        android:contentDescription="@string/profile_photo_desc"
+                        app:civ_border_color="@color/fb_bg_gray"
+                        app:civ_border_width="2dp"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <FrameLayout
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:background="@drawable/bg_circle_white"
+                        android:elevation="4dp"
+                        android:importantForAccessibility="no"
+                        app:layout_constraintBottom_toBottomOf="@id/ivMedPhoto"
+                        app:layout_constraintEnd_toEndOf="@id/ivMedPhoto">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_camera"
+                            app:tint="@color/fb_blue" />
+                    </FrameLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+
+            <!-- Section: Medical ID -->
+            <TextView
+                style="@style/MedicalId.SectionHeader"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="@dimen/spacing_section_gap"
+                android:text="@string/section_medical_details" />
+
+            <!-- Blood Group -->
+            <LinearLayout
+                android:id="@+id/cardBlood"
+                style="@style/MedicalId.DetailCard"
+                android:contentDescription="@string/edit_blood_group_desc">
+
+                <ImageView
+                    style="@style/MedicalId.CardIcon"
+                    android:src="@drawable/ic_medical"
+                    app:tint="@color/sos_red" />
+
+                <LinearLayout style="@style/MedicalId.CardTextGroup">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/MedicalId.CardLabel"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/blood_group_label" />
+
+                        <TextView
+                            android:id="@+id/editBlood"
+                            style="@style/MedicalId.EditAction"
+                            android:text="@string/edit_label" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvBloodGroup"
+                        style="@style/MedicalId.CardValue"
+                        tools:text="O+" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Pregnancy -->
+            <LinearLayout
+                android:id="@+id/rowPregnancy"
+                style="@style/MedicalId.DetailCard"
+                android:contentDescription="@string/edit_pregnancy_desc">
+
+                <ImageView
+                    style="@style/MedicalId.CardIcon"
+                    android:src="@drawable/ic_personal"
+                    app:tint="@color/fb_blue" />
+
+                <LinearLayout style="@style/MedicalId.CardTextGroup">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/MedicalId.CardLabel"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/pregnancy_label" />
+
+                        <TextView
+                            android:id="@+id/editPregnancy"
+                            style="@style/MedicalId.EditAction"
+                            android:text="@string/edit_label" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvPregnancy"
+                        style="@style/MedicalId.CardValue"
+                        android:textColor="@color/sos_red"
+                        android:text="@string/add_label" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Medications -->
+            <LinearLayout
+                android:id="@+id/cardMedications"
+                style="@style/MedicalId.DetailCard"
+                android:contentDescription="@string/edit_medications_desc">
+
+                <ImageView
+                    style="@style/MedicalId.CardIcon"
+                    android:src="@drawable/ic_pill" />
+
+                <LinearLayout style="@style/MedicalId.CardTextGroup">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/MedicalId.CardLabel"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/medications_label" />
+
+                        <TextView
+                            android:id="@+id/editMedications"
+                            style="@style/MedicalId.EditAction"
+                            android:text="@string/edit_label" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvMedications"
+                        style="@style/MedicalId.CardValue"
+                        android:layout_width="match_parent"
+                        tools:text="Lisinopril (10mg) by mouth" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Allergies -->
+            <LinearLayout
+                android:id="@+id/cardAllergies"
+                style="@style/MedicalId.DetailCard"
+                android:contentDescription="@string/edit_allergies_desc">
+
+                <ImageView
+                    style="@style/MedicalId.CardIcon"
+                    android:src="@drawable/ic_sos_shield"
+                    app:tint="@color/sos_red" />
+
+                <LinearLayout style="@style/MedicalId.CardTextGroup">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/MedicalId.CardLabel"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/allergies_label" />
+
+                        <TextView
+                            android:id="@+id/editAllergies"
+                            style="@style/MedicalId.EditAction"
+                            android:text="@string/edit_label" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvAllergies"
+                        style="@style/MedicalId.CardValue"
+                        android:layout_width="match_parent"
+                        tools:text="Peanuts" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Emergency Contacts -->
+            <LinearLayout
+                android:id="@+id/cardContacts"
+                style="@style/MedicalId.DetailCard"
+                android:contentDescription="@string/edit_contacts_desc">
+
+                <ImageView
+                    style="@style/MedicalId.CardIcon"
+                    android:src="@drawable/ic_phone"
+                    app:tint="@color/green_verified" />
+
+                <LinearLayout style="@style/MedicalId.CardTextGroup">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/MedicalId.CardLabel"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/emergency_contacts_label" />
+
+                        <TextView
+                            android:id="@+id/editContacts"
+                            style="@style/MedicalId.EditAction"
+                            android:text="@string/edit_label" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvContacts"
+                        style="@style/MedicalId.CardValue"
+                        android:layout_width="match_parent"
+                        tools:text="Ashley Rico" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Conditions -->
+            <LinearLayout
+                android:id="@+id/cardConditions"
+                style="@style/MedicalId.DetailCard"
+                android:contentDescription="@string/edit_conditions_desc">
+
+                <ImageView
+                    style="@style/MedicalId.CardIcon"
+                    android:src="@drawable/ic_medical_connect"
+                    app:tint="@color/fb_blue" />
+
+                <LinearLayout style="@style/MedicalId.CardTextGroup">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/MedicalId.CardLabel"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/conditions_label" />
+
+                        <TextView
+                            android:id="@+id/editConditions"
+                            style="@style/MedicalId.EditAction"
+                            android:text="@string/edit_label" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvConditions"
+                        style="@style/MedicalId.CardValue"
+                        android:layout_width="match_parent"
+                        tools:text="Hypertension" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Footer -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:text="@string/medical_id_footer"
+                android:textColor="@color/text_gray"
+                android:textSize="12sp"
+                android:lineSpacingExtra="3dp"
+                android:gravity="center" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/medical_disclaimer"
+                android:textColor="@color/fb_blue"
+                android:textSize="11sp"
+                android:textStyle="italic"
+                android:gravity="center" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:background="@drawable/bg_floating_menu"
+        app:elevation="12dp"
+        app:itemIconTint="@color/m_grey_icon"
+        app:itemTextColor="@color/m_grey_icon"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
