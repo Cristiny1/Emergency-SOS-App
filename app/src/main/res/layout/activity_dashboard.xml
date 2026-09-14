@@ -222,8 +222,7 @@
                 android:gravity="center"
                 android:layout_marginTop="5dp"
                 android:letterSpacing="0.08"
-                android:text="Monday, Aug 12, 2024
-                12:00 PM"
+                android:text="Monday, Aug 12, 2024 12:00 PM"
                 android:textAllCaps="true"
                 android:textColor="@color/text_gray"
                 android:textSize="15sp"
@@ -348,6 +347,40 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="16dp"
                         android:background="@color/border_gray" />
+
+                    <!-- Silent Mode Toggle -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:paddingHorizontal="8dp"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_shoutout"
+                            app:tint="@color/sos_red"
+                            android:contentDescription="Silent Mode" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="12dp"
+                            android:text="Silent Rescue Mode"
+                            android:textColor="@color/text_dark"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <com.google.android.material.switchmaterial.SwitchMaterial
+                            android:id="@+id/switchSilentMode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:thumbTint="@color/sos_red"
+                            app:trackTint="@color/sos_pulse_red" />
+                    </LinearLayout>
 
                     <!-- Action Hub Grid -->
                     <GridLayout
@@ -517,7 +550,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
-                                    android:text="Report"
+                                    android:text="@string/report_card"
                                     android:textColor="@color/text_dark"
                                     android:textSize="11sp"
                                     android:textStyle="bold" />
@@ -566,6 +599,100 @@
                             </LinearLayout>
                         </com.google.android.material.card.MaterialCardView>
                     </GridLayout>
+
+                    <!-- Nearest Help Status -->
+                    <LinearLayout
+                        android:id="@+id/layoutNearestHelp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/bg_card_modern"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/nearest_assistance_header"
+                            android:textColor="@color/text_gray"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.05" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_responder_car"
+                                app:tint="@color/primary" />
+
+                            <TextView
+                                android:id="@+id/tvNearestPolice"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp"
+                                android:text="@string/finding_police"
+                                android:textColor="@color/text_dark"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvPoliceEta"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="-- min"
+                                android:textColor="@color/primary"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginTop="12dp"
+                            android:background="#F0F2F5" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_medical"
+                                app:tint="@color/green_verified" />
+
+                            <TextView
+                                android:id="@+id/tvNearestHospital"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp"
+                                android:text="@string/finding_hospital"
+                                android:textColor="@color/text_dark"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvHospitalEta"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="-- min"
+                                android:textColor="@color/green_verified"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
 
                     <!-- Medical Quick Glance -->
                     <LinearLayout
@@ -707,15 +834,12 @@
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottomNavigation"
+            style="@style/App.BottomNavigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/bg_bottom_nav"
             android:layout_alignParentBottom="true"
             android:layout_margin="16dp"
-            android:background="@drawable/bg_floating_menu"
-            app:elevation="12dp"
-            app:itemIconTint="@color/m_grey_icon"
-            app:itemTextColor="@color/m_grey_icon"
-            app:labelVisibilityMode="labeled"
             app:menu="@menu/bottom_nav_menu" />
 
         <!-- Hidden compatibility views -->

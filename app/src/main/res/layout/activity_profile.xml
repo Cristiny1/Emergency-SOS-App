@@ -429,14 +429,11 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
-        android:layout_width="0dp"
+        style="@style/App.BottomNavigation"
+        android:layout_width="match_parent"
+        android:background="@drawable/bg_bottom_nav"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:background="@drawable/bg_floating_menu"
-        app:elevation="12dp"
-        app:itemIconTint="@color/m_grey_icon"
-        app:itemTextColor="@color/m_grey_icon"
-        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

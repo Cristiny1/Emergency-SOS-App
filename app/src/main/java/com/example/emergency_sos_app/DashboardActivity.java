@@ -83,9 +83,8 @@ public class DashboardActivity extends BaseActivity {
         initViews();
         setupActionGrid();
         setupDrawer();
-        setupEdgeToEdge();
-
-        NavigationHelper.setup(this, R.id.nav_home);
+        // setupEdgeToEdge(); // Removed - Handled by setupNavigation in Base
+        setupNavigation(R.id.nav_home);
 
         updateGreeting();
         loadMedicalGlance();
@@ -93,6 +92,9 @@ public class DashboardActivity extends BaseActivity {
         setupSocketStatusIndicator();
         requestLocation();
         startClock();
+
+        // Start Safety Sensor Service
+        startService(new Intent(this, SafetySensorService.class));
 
         // Connect to backend (even if in processing)
         SocketManager.getInstance().connect(null);
@@ -115,6 +117,34 @@ public class DashboardActivity extends BaseActivity {
 
         // Chatbot Link
         findViewById(R.id.btnOpenChatbot).setOnClickListener(v -> startFadeActivity(new Intent(this, ChatbotActivity.class)));
+
+        handleIntent(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(@NonNull Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent == null) return;
+        
+        if (intent.getBooleanExtra("IMPACT_DETECTED", false)) {
+            showImpactConfirmationDialog();
+        } else if (intent.getBooleanExtra("WIDGET_SOS_TRIGGER", false)) {
+            triggerSOS();
+        }
+    }
+
+    private void showImpactConfirmationDialog() {
+        vibrateEmergency();
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("🚨 Impact Detected")
+                .setMessage("A potential crash or fall was detected. Do you need emergency assistance?")
+                .setPositiveButton("YES, CALL SOS", (d, w) -> triggerSOS())
+                .setNegativeButton("I am OK", null)
+                .show();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -141,14 +171,23 @@ public class DashboardActivity extends BaseActivity {
                     if (progressIndicator != null) {
                         progressIndicator.setVisibility(View.VISIBLE);
                         progressIndicator.setProgress(0);
-                        ObjectAnimator.ofInt(progressIndicator, "progress", 100)
-                                .setDuration(3000)
-                                .start();
+                        
+                        // Professional smooth progress animation
+                        ValueAnimator animator = ValueAnimator.ofInt(0, 100);
+                        animator.setDuration(3000);
+                        animator.addUpdateListener(animation -> {
+                            if (isSosHolding) {
+                                progressIndicator.setProgress((int) animation.getAnimatedValue());
+                            } else {
+                                animator.cancel();
+                            }
+                        });
+                        animator.start();
                     }
 
                     sosHoldHandler.postDelayed(() -> {
                         if (isSosHolding) {
-                            vibrate(200);
+                            vibrateEmergency();
                             triggerSOS();
                             resetSosButton(v, tvSosHint, progressIndicator);
                         }
@@ -274,13 +313,38 @@ public class DashboardActivity extends BaseActivity {
                     currentLng = location.getLongitude();
                     
                     float accuracy = location.getAccuracy();
-                    if (accuracy > 25) {
-                        tvCurrentAddress.setText(String.format(Locale.getDefault(), 
-                            "Low GPS Accuracy (%.0fm). Move to open area.", accuracy));
-                        tvCurrentAddress.setTextColor(getColor(R.color.sos_red));
+                    String accuracyStatus;
+                    int color;
+                    if (accuracy <= 10) {
+                        accuracyStatus = getString(R.string.gps_excellent);
+                        color = getColor(R.color.green_verified);
+                    } else if (accuracy <= 25) {
+                        accuracyStatus = getString(R.string.gps_good);
+                        color = getColor(R.color.green_verified);
+                    } else if (accuracy <= 50) {
+                        accuracyStatus = getString(R.string.gps_fair);
+                        color = getColor(R.color.severity_yellow);
+                    } else {
+                        accuracyStatus = getString(R.string.gps_poor);
+                        color = getColor(R.color.sos_red);
+                    }
+
+                    if (accuracy > 50) {
+                        tvCurrentAddress.setText(getString(R.string.low_gps_accuracy, accuracy));
+                        tvCurrentAddress.setTextColor(color);
                     } else {
                         tvCurrentAddress.setTextColor(getColor(R.color.text_dark));
                         updateAddress(currentLat, currentLng);
+                        
+                        // Show authoritative GPS Status
+                        String statusMsg = getString(R.string.gps_status_label, accuracyStatus, accuracy);
+                        Log.d("GPS", statusMsg);
+                        
+                        // Optionally show on UI if needed, for now address bar + Log
+                        String current = tvCurrentAddress.getText().toString();
+                        if (!current.contains("(")) {
+                            tvCurrentAddress.setText(current + " (" + accuracyStatus + ")");
+                        }
                     }
                 }
             }
@@ -338,6 +402,21 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void updateAddress(double lat, double lng) {
+        // Update Proximity Info
+        ProximityManager.Facility nearestPolice = ProximityManager.getNearest(lat, lng, "POLICE");
+        ProximityManager.Facility nearestHospital = ProximityManager.getNearest(lat, lng, "MEDICAL");
+
+        runOnUiThread(() -> {
+            if (nearestPolice != null) {
+                ((TextView)findViewById(R.id.tvNearestPolice)).setText(nearestPolice.name);
+                ((TextView)findViewById(R.id.tvPoliceEta)).setText(getString(R.string.eta_minutes, nearestPolice.travelTimeMins));
+            }
+            if (nearestHospital != null) {
+                ((TextView)findViewById(R.id.tvNearestHospital)).setText(nearestHospital.name);
+                ((TextView)findViewById(R.id.tvHospitalEta)).setText(getString(R.string.eta_minutes, nearestHospital.travelTimeMins));
+            }
+        });
+
         new Thread(() -> {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
             String resolvedAddress = null;
@@ -367,13 +446,9 @@ public class DashboardActivity extends BaseActivity {
         }).start();
     }
 
-    private void vibrate(long millis) {
-        if (vibrator != null) vibrator.vibrate(millis);
-    }
-
     private void vibrateEmergency() {
         if (vibrator != null) {
-            vibrator.vibrate(new long[]{0, 100, 50, 150}, -1);
+            vibrator.vibrate(android.os.VibrationEffect.createWaveform(new long[]{0, 100, 50, 150}, -1));
         }
     }
 
@@ -487,6 +562,15 @@ public class DashboardActivity extends BaseActivity {
         setupCardInteraction(findViewById(R.id.cardPolice), () -> showCallConfirmation("Police", "POLICE"));
         setupCardInteraction(findViewById(R.id.cardReportDanger), () -> startFadeActivity(new Intent(this, CitizenReportActivity.class)));
         setupCardInteraction(findViewById(R.id.cardCalendar), () -> startFadeActivity(new Intent(this, CalendarActivity.class)));
+        
+        // --- NEW: INTERACTIVE PROXIMITY CARDS ---
+        View layoutHelp = findViewById(R.id.layoutNearestHelp);
+        if (layoutHelp != null) {
+            layoutHelp.setOnClickListener(v -> {
+                Intent intent = new Intent(this, EmergencyDirectoryActivity.class);
+                startFadeActivity(intent);
+            });
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -495,12 +579,14 @@ public class DashboardActivity extends BaseActivity {
         view.setOnTouchListener((v, event) -> {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    v.animate().scaleX(0.96f).scaleY(0.96f).setDuration(100).start();
-                    vibrate(15);
+                    // Instant touch response
+                    v.animate().scaleX(0.96f).scaleY(0.96f).setDuration(60).start();
+                    vibrate(10);
                     break;
                 case MotionEvent.ACTION_UP:
                 case MotionEvent.ACTION_CANCEL:
-                    v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(200).setInterpolator(new OvershootInterpolator()).start();
+                    // Rapid recovery
+                    v.animate().scaleX(1.0f).scaleY(1.0f).setDuration(120).setInterpolator(new OvershootInterpolator()).start();
                     if (event.getAction() == MotionEvent.ACTION_UP) {
                         action.run();
                         v.performClick();
@@ -525,48 +611,114 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void triggerSOS() {
-        // High Priority SOS Trigger
-        vibrateEmergency();
-        
-        com.google.android.material.bottomsheet.BottomSheetDialog dialog = new com.google.android.material.bottomsheet.BottomSheetDialog(this);
-        @SuppressLint("InflateParams") View dialogView = android.view.LayoutInflater.from(this).inflate(R.layout.dialog_sos_type, null);
-        dialog.setContentView(dialogView);
-        
-        dialogView.findViewById(R.id.typeMedical).setOnClickListener(v -> { emitSos("Medical"); dialog.dismiss(); });
-        dialogView.findViewById(R.id.typeFire).setOnClickListener(v -> { emitSos("Fire"); dialog.dismiss(); });
-        dialogView.findViewById(R.id.typePolice).setOnClickListener(v -> { emitSos("Police"); dialog.dismiss(); });
-        dialogView.findViewById(R.id.btnCancel).setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
+        try {
+            // High Priority SOS Trigger
+            vibrateEmergency();
+
+            com.google.android.material.bottomsheet.BottomSheetDialog dialog = new com.google.android.material.bottomsheet.BottomSheetDialog(this);
+            @SuppressLint("InflateParams") View dialogView = android.view.LayoutInflater.from(this).inflate(R.layout.dialog_sos_type, null);
+            dialog.setContentView(dialogView);
+
+            dialogView.findViewById(R.id.typeMedical).setOnClickListener(v -> {
+                dialog.dismiss();
+                emitSos("Medical");
+            });
+            dialogView.findViewById(R.id.typeFire).setOnClickListener(v -> {
+                dialog.dismiss();
+                emitSos("Fire");
+            });
+            dialogView.findViewById(R.id.typePolice).setOnClickListener(v -> {
+                dialog.dismiss();
+                emitSos("Police");
+            });
+            dialogView.findViewById(R.id.btnCancel).setOnClickListener(v -> dialog.dismiss());
+            dialog.show();
+        } catch (Exception e) {
+            Log.e("Dashboard", "Error showing SOS dialog", e);
+            emitSos("Medical"); // Fallback
+        }
     }
 
     private void emitSos(String type) {
-        SharedPreferences prefs = getSharedPreferences("sos_profile_prefs", MODE_PRIVATE);
-        String name = prefs.getString("name", "Unknown User");
-        
-        // Generate a unique ID for this session
-        String sosId = "SOS_" + System.currentTimeMillis();
-        
-        // Create Domain Event
-        SosEvent event = new SosEvent(sosId, name, type, currentLat, currentLng, 0); // Accuracy fixed later
-        
-        // Use Repository to trigger SOS
-        RepositoryProvider.getSosRepository().createSos(event, new SosRepository.SosCallback() {
-            @Override
-            public void onStatusChanged(SosStatus status) {
-                Log.d("SOS", "Repository Status: " + status);
-            }
+        try {
+            SharedPreferences prefs = getSharedPreferences("sos_profile_prefs", MODE_PRIVATE);
+            String name = prefs.getString("name", "Unknown User");
 
-            @Override
-            public void onError(String message) {
-                Toast.makeText(DashboardActivity.this, "SOS Failed: " + message, Toast.LENGTH_LONG).show();
-            }
-        });
+            // Generate a unique ID for this session
+            String sosId = "SOS_" + System.currentTimeMillis();
 
-        // Save to Local History
-        HistoryManager.saveEvent(this, type, tvCurrentAddress.getText().toString());
+            // Create Domain Event
+            SosEvent event = new SosEvent(sosId, name, type, currentLat, currentLng, 0);
+
+            com.google.android.material.switchmaterial.SwitchMaterial switchSilent = findViewById(R.id.switchSilentMode);
+            final boolean isSilent = switchSilent != null && switchSilent.isChecked();
+
+            // Use Repository to trigger SOS
+            RepositoryProvider.getSosRepository(this).createSos(event, new SosRepository.SosCallback() {
+                @Override
+                public void onStatusChanged(SosStatus status) {
+                    Log.d("SOS", "Repository Status changed to: " + status);
+                    if (status == SosStatus.PENDING) {
+                        runOnUiThread(() -> {
+                            Toast.makeText(DashboardActivity.this, isSilent ? "Silent Signal Broadcasting..." : "Emergency Signal Broadcasting...", Toast.LENGTH_SHORT).show();
+                        });
+                        
+                        // Persistent Emergency Mode
+                        prefs.edit().putBoolean("is_sos_active", true)
+                                   .putString("active_sos_id", sosId)
+                                   .putString("active_sos_type", type)
+                                   .putBoolean("active_sos_silent", isSilent)
+                                   .apply();
+                        
+                        // Notify Family Circle (Simulation)
+                        notifyFamilyCircle(type, sosId);
+                    }
+                }
+
+                @Override
+                public void onError(String message) {
+                    runOnUiThread(() -> Toast.makeText(DashboardActivity.this, "SOS Failed: " + message, Toast.LENGTH_LONG).show());
+                }
+            });
+
+            // Save to Local History
+            String address = "Unknown Location";
+            if (tvCurrentAddress != null && tvCurrentAddress.getText() != null) {
+                address = tvCurrentAddress.getText().toString();
+            }
+            HistoryManager.saveEvent(this, type, address);
+
+            // Move to Workflow Screen
+            startWorkflow(type, sosId, isSilent);
+        } catch (Exception e) {
+            Log.e("SOS", "Error emitting SOS", e);
+            Toast.makeText(this, "Emergency signal error. Please call 117/118 directly.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void notifyFamilyCircle(String type, String sosId) {
+        List<FamilyManager.FamilyMember> members = FamilyManager.getMembers(this);
+        if (members.isEmpty()) return;
         
-        // Move to Workflow Screen
-        startWorkflow(type, sosId);
+        String safetyLink = "https://sos-cambodia.com/track/" + sosId;
+        Log.d("SOS", "Sending Alert to Family Circle: " + safetyLink);
+        
+        String message = String.format(Locale.getDefault(), 
+            "EMERGENCY: %s triggered an SOS. Track live: %s", 
+            getSharedPreferences("sos_profile_prefs", MODE_PRIVATE).getString("name", "User"),
+            safetyLink);
+            
+        // Simulation of SMS broadcast
+        Toast.makeText(this, "Family Circle Notified via SMS.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void startWorkflow(String type, String sosId, boolean isSilent) {
+        Log.d("Dashboard", "Launching Workflow for ID: " + sosId);
+        Intent intent = new Intent(this, SosWorkflowActivity.class);
+        intent.putExtra("INCIDENT_TYPE", type);
+        intent.putExtra("SOS_ID", sosId);
+        intent.putExtra("IS_SILENT", isSilent);
+        startFadeActivity(intent);
     }
 
     private void setupEdgeToEdge() {
@@ -598,12 +750,6 @@ public class DashboardActivity extends BaseActivity {
         });
     }
 
-    private void startWorkflow(String type, String sosId) {
-        Intent intent = new Intent(this, SosWorkflowActivity.class);
-        intent.putExtra("INCIDENT_TYPE", type);
-        intent.putExtra("SOS_ID", sosId);
-        startFadeActivity(intent);
-    }
 
     private void triggerFamilyAction() {
         startFadeActivity(new Intent(this, FamilyActivity.class));

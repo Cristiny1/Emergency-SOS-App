@@ -31,12 +31,6 @@ android {
     }
 }
 
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
-
 dependencies {
     implementation libs.activity.ktx
     implementation libs.appcompat
@@ -59,10 +53,19 @@ dependencies {
     implementation libs.mlkit.translate
     implementation libs.google.ai
     implementation libs.guava
+    implementation libs.biometric
 
     testImplementation libs.junit
     androidTestImplementation libs.espresso.core
     androidTestImplementation libs.ext.junit
+
+    // Retrofit & OkHttp
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
+    // Socket.IO (for real-time updates)
+    implementation("io.socket:socket.io-client:2.1.0")
 
 
 }

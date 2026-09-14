@@ -37,12 +37,11 @@ public class NewsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
         
-        setupEdgeToEdge();
         initViews();
         setupRetrofit();
         
         fetchNews();
-        NavigationHelper.setup(this, R.id.nav_news);
+        setupNavigation(R.id.nav_news);
     }
 
     private void initViews() {

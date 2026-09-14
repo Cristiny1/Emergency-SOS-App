@@ -42,12 +42,17 @@ public final class LanguageManager {
      * Used by BaseActivity to ensure the correct locale is set on launch.
      */
     public static void apply(Context context) {
-        String savedLanguage = getLanguage(context);
-        LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
-        
-        // Only apply if the current language differs from the saved preference
-        if (currentLocales.isEmpty() || !savedLanguage.equals(currentLocales.get(0).getLanguage())) {
-            applyLocale(savedLanguage);
+        if (context == null) return;
+        try {
+            String savedLanguage = getLanguage(context);
+            LocaleListCompat currentLocales = AppCompatDelegate.getApplicationLocales();
+
+            // Only apply if the current language differs from the saved preference
+            if (currentLocales.isEmpty() || !savedLanguage.equals(currentLocales.get(0).getLanguage())) {
+                applyLocale(savedLanguage);
+            }
+        } catch (Exception e) {
+            android.util.Log.e("LangManager", "Failed to apply language", e);
         }
     }
 

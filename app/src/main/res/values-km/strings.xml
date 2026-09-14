@@ -56,6 +56,7 @@
     <string name="invalid_phone">លេខទូរស័ព្ទមិនត្រឹមត្រូវ</string>
     <string name="password_min_length">ពាក្យសម្ងាត់ត្រូវមានយ៉ាងហោចណាស់ ៦ ខ្ទង់</string>
     <string name="enter_phone">បញ្ចូលលេខទូរស័ព្ទ</string>
+    <string name="confirm_password_label">បញ្ជាក់ពាក្យសម្ងាត់</string>
 
     <string name="or_divider">ឬ</string>
     <string name="continue_google">បន្តជាមួយ Google</string>
@@ -78,8 +79,7 @@
     <string name="reset_password_title">កំណត់ពាក្យសម្ងាត់ឡើងវិញ</string>
     <string name="reset_password_subtitle">បង្កើតពាក្យសម្ងាត់សុវត្ថិភាពថ្មីសម្រាប់គណនីរបស់អ្នក។</string>
     <string name="new_password_label">ពាក្យសម្ងាត់ថ្មី</string>
-    <string name="confirm_password_label">បញ្ជាក់ពាក្យសម្ងាត់</string>
-    <string name="reset_button">កំណត់ឡើងវិញ</string>
+    <string name="confirm_button">កំណត់ឡើងវិញ</string>
     <string name="password_mismatch">ពាក្យសម្ងាត់មិនត្រូវគ្នាទេ</string>
     <string name="password_reset_success">បានធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់ដោយជោគជ័យ។ សូមចូលគណនី។</string>
     <string name="phone_not_registered">លេខទូរស័ព្ទនេះមិនទាន់បានចុះឈ្មោះទេ</string>
@@ -132,7 +132,7 @@
     <string name="cancel_sos_countdown">បោះបង់ SOS (%1$d វិនាទី)</string>
     <string name="cancel_emergency">បោះបង់អាសន្ន</string>
     <string name="return_to_dashboard">ត្រឡប់ទៅផ្ទាំងបញ្ជាវិញ</string>
-    <string name="emergency_assisted_closed">Emergency Assisted &amp; Closed</string>
+    <string name="emergency_assisted_closed">អាសន្នត្រូវបានជួយ និងបិទរួចរាល់</string>
     <string name="quick_actions">សកម្មភាពរហ័ស</string>
     <string name="share_location_btn">ចែកចាយទីតាំង</string>
     <string name="call_emergency_btn">ហៅទៅផ្នែកអាសន្ន</string>
@@ -147,10 +147,12 @@
     <string name="tracking_distance_km">ចម្ងាយ: %.1f គីឡូម៉ែត្រ</string>
     <string name="tracking_arriving_now">កំពុងទៅដល់</string>
     <string name="tracking_arrival_in_minutes">មកដល់ក្នុងរយៈពេលប្រហែល %1$d នាទី</string>
-    <string name="tracking_rescue_on_the_way">Rescue is on the way!</string>
-    <string name="tracking_help_arrived">Help has Arrived!</string>
-    <string name="tracking_arrival_confirmed">Arrival confirmed</string>
+    <string name="tracking_rescue_on_the_way">ក្រុមជួយសង្គ្រោះកំពុងមកដល់!</string>
+    <string name="tracking_help_arrived">បានមកដល់រួចហើយ!</string>
+    <string name="tracking_arrival_confirmed">បានបញ្ជាក់ថាមកដល់រួច</string>
     <string name="tracking_map_layers_message">ស្រទាប់ផែនទីត្រូវបានគ្រប់គ្រងដោយ Leaflet</string>
+    <string name="signal_reached_center">សញ្ញាបានទៅដល់មជ្ឈមណ្ឌល...</string>
+    <string name="awaiting_responder">កំពុងរង់ចាំការចាត់តាំងអ្នកឆ្លើយតប...</string>
 
     <!-- បញ្ជីលេខទូរស័ព្ទអាសន្ន -->
     <string name="emergency_directory_title">បញ្ជីលេខទូរស័ព្ទអាសន្ន</string>
@@ -195,7 +197,7 @@
     <string name="ai_brain_online">AI Safety Brain Online</string>
     <string name="activate_sos_btn">🚨 ដំណើរការ SOS</string>
     <string name="call_emergency_ai">📞 ហៅទៅផ្នែកអាសន្ន</string>
-    <string name="ai_offline_error">ខ្ញុំមានបញ្ហាក្នុងការភ្ជាប់ទៅខួរក្បាល AI របស់ខ្ញុំ។ សូមប្រើប៊ូតុង SOS ប្រសិនបើអ្នកមានគ្រោះថ្នាក់។</string>
+    <string name="ai_offline_error">ខ្ញុំមានបញ្ហាក្នុងការភ្ជាប់ទៅខួរក្បាល AI របស់ខ្ញុំ។ សូមពិនិត្យមើលអ៊ីនធឺណិតរបស់អ្នក ឬប្រើប៊ូតុង SOS ប្រសិនបើអ្នកមានគ្រោះថ្នាក់។</string>
     <string name="send">ផ្ញើ</string>
 
     <!-- គ្រួសារ -->
@@ -228,7 +230,7 @@
     <string name="privacy_security">ឯកជនភាព និងសុវត្ថិភាព</string>
     <string name="help_support">ជំនួយ និងការគាំទ្រ</string>
     <string name="clear_history">សម្អាតប្រវត្តិអាសន្ន</string>
-    <string name="log_out_btn">LOG OUT</string>
+    <string name="log_out_btn">ចាកចេញ</string>
 
     <!-- ប្រវត្តិរូប -->
     <string name="profile_title">ប្រវត្តិរូប</string>
@@ -296,4 +298,40 @@
     <string name="tracking_eta_calculating">កំពុងគណនាលក្ខខណ្ឌមកដល់...</string>
     <string name="tracking_distance_placeholder">ចម្ងាយ: 2.3 គីឡូម៉ែត្រ</string>
     <string name="tracking_cancel_button">បោះបង់ SOS</string>
+
+    <!-- មុខងារសុវត្ថិភាពកម្រិតខ្ពស់ -->
+    <string name="gps_excellent">ល្អបំផុត</string>
+    <string name="gps_good">ល្អ</string>
+    <string name="gps_fair">មធ្យម</string>
+    <string name="gps_poor">ខ្សោយ</string>
+    <string name="gps_unavailable">មិនមាន</string>
+    <string name="gps_status_label">ស្ថានភាព GPS: %1$s (%2$.0f ម៉ែត្រ)</string>
+    <string name="nearest_assistance_header">ជំនួយសង្គ្រោះបន្ទាន់ដែលជិតបំផុត</string>
+    <string name="finding_police">កំពុងស្វែងរកប៉ុស្តិ៍ប៉ូលីសដែលជិតបំផុត...</string>
+    <string name="finding_hospital">កំពុងស្វែងរកមន្ទីរពេទ្យដែលជិតបំផុត...</string>
+    <string name="eta_minutes">%1$d នាទី</string>
+    <string name="safety_check_title">ការត្រួតពិនិត្យការត្រៀមខ្លួនសម្រាប់សុវត្ថិភាព</string>
+    <string name="safety_check_intro">ដើម្បីរក្សាសុវត្ថិភាពរបស់អ្នក កម្មវិធីត្រូវការការអនុញ្ញាតដើម្បីចូលប្រើទីតាំងរបស់អ្នក និងផ្ញើការជូនដំណឹង។</string>
+    <string name="high_accuracy_gps">GPS ភាពត្រឹមត្រូវខ្ពស់</string>
+    <string name="rescue_notifications">ការជូនដំណឹងអំពីសញ្ញាសង្គ្រោះ</string>
+    <string name="offline_safety_cache">ឃ្លាំងសម្ងាត់សុវត្ថិភាពក្រៅបណ្តាញ</string>
+    <string name="confirm_readiness">បញ្ជាក់ការត្រៀមខ្លួន</string>
+    <string name="family_notified_toast">រង្វង់គ្រួសារត្រូវបានជូនដំណឹង៖ ការជូនដំណឹង %1$s ត្រូវបានផ្ញើ។</string>
+    <string name="offline_ai_message">ខ្ញុំមានបញ្ហាក្នុងការភ្ជាប់ទៅខួរក្បាល AI របស់ខ្ញុំ។ សូមពិនិត្យមើលអ៊ីនធឺណិតរបស់អ្នក ឬប្រើប៊ូតុង SOS ប្រសិនបើអ្នកមានគ្រោះថ្នាក់។</string>
+    <string name="mute_siren">បិទសំឡេងស៊ីរ៉ែន</string>
+    <string name="unmute_siren">បើកសំឡេងស៊ីរ៉ែន</string>
+    <string name="silent_signal_broadcasting">កំពុងផ្សព្វផ្សាយសញ្ញាស្ងាត់...</string>
+    <string name="emergency_signal_broadcasting">កំពុងផ្សព្វផ្សាយសញ្ញាសង្គ្រោះ...</string>
+    <string name="security_verification_failed">ការផ្ទៀងផ្ទាត់សុវត្ថិភាពបានបរាជ័យ</string>
+    <string name="verify_identity">ផ្ទៀងផ្ទាត់អត្តសញ្ញាណ</string>
+    <string name="confirm_cancel_subtitle">បញ្ជាក់ការបោះបង់ការជូនដំណឹង SOS</string>
+    <string name="impact_detected_title">🚨 រកឃើញការប៉ះទង្គិច</string>
+    <string name="impact_detected_message">ការប៉ះទង្គិចឬការដួលត្រូវបានរកឃើញ។ តើអ្នកត្រូវការជំនួយសង្គ្រោះបន្ទាន់ទេ?</string>
+    <string name="impact_positive_btn">បាទ/ចាស, ហៅ SOS</string>
+    <string name="impact_negative_btn">ខ្ញុំមិនអីទេ</string>
+    <string name="silent_rescue_mode">របៀបសង្គ្រោះស្ងាត់</string>
+    <string name="evidence_photo">រូបថត</string>
+    <string name="evidence_video">វីដេអូ</string>
+    <string name="evidence_voice">សំឡេង</string>
+    <string name="reset_button">កំណត់ពាក្យសម្ងាត់ឡើងវិញ</string>
 </resources>

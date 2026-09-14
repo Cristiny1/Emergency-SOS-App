@@ -9,11 +9,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.webkit.WebSettings;
@@ -27,9 +25,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import com.example.emergency_sos_app.models.SosEvent;
 import com.example.emergency_sos_app.models.SosStatus;
 import com.example.emergency_sos_app.repositories.RepositoryProvider;
 import com.example.emergency_sos_app.repositories.SosRepository;
@@ -56,8 +59,8 @@ public class SosWorkflowActivity extends BaseActivity {
     private enum State { LOCATION, ROUTING, TRACKING, COMPLETED }
     private State currentState = State.LOCATION;
 
-    private ViewGroup rootLayout;
-    private LinearLayout phaseLocation, phaseTracking, responderCard, statusTimeline;
+    private LinearLayout phaseLocation, phaseTracking, statusTimeline;
+    private View responderCard;
     private TextView tvCurrentStatus, tvLocationText, tvResponderName, tvResponderId, tvEta, tvHeaderTitle;
     private ProgressBar pbRouting;
     private Spinner spinnerVictims;
@@ -78,68 +81,232 @@ public class SosWorkflowActivity extends BaseActivity {
 
     private boolean isMuted = false;
     private boolean isCancelled = false;
+    private boolean isSilentMode = false;
     private int cancelCountdown = 10;
     private String sosId;
+    private SosStatus currentRepositoryStatus = SosStatus.IDLE;
     
     private String incidentType = "MEDICAL";
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private View rootLayout;
+
+    private final android.content.BroadcastReceiver batteryReceiver = new android.content.BroadcastReceiver() {
+        @Override
+        public void onReceive(android.content.Context context, Intent intent) {
+            int level = intent.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, -1);
+            int scale = intent.getIntExtra(android.os.BatteryManager.EXTRA_SCALE, -1);
+            float batteryPct = level * 100 / (float)scale;
+
+            if (batteryPct < 15) {
+                applyLowPowerMode();
+            }
+        }
+    };
+
+    private void applyLowPowerMode() {
+        if (currentState == State.TRACKING || currentState == State.ROUTING) {
+            Toast.makeText(this, "Low Battery: Emergency Power Saving Active", Toast.LENGTH_LONG).show();
+            if (isMapLoaded && mapWebView != null) {
+                mapWebView.evaluateJavascript("stopRadar()", null);
+            }
+            if (rootLayout != null) rootLayout.setAlpha(0.8f);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sos_workflow);
-
-        incidentType = getIntent().getStringExtra("INCIDENT_TYPE");
-        if (incidentType == null) incidentType = "MEDICAL";
+        Log.d("Workflow", "onCreate started");
         
-        sosId = getIntent().getStringExtra("SOS_ID");
+        try {
+            setContentView(R.layout.activity_sos_workflow);
+            rootLayout = findViewById(android.R.id.content);
 
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        initViews();
-        setupWebView();
+            incidentType = getIntent().getStringExtra("INCIDENT_TYPE");
+            if (incidentType == null) incidentType = "MEDICAL";
+            
+            isSilentMode = getIntent().getBooleanExtra("IS_SILENT", false);
+            
+            sosId = getIntent().getStringExtra("SOS_ID");
+            if (sosId != null) {
+                Log.d("Workflow", "Initial State set to ROUTING due to SOS_ID");
+                currentState = State.ROUTING;
+            }
 
-        alertManager = new SosAlertManager(this);
-        socketManager = SocketManager.getInstance();
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            initViews();
+            setupWebView();
 
-        updateUI();
+            alertManager = new SosAlertManager(this);
+            socketManager = SocketManager.getInstance();
 
-        btnConfirmLocation.setOnClickListener(v -> startSosWorkflow());
-        btnCancelSos.setOnClickListener(v -> cancelEmergency());
-        btnBack.setOnClickListener(v -> finish());
-        btnCallResponder.setOnClickListener(v -> callResponder());
-        findViewById(R.id.btnCenterMap).setOnClickListener(v -> updateMapLocation());
+            updateUI();
 
-        setupSocketListeners();
-        requestNecessaryPermissions();
-        
-        if (sosId != null) {
-            observeSosStatus();
+            setupListeners();
+            setupSocketListeners();
+            requestNecessaryPermissions();
+            
+            // Lockdown: Prevent accidental exit
+            getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    if (currentState == State.ROUTING || currentState == State.TRACKING) {
+                        Toast.makeText(SosWorkflowActivity.this, "Emergency is active. Use Cancel button to exit.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        setEnabled(false);
+                        getOnBackPressedDispatcher().onBackPressed();
+                    }
+                }
+            });
+
+            registerReceiver(batteryReceiver, new android.content.IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+
+            if (sosId != null) {
+                handler.postDelayed(this::observeSosStatus, 500);
+            }
+        } catch (Throwable e) {
+            Log.e("Workflow", "Fatal crash in onCreate", e);
+            String detail = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
+            Toast.makeText(this, "SOS Workflow Error: " + detail, Toast.LENGTH_LONG).show();
+            finish();
         }
     }
 
+    private void setupListeners() {
+        if (btnConfirmLocation != null) btnConfirmLocation.setOnClickListener(v -> startSosWorkflow());
+        if (btnCancelSos != null) btnCancelSos.setOnClickListener(v -> attemptCancelEmergency());
+        if (btnBack != null) btnBack.setOnClickListener(v -> finish());
+        
+        View btnCenterMap = findViewById(R.id.btnCenterMap);
+        if (btnCenterMap != null) btnCenterMap.setOnClickListener(v -> updateMapLocation());
+    }
+
     private void observeSosStatus() {
-        RepositoryProvider.getSosRepository().getSosStatus(sosId, new SosRepository.SosCallback() {
+        if (isFinishing() || isDestroyed() || sosId == null) return;
+        Log.d("Workflow", "Requesting current status from Repository");
+        
+        RepositoryProvider.getSosRepository(this).getSosStatus(sosId, new SosRepository.SosCallback() {
             @Override
             public void onStatusChanged(SosStatus status) {
-                runOnUiThread(() -> handleStatusUpdate(status));
+                handler.post(() -> {
+                    Log.d("Workflow", "Repository Status changed to: " + status);
+                    handleStatusUpdate(status);
+                });
             }
 
             @Override
             public void onError(String message) {
-                Log.e("SOS", "Status Error: " + message);
+                Log.e("Workflow", "Repository error: " + message);
             }
         });
     }
 
+    private void handleStatusUpdate(SosStatus status) {
+        if (isFinishing() || isDestroyed()) return;
+        this.currentRepositoryStatus = status;
+        
+        // Map Repository Status to Workflow State
+        if (status == SosStatus.PENDING || status == SosStatus.SENT || status == SosStatus.ACKNOWLEDGED) {
+            currentState = State.ROUTING;
+        } else if (status == SosStatus.RESPONDER_ASSIGNED || status == SosStatus.RESPONDER_EN_ROUTE || status == SosStatus.ARRIVED) {
+            currentState = State.TRACKING;
+        } else if (status == SosStatus.RESOLVED) {
+            currentState = State.COMPLETED;
+            clearPersistentSos();
+        } else if (status == SosStatus.CANCELLED || status == SosStatus.FAILED) {
+            clearPersistentSos();
+            finish();
+            return;
+        }
+
+        // Show Responder Card once assigned (and keep it shown for subsequent tracking states)
+        if (status == SosStatus.RESPONDER_ASSIGNED || status == SosStatus.RESPONDER_EN_ROUTE || status == SosStatus.ARRIVED) {
+            if (responderCard != null && responderCard.getVisibility() != View.VISIBLE) {
+                responderCard.setVisibility(View.VISIBLE);
+                responderCard.setAlpha(1.0f);
+                if (bottomSheetBehavior != null) {
+                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                }
+            }
+            if (tvEta != null) tvEta.setVisibility(View.VISIBLE);
+            if (tvResponderName != null) tvResponderName.setText(R.string.tracking_default_agent_name);
+        }
+
+        updateUI();
+    }
+
+    private void clearPersistentSos() {
+        getSharedPreferences("sos_profile_prefs", MODE_PRIVATE).edit()
+                .putBoolean("is_sos_active", false)
+                .remove("active_sos_id")
+                .remove("active_sos_type")
+                .apply();
+    }
+
+    private void attemptCancelEmergency() {
+        if (currentState == State.COMPLETED) {
+            finish();
+            return;
+        }
+
+        BiometricManager biometricManager = BiometricManager.from(this);
+        int canAuth = biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_STRONG | BiometricManager.Authenticators.DEVICE_CREDENTIAL);
+        
+        if (canAuth == BiometricManager.BIOMETRIC_SUCCESS) {
+            BiometricPrompt.PromptInfo promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                    .setTitle(getString(R.string.verify_identity))
+                    .setSubtitle(getString(R.string.confirm_cancel_subtitle))
+                    .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG | BiometricManager.Authenticators.DEVICE_CREDENTIAL)
+                    .build();
+
+            BiometricPrompt biometricPrompt = new BiometricPrompt(this, ContextCompat.getMainExecutor(this),
+                    new BiometricPrompt.AuthenticationCallback() {
+                        @Override
+                        public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
+                            super.onAuthenticationSucceeded(result);
+                            cancelEmergency();
+                        }
+
+                        @Override
+                        public void onAuthenticationError(int errorCode, @NonNull CharSequence errString) {
+                            super.onAuthenticationError(errorCode, errString);
+                            Toast.makeText(SosWorkflowActivity.this, getString(R.string.security_verification_failed), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+            biometricPrompt.authenticate(promptInfo);
+        } else {
+            // Fallback for devices without biometrics/lock
+            cancelEmergency();
+        }
+    }
+
     private void cancelEmergency() {
+        Log.d("Workflow", "cancelEmergency clicked. State: " + currentState);
         isCancelled = true;
-        if (sosId != null) {
-            RepositoryProvider.getSosRepository().cancelSos(sosId, new SosRepository.SosCallback() {
+        
+        // Immediately clear persistent state so user isn't trapped in SOS loop
+        clearPersistentSos();
+
+        if (sosId != null && currentState != State.COMPLETED) {
+            RepositoryProvider.getSosRepository(this).cancelSos(sosId, new SosRepository.SosCallback() {
                 @Override public void onStatusChanged(SosStatus status) {
-                    runOnUiThread(() -> updateUI());
+                    // Status already cleared locally
                 }
                 @Override public void onError(String message) {}
             });
+        }
+        
+        navigateToDashboard();
+    }
+
+    private void navigateToDashboard() {
+        // If this activity is the task root (e.g. started from Splash), 
+        // we must start Dashboard explicitly or the app will close.
+        if (isTaskRoot()) {
+            Intent intent = new Intent(this, DashboardActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
         finish();
     }
@@ -147,6 +314,8 @@ public class SosWorkflowActivity extends BaseActivity {
     @SuppressLint("SetJavaScriptEnabled")
     private void setupWebView() {
         mapWebView = findViewById(R.id.mapView);
+        if (mapWebView == null) return;
+        
         WebSettings settings = mapWebView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
@@ -156,6 +325,9 @@ public class SosWorkflowActivity extends BaseActivity {
             public void onPageFinished(WebView view, String url) {
                 isMapLoaded = true;
                 updateMapLocation();
+                if (currentState == State.ROUTING || currentState == State.TRACKING) {
+                    mapWebView.evaluateJavascript("startRadar()", null);
+                }
             }
         });
 
@@ -163,7 +335,7 @@ public class SosWorkflowActivity extends BaseActivity {
     }
 
     private void updateMapLocation() {
-        if (!isMapLoaded) return;
+        if (!isMapLoaded || mapWebView == null) return;
         mapWebView.evaluateJavascript("setLocation(" + userLat + "," + userLng + ", 'Your Location')", null);
     }
 
@@ -214,13 +386,29 @@ public class SosWorkflowActivity extends BaseActivity {
                         
                         float accuracy = location.getAccuracy();
                         if (tvLocationText != null) {
-                            if (accuracy > 25) {
-                                tvLocationText.setText(String.format(Locale.getDefault(), 
-                                    "Low GPS Accuracy (%.0fm). Move to open area.", accuracy));
-                                tvLocationText.setTextColor(getColor(R.color.sos_red));
+                            String accuracyStatus;
+                            int color;
+                            if (accuracy <= 10) {
+                                accuracyStatus = getString(R.string.gps_excellent);
+                                color = getColor(R.color.green_verified);
+                            } else if (accuracy <= 25) {
+                                accuracyStatus = getString(R.string.gps_good);
+                                color = getColor(R.color.green_verified);
+                            } else if (accuracy <= 50) {
+                                accuracyStatus = getString(R.string.gps_fair);
+                                color = getColor(R.color.severity_yellow);
                             } else {
-                                tvLocationText.setText(String.format(Locale.getDefault(), "Live Lat: %.5f, Lng: %.5f", userLat, userLng));
-                                tvLocationText.setTextColor(getColor(R.color.text_secondary));
+                                accuracyStatus = getString(R.string.gps_poor);
+                                color = getColor(R.color.sos_red);
+                            }
+                            
+                            String locDetail = String.format(Locale.getDefault(), "Live Lat: %.5f, Lng: %.5f\nGPS Accuracy: %.0fm (%s)", 
+                                    userLat, userLng, accuracy, accuracyStatus);
+                            tvLocationText.setText(locDetail);
+                            tvLocationText.setTextColor(color);
+                            
+                            if (accuracy > 25) {
+                                Toast.makeText(SosWorkflowActivity.this, "Low GPS Accuracy. Move to open area.", Toast.LENGTH_SHORT).show();
                             }
                         }
                         
@@ -246,7 +434,6 @@ public class SosWorkflowActivity extends BaseActivity {
     }
 
     private void initViews() {
-        rootLayout = findViewById(android.R.id.content);
         phaseLocation = findViewById(R.id.phaseLocation);
         phaseTracking = findViewById(R.id.phaseTracking);
         responderCard = findViewById(R.id.responderCard);
@@ -262,9 +449,6 @@ public class SosWorkflowActivity extends BaseActivity {
         pbRouting = findViewById(R.id.pbRouting);
         spinnerVictims = findViewById(R.id.spinnerVictims);
         btnConfirmLocation = findViewById(R.id.btnConfirmLocation);
-        btnConfirmLocation.setEnabled(false);
-        btnConfirmLocation.setText(R.string.waiting_for_gps);
-        btnConfirmLocation.setAlpha(0.6f);
         btnCancelSos = findViewById(R.id.btnCancelSos);
         btnBack = findViewById(R.id.btnBack);
         btnCallResponder = findViewById(R.id.btnCallResponder);
@@ -272,9 +456,11 @@ public class SosWorkflowActivity extends BaseActivity {
         vAlertOverlay = findViewById(R.id.vAlertOverlay);
 
         View bottomSheet = findViewById(R.id.bottomSheet);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        if (bottomSheet != null) {
+            bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        }
 
-        btnMuteSiren.setOnClickListener(v -> toggleMute());
+        if (btnMuteSiren != null) btnMuteSiren.setOnClickListener(v -> toggleMute());
     }
 
     private void setupSocketListeners() {
@@ -283,12 +469,10 @@ public class SosWorkflowActivity extends BaseActivity {
                 try {
                     JSONObject data = (JSONObject) args[0];
                     String statusStr = data.getString("status");
-                    
-                    // Map string to Enum
-                    SosStatus status = SosStatus.valueOf(statusStr);
+                    SosStatus status = SosStatus.valueOf(statusStr.toUpperCase().trim());
                     handler.post(() -> handleStatusUpdate(status));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.e("Workflow", "Socket status parse error", e);
                 }
             }
         });
@@ -308,88 +492,54 @@ public class SosWorkflowActivity extends BaseActivity {
     }
 
     private void updateResponderOnMap(double lat, double lng) {
-        if (!isMapLoaded) return;
+        if (!isMapLoaded || mapWebView == null) return;
         mapWebView.evaluateJavascript("setResponder(" + lat + "," + lng + ", 'Rescue Team')", null);
         mapWebView.evaluateJavascript("updateRoute(" + lat + "," + lng + "," + userLat + "," + userLng + ")", null);
         mapWebView.evaluateJavascript("fitToMarkers(" + userLat + "," + userLng + "," + lat + "," + lng + ")", null);
     }
 
-    private void handleStatusUpdate(SosStatus status) {
-        switch (status) {
-            case SENT:
-            case ACKNOWLEDGED:
-                currentState = State.ROUTING;
-                updateUI();
-                break;
-            case RESPONDER_ASSIGNED:
-                currentState = State.TRACKING;
-                responderCard.setVisibility(View.VISIBLE);
-                responderCard.setAlpha(1.0f);
-                tvEta.setVisibility(View.VISIBLE);
-                tvResponderName.setText(R.string.tracking_default_agent_name);
-                tvResponderId.setText("Unit #SIM-101");
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-                updateUI();
-                break;
-            case RESPONDER_EN_ROUTE:
-                currentState = State.TRACKING;
-                updateUI();
-                break;
-            case ARRIVED:
-                currentState = State.TRACKING;
-                updateUI();
-                break;
-            case RESOLVED:
-                currentState = State.COMPLETED;
-                updateUI();
-                break;
-        }
-    }
-
     private void startSosWorkflow() {
-        TransitionManager.beginDelayedTransition(rootLayout);
+        Log.d("Workflow", "startSosWorkflow");
         currentState = State.ROUTING;
         updateUI();
 
-        if (isMapLoaded) {
+        if (isMapLoaded && mapWebView != null) {
             mapWebView.evaluateJavascript("startRadar()", null);
         }
 
         SharedPreferences prefs = getSharedPreferences("sos_profile_prefs", MODE_PRIVATE);
         String userName = prefs.getString("name", "User");
-        String victims = (spinnerVictims != null && spinnerVictims.getSelectedItem() != null)
-                ? spinnerVictims.getSelectedItem().toString()
-                : "1";
 
-        socketManager.connect(prefs.getString("sos_access_token", null));
+        // Use Repository to trigger SOS
+        sosId = "SOS_" + System.currentTimeMillis();
+        SosEvent event = new SosEvent(sosId, userName, incidentType, userLat, userLng, 0);
+        
+        RepositoryProvider.getSosRepository(this).createSos(event, new SosRepository.SosCallback() {
+            @Override
+            public void onStatusChanged(SosStatus status) {
+                handler.post(() -> {
+                    Log.d("Workflow", "startSosWorkflow: Callback Status -> " + status);
+                    handleStatusUpdate(status);
+                });
+            }
 
-        // Create Robust SOS Payload
-        JSONObject sosData = new JSONObject();
-        try {
-            sosData.put("event", "SOS_CREATED");
-            sosData.put("sosId", "SOS_" + System.currentTimeMillis());
-            sosData.put("type", incidentType);
-            sosData.put("victims", victims);
-            sosData.put("userName", userName);
-            sosData.put("latitude", userLat);
-            sosData.put("longitude", userLng);
-            sosData.put("timestamp", System.currentTimeMillis());
-            sosData.put("status", "SIGNAL_SENT");
-            
-            socketManager.emit("sos_request", sosData);
-        } catch (JSONException e) {
-            e.printStackTrace();
+            @Override
+            public void onError(String message) {
+                Log.e("Workflow", "createSos error: " + message);
+                handler.post(() -> Toast.makeText(SosWorkflowActivity.this, message, Toast.LENGTH_SHORT).show());
+            }
+        });
+
+        if (alertManager != null) {
+            alertManager.startSiren(isSilentMode);
+            alertManager.showCenterAlert(userName, incidentType);
         }
-
-        alertManager.startSiren();
-        alertManager.showCenterAlert(userName, incidentType);
-        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        if (bottomSheetBehavior != null) {
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        }
 
         // Start Cancellation Window Logic
         startCancellationTimer();
-        
-        // Listen to the new SOS session
-        observeSosStatus();
     }
 
     private void startCancellationTimer() {
@@ -400,11 +550,11 @@ public class SosWorkflowActivity extends BaseActivity {
                 if (isCancelled || currentState == State.COMPLETED) return;
                 
                 if (cancelCountdown > 0) {
-                    btnCancelSos.setText(getString(R.string.cancel_sos_countdown, cancelCountdown));
+                    if (btnCancelSos != null) btnCancelSos.setText(getString(R.string.cancel_sos_countdown, cancelCountdown));
                     cancelCountdown--;
                     handler.postDelayed(this, 1000);
                 } else {
-                    btnCancelSos.setText(R.string.cancel_emergency);
+                    if (btnCancelSos != null) btnCancelSos.setText(R.string.cancel_emergency);
                 }
             }
         };
@@ -412,35 +562,50 @@ public class SosWorkflowActivity extends BaseActivity {
     }
 
     private void updateUI() {
-        TransitionManager.beginDelayedTransition(rootLayout);
-        phaseLocation.setVisibility(currentState == State.LOCATION ? View.VISIBLE : View.GONE);
-        phaseTracking.setVisibility(currentState != State.LOCATION ? View.VISIBLE : View.GONE);
-        vAlertOverlay.setVisibility(currentState != State.LOCATION && currentState != State.COMPLETED ? View.VISIBLE : View.GONE);
+        if (phaseLocation != null) phaseLocation.setVisibility(currentState == State.LOCATION ? View.VISIBLE : View.GONE);
+        if (phaseTracking != null) phaseTracking.setVisibility(currentState != State.LOCATION ? View.VISIBLE : View.GONE);
+        if (vAlertOverlay != null) vAlertOverlay.setVisibility(currentState != State.LOCATION && currentState != State.COMPLETED ? View.VISIBLE : View.GONE);
 
         if (currentState == State.ROUTING) {
-            tvCurrentStatus.setText(R.string.broadcasting_signal);
-            tvCurrentStatus.setTextColor(getColor(R.color.sos_red));
-            pbRouting.setVisibility(View.VISIBLE);
-            tvHeaderTitle.setText(R.string.active_sos_header);
+            if (tvCurrentStatus != null) {
+                if (currentRepositoryStatus == SosStatus.PENDING) {
+                    tvCurrentStatus.setText(R.string.broadcasting_signal);
+                } else if (currentRepositoryStatus == SosStatus.SENT) {
+                    tvCurrentStatus.setText(R.string.signal_reached_center);
+                } else if (currentRepositoryStatus == SosStatus.ACKNOWLEDGED) {
+                    tvCurrentStatus.setText(R.string.awaiting_responder);
+                } else {
+                    tvCurrentStatus.setText(R.string.broadcasting_signal);
+                }
+                tvCurrentStatus.setTextColor(getColor(R.color.sos_red));
+            }
+            if (pbRouting != null) pbRouting.setVisibility(View.VISIBLE);
+            if (tvHeaderTitle != null) tvHeaderTitle.setText(R.string.active_sos_header);
             startHeaderPulse();
         } else if (currentState == State.TRACKING) {
-            tvCurrentStatus.setText(R.string.rescue_on_the_way);
-            pbRouting.setVisibility(View.GONE);
+            if (tvCurrentStatus != null) tvCurrentStatus.setText(R.string.rescue_on_the_way);
+            if (pbRouting != null) pbRouting.setVisibility(View.GONE);
+            if (isMapLoaded && mapWebView != null) mapWebView.evaluateJavascript("startRadar()", null);
         } else if (currentState == State.COMPLETED) {
-            tvCurrentStatus.setText(R.string.emergency_assisted_closed);
-            tvCurrentStatus.setTextColor(getColor(R.color.green_verified));
-            pbRouting.setVisibility(View.GONE);
-            btnCancelSos.setText(R.string.return_to_dashboard);
-            btnCancelSos.setTextColor(getColor(R.color.fb_blue));
-            btnBack.setVisibility(View.VISIBLE);
-            alertManager.stopSiren();
-            if (isMapLoaded) mapWebView.evaluateJavascript("stopRadar()", null);
+            if (tvCurrentStatus != null) {
+                tvCurrentStatus.setText(R.string.emergency_assisted_closed);
+                tvCurrentStatus.setTextColor(getColor(R.color.green_verified));
+            }
+            if (pbRouting != null) pbRouting.setVisibility(View.GONE);
+            if (btnCancelSos != null) {
+                btnCancelSos.setText(R.string.return_to_dashboard);
+                btnCancelSos.setTextColor(getColor(R.color.fb_blue));
+            }
+            if (btnBack != null) btnBack.setVisibility(View.VISIBLE);
+            if (alertManager != null) alertManager.stopSiren();
+            if (isMapLoaded && mapWebView != null) mapWebView.evaluateJavascript("stopRadar()", null);
         }
         
         buildTimeline();
     }
 
     private void startHeaderPulse() {
+        if (tvHeaderTitle == null) return;
         Animation anim = new AlphaAnimation(1.0f, 0.4f);
         anim.setDuration(800);
         anim.setRepeatMode(Animation.REVERSE);
@@ -453,12 +618,19 @@ public class SosWorkflowActivity extends BaseActivity {
         statusTimeline.removeAllViews();
         LayoutInflater inflater = LayoutInflater.from(this);
 
-        String[] steps = {"Signal Sent", "Responder Assigned", "Help is en-route", "Arrived at scene"};
+        String[] steps = {
+                getString(R.string.step_signal_sent),
+                getString(R.string.step_responder_assigned),
+                getString(R.string.step_help_enroute),
+                getString(R.string.step_arrived)
+        };
+        
+        // Refined logical progression for checkmarks
         boolean[] completed = {
-                true, 
-                currentState == State.TRACKING || currentState == State.COMPLETED, 
-                false, // In a mock, we don't have "EN_ROUTE" state in the enum yet
-                currentState == State.COMPLETED
+                currentRepositoryStatus == SosStatus.PENDING || currentRepositoryStatus == SosStatus.SENT || currentRepositoryStatus == SosStatus.ACKNOWLEDGED || currentRepositoryStatus.ordinal() > SosStatus.ACKNOWLEDGED.ordinal(),
+                currentRepositoryStatus == SosStatus.RESPONDER_ASSIGNED || currentRepositoryStatus.ordinal() > SosStatus.RESPONDER_ASSIGNED.ordinal(),
+                currentRepositoryStatus == SosStatus.RESPONDER_EN_ROUTE || currentRepositoryStatus.ordinal() > SosStatus.RESPONDER_EN_ROUTE.ordinal(),
+                currentRepositoryStatus == SosStatus.ARRIVED || currentRepositoryStatus == SosStatus.RESOLVED
         };
 
         for (int i = 0; i < steps.length; i++) {
@@ -468,28 +640,31 @@ public class SosWorkflowActivity extends BaseActivity {
             ImageView dot = stepView.findViewById(R.id.ivStatusDot);
             View line = stepView.findViewById(R.id.vStatusLine);
 
-            title.setText(steps[i]);
-            if (i == steps.length - 1) line.setVisibility(View.GONE);
+            if (title != null) title.setText(steps[i]);
+            if (i == steps.length - 1 && line != null) line.setVisibility(View.GONE);
 
             if (completed[i]) {
-                title.setAlpha(1.0f);
-                desc.setAlpha(1.0f);
-                dot.setAlpha(1.0f);
-                dot.setImageResource(R.drawable.ic_check);
-                dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.green_verified)));
-                desc.setText(R.string.completed);
+                if (title != null) title.setAlpha(1.0f);
+                if (desc != null) desc.setAlpha(1.0f);
+                if (dot != null) {
+                    dot.setAlpha(1.0f);
+                    dot.setImageResource(R.drawable.ic_check);
+                    dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.green_verified)));
+                }
+                if (desc != null) desc.setText(R.string.completed);
             } else if (i > 0 && completed[i-1]) {
-                title.setAlpha(1.0f);
-                desc.setAlpha(1.0f);
-                dot.setAlpha(1.0f);
-                dot.setImageResource(R.drawable.ic_clock);
-                desc.setText(R.string.in_progress);
-                
-                Animation pulse = new AlphaAnimation(1.0f, 0.3f);
-                pulse.setDuration(1000);
-                pulse.setRepeatMode(Animation.REVERSE);
-                pulse.setRepeatCount(Animation.INFINITE);
-                dot.startAnimation(pulse);
+                if (title != null) title.setAlpha(1.0f);
+                if (desc != null) desc.setAlpha(1.0f);
+                if (dot != null) {
+                    dot.setAlpha(1.0f);
+                    dot.setImageResource(R.drawable.ic_clock);
+                    Animation pulse = new AlphaAnimation(1.0f, 0.3f);
+                    pulse.setDuration(1000);
+                    pulse.setRepeatMode(Animation.REVERSE);
+                    pulse.setRepeatCount(Animation.INFINITE);
+                    dot.startAnimation(pulse);
+                }
+                if (desc != null) desc.setText(R.string.in_progress);
             }
 
             statusTimeline.addView(stepView);
@@ -503,11 +678,11 @@ public class SosWorkflowActivity extends BaseActivity {
     private void toggleMute() {
         isMuted = !isMuted;
         if (isMuted) {
-            alertManager.stopSiren();
-            btnMuteSiren.setText("Unmute Siren");
+            if (alertManager != null) alertManager.stopSiren();
+            if (btnMuteSiren != null) btnMuteSiren.setText(R.string.unmute_siren);
         } else {
-            alertManager.startSiren();
-            btnMuteSiren.setText("Mute Siren");
+            if (alertManager != null) alertManager.startSiren();
+            if (btnMuteSiren != null) btnMuteSiren.setText(R.string.mute_siren);
         }
     }
 
@@ -521,10 +696,21 @@ public class SosWorkflowActivity extends BaseActivity {
 
     @Override protected void onDestroy() {
         super.onDestroy();
-        alertManager.stopSiren();
-        alertManager.clearNotifications();
-        socketManager.off("status_update");
-        socketManager.off("agent_location");
-        handler.removeCallbacksAndMessages(null);
+        try {
+            unregisterReceiver(batteryReceiver);
+            if (alertManager != null) {
+                alertManager.stopSiren();
+                alertManager.clearNotifications();
+            }
+            if (socketManager != null) {
+                socketManager.off("status_update");
+                socketManager.off("agent_location");
+            }
+            if (handler != null) {
+                handler.removeCallbacksAndMessages(null);
+            }
+        } catch (Exception e) {
+            Log.e("Workflow", "Error in onDestroy clean-up", e);
+        }
     }
 }

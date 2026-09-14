@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_sos_shield"
+        app:tint="@color/sos_red"
+        android:contentDescription="@string/app_name" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/safety_check_title"
+        android:textColor="@color/text_dark"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:text="@string/safety_check_intro"
+        android:textColor="@color/text_gray"
+        android:textSize="14sp" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/border_gray">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <CheckBox
+                android:id="@+id/checkLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:enabled="false"
+                android:text="@string/high_accuracy_gps" />
+
+            <CheckBox
+                android:id="@+id/checkNotification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:checked="true"
+                android:enabled="false"
+                android:text="@string/rescue_notifications" />
+
+            <CheckBox
+                android:id="@+id/checkOffline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:checked="true"
+                android:enabled="false"
+                android:text="@string/offline_safety_cache" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <Button
+        android:id="@+id/btnContinue"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="@color/sos_red"
+        android:text="@string/confirm_readiness"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:cornerRadius="16dp" />
+
+</LinearLayout>

@@ -49,7 +49,8 @@ public final class TranslationManager {
     public void initialize(Context context) {
         if (isModelsReady) return;
 
-        loadCache(context);
+        // Load cache in background to prevent UI hang
+        new Thread(() -> loadCache(context)).start();
 
         String enTag = TranslateLanguage.ENGLISH;
         String kmTag = "km"; 

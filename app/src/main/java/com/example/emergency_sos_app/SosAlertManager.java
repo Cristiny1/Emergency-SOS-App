@@ -62,31 +62,36 @@ public class SosAlertManager {
     }
 
     public void startSiren() {
-        // FIX: RingtoneManager.getRingtone() can legitimately return null
-        // (e.g. no alarm sound configured on the device/emulator). The old
-        // code called .isPlaying() on a possibly-null siren, crashing every
-        // time SOS was triggered on affected devices.
-        try {
-            if (siren == null) {
-                Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-                siren = RingtoneManager.getRingtone(context, notification);
+        startSiren(false);
+    }
+
+    public void startSiren(boolean isSilent) {
+        if (!isSilent) {
+            try {
+                if (siren == null) {
+                    Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                    siren = RingtoneManager.getRingtone(context, notification);
+                }
+                if (siren != null) {
+                    try {
+                        if (!siren.isPlaying()) siren.play();
+                    } catch (Exception ignored) {
+                    }
+                } else {
+                    Log.w(TAG, "No siren ringtone available on this device.");
+                }
+            } catch (Exception e) {
+                Log.e(TAG, "Failed to play siren: " + e.getMessage());
             }
-            if (siren != null && !siren.isPlaying()) {
-                siren.play();
-            } else if (siren == null) {
-                Log.w(TAG, "No siren ringtone available on this device.");
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Failed to play siren: " + e.getMessage());
         }
 
-        // FIX: vibrator may be null (see constructor) — guard before use.
+        // Always vibrate for tactile feedback unless it's a deep-stealth mode
         if (vibrator != null) {
             long[] pattern = {0, 500, 200, 500};
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vibrator.vibrate(VibrationEffect.createWaveform(pattern, 0));
+                vibrator.vibrate(VibrationEffect.createWaveform(pattern, isSilent ? -1 : 0));
             } else {
-                vibrator.vibrate(pattern, 0);
+                vibrator.vibrate(pattern, isSilent ? -1 : 0);
             }
         }
     }

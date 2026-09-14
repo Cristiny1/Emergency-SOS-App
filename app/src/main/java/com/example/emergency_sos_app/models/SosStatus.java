@@ -9,6 +9,7 @@ public enum SosStatus {
     PENDING,
     SENT,
     ACKNOWLEDGED,
+    CANCELLING,
     RESPONDER_ASSIGNED,
     RESPONDER_EN_ROUTE,
     ARRIVED,

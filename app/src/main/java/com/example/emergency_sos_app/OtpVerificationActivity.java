@@ -213,9 +213,16 @@ public class OtpVerificationActivity extends BaseActivity {
         editor.putString("name", name);
         editor.putString("email", email);
         editor.putString("password", password);
-        editor.putString("phone", destination);
+        
+        // Only save destination as phone if it's not an email
+        String phone = getIntent().getStringExtra("PHONE");
+        if (phone != null) {
+            editor.putString("phone", phone);
+        } else if (!destination.contains("@")) {
+            editor.putString("phone", destination);
+        }
+        
         editor.putBoolean("remember", true); // Auto login after signup
-
         editor.apply();
 
         Toast.makeText(this, "Verification Successful!", Toast.LENGTH_LONG).show();

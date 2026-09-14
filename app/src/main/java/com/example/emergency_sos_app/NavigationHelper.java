@@ -2,22 +2,38 @@ package com.example.emergency_sos_app;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.widget.Toast;
+import android.util.Log;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class NavigationHelper {
 
+    private static final String TAG = "NavigationHelper";
+
     public static void setup(Activity activity, int currentId) {
         BottomNavigationView nav = activity.findViewById(R.id.bottomNavigation);
         if (nav == null) return;
 
+        // Set the current item without triggering the listener
+        nav.setOnItemSelectedListener(null);
         nav.setSelectedItemId(currentId);
 
         nav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
+            Log.d(TAG, "Selected: " + id + " (Current: " + currentId + ")");
 
-            if (id == currentId) return true;
+            // Haptic Feedback for premium feel
+            if (activity instanceof BaseActivity) {
+                ((BaseActivity) activity).playClickFeedback();
+            }
+
+            if (id == currentId) {
+                // If user clicks the current tab, refresh the screen
+                if (activity instanceof BaseActivity) {
+                    ((BaseActivity) activity).smoothRefresh();
+                }
+                return true;
+            }
 
             Class<?> target = null;
             if (id == R.id.nav_home) target = DashboardActivity.class;
@@ -28,27 +44,15 @@ public class NavigationHelper {
 
             if (target != null) {
                 Intent intent = new Intent(activity, target);
-                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                // Use a more standard flag for home/tab navigation
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 activity.startActivity(intent);
+                // Instant switch to avoid flicker
                 activity.overridePendingTransition(0, 0);
                 return true;
             }
 
             return false;
         });
-    }
-
-    private static void triggerFamilyAction(Activity activity) {
-        // Logic moved from activities for consistency
-        android.content.SharedPreferences sp = activity.getSharedPreferences("sos_profile_prefs", Activity.MODE_PRIVATE);
-        String number = sp.getString("phone", "");
-        if (number.isEmpty()) {
-            Toast.makeText(activity, "Set up family number in Profile", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(activity, ProfileActivity.class);
-            activity.startActivity(intent);
-        } else {
-            Intent intent = new Intent(Intent.ACTION_DIAL, android.net.Uri.parse("tel:" + number));
-            activity.startActivity(intent);
-        }
     }
 }

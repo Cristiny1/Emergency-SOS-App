@@ -38,7 +38,6 @@ public class ProfileActivity extends BaseActivity {
     private TextView tvMedName, tvMedAge, tvMedLanguage, tvBloodGroup;
     private TextView tvPregnancy, tvMedications, tvAllergies, tvContacts, tvConditions;
     private ImageView ivMedPhoto;
-    private Vibrator vibrator;
 
     private ActivityResultLauncher<String> photoPickerLauncher;
 
@@ -47,13 +46,11 @@ public class ProfileActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-
         initViews();
         setupPhotoPicker();
         loadMedicalId();
-        setupEdgeToEdge();
-        NavigationHelper.setup(this, R.id.nav_profile);
+        // setupEdgeToEdge(); // Removed - Handled by setupNavigation in Base
+        setupNavigation(R.id.nav_profile);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> {
             vibrate(20);
@@ -145,15 +142,6 @@ public class ProfileActivity extends BaseActivity {
             }
             return true;
         });
-    }
-
-    private void vibrate(long millis) {
-        if (vibrator == null) return;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(millis, VibrationEffect.DEFAULT_AMPLITUDE));
-        } else {
-            vibrator.vibrate(millis);
-        }
     }
 
     private SharedPreferences getPrefs() {

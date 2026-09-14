@@ -2,6 +2,7 @@ package com.example.emergency_sos_app.repositories;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import com.example.emergency_sos_app.models.SosEvent;
 import com.example.emergency_sos_app.models.SosStatus;
 
@@ -17,54 +18,75 @@ public class MockSosRepository implements SosRepository {
 
     @Override
     public void createSos(SosEvent sos, SosCallback callback) {
+        Log.d("MockRepo", "Creating SOS: " + sos.getSosId());
         this.lastEvent = sos;
         this.activeCallback = callback;
         
-        simulateProgression(callback);
+        // Start the rescue simulation logic
+        simulateProgression();
     }
 
-    private void simulateProgression(SosCallback callback) {
+    private void simulateProgression() {
         // Step 1: Pending (Local)
-        callback.onStatusChanged(SosStatus.PENDING);
+        updateStatus(SosStatus.PENDING);
 
-        // Step 2: Simulate network sending (1s)
+        // Step 2: Simulate network sending (500ms)
         handler.postDelayed(() -> {
-            updateStatus(SosStatus.SENT, callback);
+            updateStatus(SosStatus.SENT);
             
-            // Step 3: Server Acknowledged (2s later)
+            // Step 3: Server Acknowledged (1s later)
             handler.postDelayed(() -> {
-                updateStatus(SosStatus.ACKNOWLEDGED, callback);
+                updateStatus(SosStatus.ACKNOWLEDGED);
                 
-                // Step 4: Responder Assigned (3s later)
+                // Step 4: Responder Assigned (1.5s later)
                 handler.postDelayed(() -> {
-                    updateStatus(SosStatus.RESPONDER_ASSIGNED, callback);
+                    updateStatus(SosStatus.RESPONDER_ASSIGNED);
                     
-                    // Step 5: En Route (4s later)
+                    // Step 5: En Route (2s later)
                     handler.postDelayed(() -> {
-                        updateStatus(SosStatus.RESPONDER_EN_ROUTE, callback);
-                    }, 4000);
-                }, 3000);
-            }, 2000);
-        }, 1000);
+                        updateStatus(SosStatus.RESPONDER_EN_ROUTE);
+                        
+                        // Step 6: Arrived (2s later)
+                        handler.postDelayed(() -> {
+                            updateStatus(SosStatus.ARRIVED);
+                        }, 2000);
+                    }, 2000);
+                }, 1500);
+            }, 1000);
+        }, 500);
     }
 
-    private void updateStatus(SosStatus status, SosCallback callback) {
-        if (lastEvent != null) lastEvent.setStatus(status);
-        if (callback != null) callback.onStatusChanged(status);
+    private void updateStatus(SosStatus status) {
+        if (lastEvent != null) {
+            lastEvent.setStatus(status);
+            Log.d("MockRepo", "Status Updated: " + status);
+        }
+        if (activeCallback != null) {
+            try {
+                // Ensure UI notifications happen on the main thread if coming from handler
+                handler.post(() -> activeCallback.onStatusChanged(status));
+            } catch (Exception e) {
+                Log.e("MockRepo", "Callback notification error: " + e.getMessage());
+            }
+        }
     }
 
     @Override
     public void cancelSos(String sosId, SosCallback callback) {
+        Log.d("MockRepo", "Cancelling SOS: " + sosId);
+        this.activeCallback = callback;
         handler.removeCallbacksAndMessages(null); // Stop any pending mock updates
-        updateStatus(SosStatus.CANCELLED, callback);
+        updateStatus(SosStatus.CANCELLED);
     }
 
     @Override
     public void getSosStatus(String sosId, SosCallback callback) {
         if (lastEvent != null && lastEvent.getSosId().equals(sosId)) {
-            // If we are already simulating, just reconnect the callback
+            Log.d("MockRepo", "Re-binding SOS Status: " + lastEvent.getStatus());
             this.activeCallback = callback;
             callback.onStatusChanged(lastEvent.getStatus());
+        } else {
+            Log.d("MockRepo", "No active SOS found for ID: " + sosId);
         }
     }
 }

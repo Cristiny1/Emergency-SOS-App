@@ -10,7 +10,14 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.example.emergency_sos_app.models.ApiResponse;
+import com.example.emergency_sos_app.models.LoginData;
+import com.example.emergency_sos_app.models.LoginRequest;
+import com.example.emergency_sos_app.network.RetrofitClient;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginActivity extends BaseActivity {
 
@@ -31,7 +38,6 @@ public class LoginActivity extends BaseActivity {
         TextView tvGoToSignUp = findViewById(R.id.tvGoToSignUp);
 
         FrameLayout btnGoogleCircle = findViewById(R.id.btnGoogleCircle);
-        // FrameLayout btnAppleCircle = findViewById(R.id.btnAppleCircle);
         FrameLayout btnFacebookCircle = findViewById(R.id.btnFacebookCircle);
 
         SharedPreferences sp = getSharedPreferences("sos_profile_prefs", MODE_PRIVATE);
@@ -55,15 +61,75 @@ public class LoginActivity extends BaseActivity {
         });
 
         btnGoogleCircle.setOnClickListener(v ->
-                Toast.makeText(this,
-                        "Google Sign In coming soon.",
-                        Toast.LENGTH_SHORT).show());
+                Toast.makeText(this, "Google Sign In coming soon.", Toast.LENGTH_SHORT).show());
 
         btnFacebookCircle.setOnClickListener(v ->
-                Toast.makeText(this,
-                        "Facebook Sign In coming soon.",
-                        Toast.LENGTH_SHORT).show());
+                Toast.makeText(this, "Facebook Sign In coming soon.", Toast.LENGTH_SHORT).show());
     }
+
+//    private void attemptLogin() {
+//        String email = etEmail.getText().toString().trim();
+//        String password = etPassword.getText().toString().trim();
+//
+//        if (TextUtils.isEmpty(email)) {
+//            etEmail.setError(getString(R.string.email_required));
+//            etEmail.requestFocus();
+//            return;
+//        }
+//
+//        if (TextUtils.isEmpty(password)) {
+//            etPassword.setError(getString(R.string.enter_password));
+//            etPassword.requestFocus();
+//            return;
+//        }
+//
+//        // ✅ Call backend API instead of checking SharedPreferences
+//        loginWithBackend(email, password);
+//    }
+//
+//    // ✅ Add this new method below attemptLogin():
+//    private void loginWithBackend(String email, String password) {
+//        LoginRequest request = new LoginRequest(email, password);
+//
+//        RetrofitClient.getApiService().login(request).enqueue(new Callback<ApiResponse<LoginData>>() {
+//            @Override
+//            public void onResponse(Call<ApiResponse<LoginData>> call, Response<ApiResponse<LoginData>> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    ApiResponse<LoginData> apiResponse = response.body();
+//
+//                    if (apiResponse.success && apiResponse.data != null) {
+//                        RetrofitClient.saveToken(apiResponse.data.token, apiResponse.data.refreshToken);
+//
+//                        SharedPreferences sp = getSharedPreferences("sos_profile_prefs", MODE_PRIVATE);
+//                        SharedPreferences.Editor editor = sp.edit();
+//                        editor.putString("name", apiResponse.data.user.fullName);
+//                        editor.putString("email", apiResponse.data.user.email);
+//                        if (cbRememberMe.isChecked()) {
+//                            editor.putBoolean("remember", true);
+//                        }
+//                        editor.apply();
+//
+//                        Toast.makeText(LoginActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
+//                        Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+//                        intent.putExtra("USER_NAME", apiResponse.data.user.fullName);
+//                        startFadeActivity(intent);
+//                        finish();
+//                    } else {
+//                        Toast.makeText(LoginActivity.this, apiResponse.message, Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    Toast.makeText(LoginActivity.this, "Server error", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ApiResponse<LoginData>> call, Throwable t) {
+//                Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
+
 
     private void attemptLogin() {
 
@@ -71,13 +137,13 @@ public class LoginActivity extends BaseActivity {
         String password = etPassword.getText().toString().trim();
 
         if (TextUtils.isEmpty(email)) {
-            etEmail.setError("Email is required");
+            etEmail.setError(getString(R.string.email_required));
             etEmail.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            etPassword.setError("Password is required");
+            etPassword.setError(getString(R.string.enter_password));
             etPassword.requestFocus();
             return;
         }
@@ -100,21 +166,15 @@ public class LoginActivity extends BaseActivity {
 
             editor.apply();
 
-            Toast.makeText(this,
-                    "Login Successful",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
             intent.putExtra("USER_NAME", savedName);
-            startActivity(intent);
+            startFadeActivity(intent);
             finish();
 
         } else {
-
-            Toast.makeText(this,
-                    "Invalid Email or Password",
-                    Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(this, R.string.invalid_credentials, Toast.LENGTH_SHORT).show();
         }
     }
 }

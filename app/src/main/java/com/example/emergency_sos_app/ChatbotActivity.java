@@ -10,11 +10,15 @@ import android.os.Looper;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
@@ -41,6 +45,8 @@ public class ChatbotActivity extends BaseActivity implements ChatAdapter.OnActio
     private ImageView btnMic;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private SpeechRecognizer speechRecognizer;
+    private TextToSpeech textToSpeech;
+    private boolean isTtsEnabled = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +56,26 @@ public class ChatbotActivity extends BaseActivity implements ChatAdapter.OnActio
         setupEdgeToEdge();
         initViews();
         setupSpeech();
+        initTTS();
         
         postBotMessage("Hello! I am your AI Safety Assistant. How can I help you today?");
+    }
+
+    private void initTTS() {
+        textToSpeech = new TextToSpeech(this, status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                String lang = LanguageManager.getLanguage(this);
+                // Use a proper locale for Khmer if supported, else fallback
+                Locale locale = LanguageManager.LANG_KHMER.equals(lang) ? new Locale("km", "KH") : Locale.US;
+                textToSpeech.setLanguage(locale);
+            }
+        });
+    }
+
+    private void speak(String text) {
+        if (isTtsEnabled && textToSpeech != null) {
+            textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null, "SafetyTTS");
+        }
     }
 
     private void initViews() {
@@ -99,6 +123,8 @@ public class ChatbotActivity extends BaseActivity implements ChatAdapter.OnActio
                     messages.add(new ChatMessage(response));
                     adapter.notifyItemInserted(messages.size() - 1);
                     rvChat.smoothScrollToPosition(messages.size() - 1);
+                    
+                    if (response.message != null) speak(response.message);
                 });
             }
 
@@ -106,7 +132,7 @@ public class ChatbotActivity extends BaseActivity implements ChatAdapter.OnActio
             public void onError(Throwable t) {
                 runOnUiThread(() -> {
                     removeTyping(typing);
-                    postBotMessage("I am having trouble connecting to my AI brain. Please use the SOS button if you are in danger.");
+                    postBotMessage(getString(R.string.offline_ai_message));
                 });
             }
         });
@@ -129,7 +155,6 @@ public class ChatbotActivity extends BaseActivity implements ChatAdapter.OnActio
     // --- Action Button Handlers ---
     @Override
     public void onSOSClick() {
-        // Trigger existing SOS flow
         Intent intent = new Intent(this, DashboardActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
@@ -138,7 +163,7 @@ public class ChatbotActivity extends BaseActivity implements ChatAdapter.OnActio
 
     @Override
     public void onCallClick(String category) {
-        String number = "117"; // Default
+        String number = "117"; 
         if ("FIRE".equals(category)) number = "118";
         
         startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number)));
@@ -187,17 +212,23 @@ public class ChatbotActivity extends BaseActivity implements ChatAdapter.OnActio
 
     private void setupEdgeToEdge() {
         View root = findViewById(R.id.chatbotRoot);
-        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
-            int top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
-            int bottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
-            v.setPadding(0, top, 0, bottom);
-            return WindowInsetsCompat.CONSUMED;
-        });
+        if (root != null) {
+            ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+                int top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+                int bottom = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
+                v.setPadding(0, top, 0, bottom);
+                return WindowInsetsCompat.CONSUMED;
+            });
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (speechRecognizer != null) speechRecognizer.destroy();
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
     }
 }

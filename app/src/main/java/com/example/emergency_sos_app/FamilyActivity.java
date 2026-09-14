@@ -49,8 +49,7 @@ public class FamilyActivity extends BaseActivity {
 
         container = findViewById(R.id.familyMembersContainer);
 
-        setupEdgeToEdge();
-        NavigationHelper.setup(this, R.id.nav_family);
+        setupNavigation(R.id.nav_family);
 
         findViewById(R.id.btnCheckIn).setOnClickListener(v -> 
                 Toast.makeText(this, "Location shared with family circle.", Toast.LENGTH_LONG).show());

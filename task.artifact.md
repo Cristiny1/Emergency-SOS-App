@@ -1,0 +1,5 @@
+- [x] Integrate Text-to-Speech (TTS) for AI Chat
+- [x] Implement Video Capture for Danger Reports
+- [x] Finalize Voice Description recording logic
+- [x] Add Battery Monitor for Emergency Power Saving
+- [x] Final Build & Verification

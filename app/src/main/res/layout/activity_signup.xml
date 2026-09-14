@@ -16,35 +16,6 @@
         android:layout_marginTop="60dp"
         android:paddingBottom="24dp">
 
-        <!-- Avatar with plus badge -->
-<!--        <FrameLayout-->
-<!--            android:layout_width="88dp"-->
-<!--            android:layout_height="88dp"-->
-<!--            android:layout_gravity="center_horizontal">-->
-
-<!--            <View-->
-<!--                android:layout_width="88dp"-->
-<!--                android:layout_height="88dp"-->
-<!--                android:background="@drawable/bg_circle_light_primary" />-->
-
-<!--&lt;!&ndash;            <ImageView&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_width="48dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_height="55dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_gravity="center"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:contentDescription="@string/full_name_label"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:src="@drawable/ic_personal" />&ndash;&gt;-->
-
-<!--&lt;!&ndash;            <TextView&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_width="26dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_height="26dp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:layout_gravity="top|end"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:background="@drawable/bg_button_primary"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:gravity="center"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:text="+"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:textColor="@color/white"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:textSize="16sp"&ndash;&gt;-->
-<!--&lt;!&ndash;                android:textStyle="bold" />&ndash;&gt;-->
-<!--        </FrameLayout>-->
         <!-- Logo -->
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ivLogo"
@@ -119,21 +90,6 @@
             android:textColor="@color/text_dark"
             android:textSize="14sp" />
 
-        <!-- Phone Number -->
-
-        <!-- Verification Method -->
-
-        <!-- Phone Number -->
-
-        <!-- Verification Method -->
-
-        <RadioGroup
-            android:id="@+id/rgVerifyMethod"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"/>
-
         <!-- Password -->
         <TextView
             android:layout_width="wrap_content"
@@ -163,6 +119,36 @@
                 android:textColorHint="@color/text_gray"
                 android:textColor="@color/text_dark"
                 android:textSize="14sp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Confirm Password -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/confirm_password_label"
+            android:textColor="@color/text_dark"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:hintEnabled="false"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/text_gray">
+        <EditText
+            android:id="@+id/etConfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints=""
+            android:background="@drawable/bg_edittext"
+            android:hint="@string/confirm_password_label"
+            android:inputType="textPassword"
+            android:textColorHint="@color/text_gray"
+            android:textColor="@color/text_dark"
+            android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -231,21 +217,6 @@
                     android:src="@drawable/ic_google"
                     android:contentDescription="@string/continue_google" />
             </FrameLayout>
-
-<!--            <FrameLayout-->
-<!--                android:id="@+id/btnAppleCircle"-->
-<!--                android:layout_width="52dp"-->
-<!--                android:layout_height="52dp"-->
-<!--                android:layout_marginEnd="16dp"-->
-<!--                android:background="@drawable/bg_circle_white">-->
-
-<!--                <ImageView-->
-<!--                    android:layout_width="17dp"-->
-<!--                    android:layout_height="22dp"-->
-<!--                    android:layout_gravity="center"-->
-<!--                    android:contentDescription="@string/continue_apple"-->
-<!--                    android:src="@drawable/ic_apple" />-->
-<!--            </FrameLayout>-->
 
             <FrameLayout
                 android:id="@+id/btnFacebookCircle"

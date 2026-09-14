@@ -95,6 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🚨 Emergency"
+                android:textColor="@color/black"
                 app:chipBackgroundColor="@color/white"
                 app:chipStrokeColor="@color/sos_red"
                 app:chipStrokeWidth="1dp" />
@@ -147,7 +148,7 @@
                 android:layout_margin="4dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="10dp"
-                android:src="@drawable/ic_shoutout"
+                android:src="@drawable/voice"
                 app:tint="@color/text_gray"
                 android:contentDescription="Voice Input" />
 

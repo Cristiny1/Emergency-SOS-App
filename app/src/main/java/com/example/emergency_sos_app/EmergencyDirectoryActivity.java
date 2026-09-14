@@ -1,7 +1,6 @@
 package com.example.emergency_sos_app;
 
 import android.annotation.SuppressLint;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
@@ -20,8 +19,6 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -29,7 +26,6 @@ public class EmergencyDirectoryActivity extends BaseActivity {
 
     private WebView mapWebView;
     private boolean isMapLoaded = false;
-    private final List<Facility> facilities = new ArrayList<>();
     private FusedLocationProviderClient fusedLocationClient;
     private Location userLocation;
     private LinearLayout directoryContainer;
@@ -46,7 +42,6 @@ public class EmergencyDirectoryActivity extends BaseActivity {
         setupWebView();
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
-        loadData();
         requestUserLocation();
     }
 
@@ -70,25 +65,34 @@ public class EmergencyDirectoryActivity extends BaseActivity {
     }
 
     private void refreshDirectory() {
+        directoryContainer.removeAllViews();
+        if (userLocation == null) return;
+
+        String filter = getIntent().getStringExtra("FILTER_TYPE");
+        List<ProximityManager.Facility> results = ProximityManager.getNearestFacilities(
+                userLocation.getLatitude(), userLocation.getLongitude(), filter);
+
+        for (ProximityManager.Facility f : results) {
+            addFacilityToUI(directoryContainer, f);
+        }
+        showMarkersOnMap(results);
+    }
+
+    private void showMarkersOnMap(List<ProximityManager.Facility> results) {
+        if (!isMapLoaded) return;
+        mapWebView.evaluateJavascript("clearMarkers()", null);
+        
+        // Show User Location on Map
         if (userLocation != null) {
-            for (Facility f : facilities) {
-                float[] results = new float[1];
-                Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(), 
-                                       f.locationLat, f.locationLng, results);
-                f.distance = results[0] / 1000f; // in km
-                f.travelTime = (int) (f.distance * 2.5); // Rough estimate: 2.5 min per km in city
-            }
-            Collections.sort(facilities, (f1, f2) -> Float.compare(f1.distance, f2.distance));
+            mapWebView.evaluateJavascript("setLocation(" + userLocation.getLatitude() + "," + userLocation.getLongitude() + ", 'You')", null);
         }
 
-        directoryContainer.removeAllViews();
-        String filter = getIntent().getStringExtra("FILTER_TYPE");
-        for (Facility f : facilities) {
-            if (filter == null || filter.isEmpty() || f.category.equals(filter)) {
-                addFacilityToUI(directoryContainer, f);
-            }
+        for (ProximityManager.Facility f : results) {
+            mapWebView.evaluateJavascript("addMarker(" + f.lat + "," + f.lng + ",'" + f.name + "','" + f.category + "')", null);
         }
-        showMarkersOnMap();
+        
+        // Zoom to fit all
+        mapWebView.evaluateJavascript("fitAllMarkers()", null);
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -102,7 +106,7 @@ public class EmergencyDirectoryActivity extends BaseActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 isMapLoaded = true;
-                showMarkersOnMap();
+                refreshDirectory();
             }
         });
         mapWebView.loadUrl("file:///android_asset/leaflet_map.html");
@@ -127,43 +131,14 @@ public class EmergencyDirectoryActivity extends BaseActivity {
         });
     }
 
-    private void showMarkersOnMap() {
-        if (!isMapLoaded) return;
-        mapWebView.evaluateJavascript("clearMarkers()", null);
-        
-        // Show User Location on Map
-        if (userLocation != null) {
-            mapWebView.evaluateJavascript("setLocation(" + userLocation.getLatitude() + "," + userLocation.getLongitude() + ", 'You')", null);
-        }
-
-        String filter = getIntent().getStringExtra("FILTER_TYPE");
-        for (Facility f : facilities) {
-            if (filter == null || filter.isEmpty() || f.category.equals(filter)) {
-                mapWebView.evaluateJavascript("addMarker(" + f.locationLat + "," + f.locationLng + ",'" + f.name + "','" + f.category + "')", null);
-            }
-        }
-        
-        // Zoom to fit all
-        mapWebView.evaluateJavascript("fitAllMarkers()", null);
-    }
-
-    private void loadData() {
-        facilities.clear();
-        facilities.add(new Facility("Siem Reap Provincial Police", "POLICE", "063760259", 13.3633, 103.8567));
-        facilities.add(new Facility("Siem Reap Fire Station", "FIRE", "012891100", 13.3556, 103.8544));
-        facilities.add(new Facility("Siem Reap Referral Hospital", "MEDICAL", "063761111", 13.3622, 103.8599));
-        facilities.add(new Facility("Angkor Hospital for Children", "MEDICAL", "063963409", 13.3639, 103.8547));
-        facilities.add(new Facility("Jayavarman VII Hospital", "MEDICAL", "063963409", 13.3761, 103.8592));
-    }
-
-    private void addFacilityToUI(LinearLayout container, Facility f) {
+    private void addFacilityToUI(LinearLayout container, ProximityManager.Facility f) {
         View view = LayoutInflater.from(this).inflate(R.layout.item_directory_facility, container, false);
         ((TextView)view.findViewById(R.id.tvFacilityName)).setText(f.name);
         ((TextView)view.findViewById(R.id.tvFacilityType)).setText(f.category);
 
-        if (f.distance > 0) {
-            ((TextView)view.findViewById(R.id.tvDistance)).setText(String.format(Locale.getDefault(), "%.1f km", f.distance));
-            ((TextView)view.findViewById(R.id.tvTravelTime)).setText(String.format(Locale.getDefault(), "%d mins", f.travelTime));
+        if (f.distanceKm > 0) {
+            ((TextView)view.findViewById(R.id.tvDistance)).setText(String.format(Locale.getDefault(), "%.1f km", f.distanceKm));
+            ((TextView)view.findViewById(R.id.tvTravelTime)).setText(String.format(Locale.getDefault(), "%d mins", f.travelTimeMins));
         }
 
         view.findViewById(R.id.btnCallFacility).setOnClickListener(v -> {
@@ -172,20 +147,10 @@ public class EmergencyDirectoryActivity extends BaseActivity {
 
         view.findViewById(R.id.btnNavFacility).setOnClickListener(v -> {
             if (isMapLoaded) {
-                mapWebView.evaluateJavascript("zoomTo(" + f.locationLat + "," + f.locationLng + ")", null);
+                mapWebView.evaluateJavascript("zoomTo(" + f.lat + "," + f.lng + ")", null);
             }
         });
 
         container.addView(view);
-    }
-
-    private static class Facility {
-        String name, category, phone;
-        double locationLat, locationLng;
-        float distance;
-        int travelTime;
-        Facility(String n, String c, String p, double lat, double lng) {
-            name = n; category = c; phone = p; locationLat = lat; locationLng = lng;
-        }
     }
 }

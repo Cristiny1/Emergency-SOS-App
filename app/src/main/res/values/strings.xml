@@ -56,6 +56,7 @@
     <string name="invalid_phone">Invalid Phone Number</string>
     <string name="password_min_length">Password must be at least 6 characters</string>
     <string name="enter_phone">Enter phone number</string>
+    <string name="confirm_password_label">Confirm Password</string>
 
     <string name="or_divider">Or</string>
     <string name="continue_google">Continue with Google</string>
@@ -78,7 +79,6 @@
     <string name="reset_password_title">Reset Password</string>
     <string name="reset_password_subtitle">Create a new secure password for your account.</string>
     <string name="new_password_label">New Password</string>
-    <string name="confirm_password_label">Confirm Password</string>
     <string name="reset_button">Reset Password</string>
     <string name="password_mismatch">Passwords do not match</string>
     <string name="password_reset_success">Password updated successfully. Please log in.</string>
@@ -126,7 +126,7 @@
     <string name="victims_need_help">Victims Need Help</string>
     <string name="send_sos_signal">SEND SOS SIGNAL</string>
     <string name="waiting_for_gps">WAITING FOR GPS...</string>
-    <string name="low_gps_accuracy">Low GPS Accuracy (%1$.0fm). Move to open area.</string>
+    <string name="low_gps_accuracy">Low GPS Accuracy (%.0fm). Move to open area.</string>
     <string name="broadcasting_signal">Broadcasting Help Signal...</string>
     <string name="rescue_on_the_way">Rescue is on the way!</string>
     <string name="cancel_sos_countdown">CANCEL SOS (%1$ds)</string>
@@ -151,6 +151,8 @@
     <string name="tracking_help_arrived">Help has Arrived!</string>
     <string name="tracking_arrival_confirmed">Arrival confirmed</string>
     <string name="tracking_map_layers_message">Map layers handled by Leaflet</string>
+    <string name="signal_reached_center">Signal Reached Center...</string>
+    <string name="awaiting_responder">Awaiting Responder Assignment...</string>
 
     <!-- Emergency Directory -->
     <string name="emergency_directory_title">Emergency Directory</string>
@@ -296,4 +298,39 @@
     <string name="tracking_eta_calculating">Calculating arrival time...</string>
     <string name="tracking_distance_placeholder">Distance: 2.3 km</string>
     <string name="tracking_cancel_button">CANCEL SOS</string>
+
+    <!-- Advanced Safety -->
+    <string name="gps_excellent">Excellent</string>
+    <string name="gps_good">Good</string>
+    <string name="gps_fair">Fair</string>
+    <string name="gps_poor">Poor</string>
+    <string name="gps_unavailable">Unavailable</string>
+    <string name="gps_status_label">GPS Status: %1$s (%2$.0fm)</string>
+    <string name="nearest_assistance_header">NEAREST EMERGENCY ASSISTANCE</string>
+    <string name="finding_police">Finding nearest Police...</string>
+    <string name="finding_hospital">Finding nearest Hospital...</string>
+    <string name="eta_minutes">%1$d min</string>
+    <string name="safety_check_title">Safety Readiness Check</string>
+    <string name="safety_check_intro">To keep you safe, the app needs permission to access your location and send alerts.</string>
+    <string name="high_accuracy_gps">High-Accuracy GPS</string>
+    <string name="rescue_notifications">Rescue Signal Notifications</string>
+    <string name="offline_safety_cache">Offline Safety Cache</string>
+    <string name="confirm_readiness">CONFIRM READINESS</string>
+    <string name="family_notified_toast">Family Circle Notified: %1$s Alert Sent.</string>
+    <string name="offline_ai_message">I am having trouble connecting to my AI brain. Please check your internet or use the SOS button if you are in danger.</string>
+    <string name="mute_siren">Mute Siren</string>
+    <string name="unmute_siren">Unmute Siren</string>
+    <string name="silent_signal_broadcasting">Silent Signal Broadcasting...</string>
+    <string name="emergency_signal_broadcasting">Emergency Signal Broadcasting...</string>
+    <string name="security_verification_failed">Security Verification Failed</string>
+    <string name="verify_identity">Verify Identity</string>
+    <string name="confirm_cancel_subtitle">Confirm cancellation of the SOS alert</string>
+    <string name="impact_detected_title">🚨 Impact Detected</string>
+    <string name="impact_detected_message">A potential crash or fall was detected. Do you need emergency assistance?</string>
+    <string name="impact_positive_btn">YES, CALL SOS</string>
+    <string name="impact_negative_btn">I am OK</string>
+    <string name="silent_rescue_mode">Silent Rescue Mode</string>
+    <string name="evidence_photo">Photo</string>
+    <string name="evidence_video">Video</string>
+    <string name="evidence_voice">Voice</string>
 </resources>

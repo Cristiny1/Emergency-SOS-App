@@ -52,7 +52,7 @@ public class ForgotPasswordActivity extends BaseActivity {
         boolean isPhone = rgMethod.getCheckedRadioButtonId() == R.id.rbPhone;
 
         if (TextUtils.isEmpty(identifier)) {
-            etIdentifier.setError("Required");
+            etIdentifier.setError(getString(R.string.email_required)); // General required error
             etIdentifier.requestFocus();
             return;
         }
@@ -62,7 +62,7 @@ public class ForgotPasswordActivity extends BaseActivity {
         String registeredValue = isPhone ? sp.getString("phone", "") : sp.getString("email", "");
 
         if (!identifier.equalsIgnoreCase(registeredValue)) {
-            String errorMsg = isPhone ? getString(R.string.phone_not_registered) : "This email is not registered";
+            String errorMsg = isPhone ? getString(R.string.phone_not_registered) : getString(R.string.email_not_registered);
             Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show();
             return;
         }

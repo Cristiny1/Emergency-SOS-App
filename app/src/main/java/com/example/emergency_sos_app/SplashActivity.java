@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
@@ -34,37 +35,53 @@ public class SplashActivity extends BaseActivity {
         logo.setScaleY(0.1f);
         logo.setAlpha(0f);
 
-        // 2. Rotation Animation (Spin round)
+        // 2. Rotation Animation (Spin round) - Professional faster entry
         logo.animate()
                 .rotation(720f)
-                .setDuration(2200)
+                .setDuration(800)
                 .setInterpolator(new AccelerateDecelerateInterpolator())
                 .start();
 
-        // 3. Grow and Fade-In Animation
+        // 3. Grow and Fade-In Animation - Rapid pop-in
         logo.animate()
                 .scaleX(1.0f)
                 .scaleY(1.0f)
                 .alpha(1.0f)
-                .setDuration(2000)
-                .setStartDelay(400)
+                .setDuration(800)
+                .setStartDelay(100) // Minimal delay
                 .setInterpolator(new OvershootInterpolator(1.2f))
                 .withEndAction(() -> {
                     // 4. Reveal Tagline
                     if (tagline != null) {
                         tagline.setVisibility(View.VISIBLE);
                         tagline.setAlpha(0f);
-                        tagline.animate().alpha(1.0f).setDuration(600).start();
+                        tagline.animate().alpha(1.0f).setDuration(300).start();
                     }
                     
-                    // Final delay before routing to allow user to see branding
-                    new Handler(Looper.getMainLooper()).postDelayed(this::performRouting, 1200);
+                    // Reduced delay for instant transition
+                    new Handler(Looper.getMainLooper()).postDelayed(this::performRouting, 400);
                 })
                 .start();
     }
 
     private void performRouting() {
         SharedPreferences sp = getSharedPreferences("sos_profile_prefs", MODE_PRIVATE);
+        
+        // --- EMERGENCY PERSISTENCE CHECK ---
+        boolean isSosActive = sp.getBoolean("is_sos_active", false);
+        if (isSosActive) {
+            String activeId = sp.getString("active_sos_id", null);
+            String activeType = sp.getString("active_sos_type", "MEDICAL");
+            
+            Log.d("Splash", "Emergency mode persist: " + activeId);
+            Intent intent = new Intent(this, SosWorkflowActivity.class);
+            intent.putExtra("SOS_ID", activeId);
+            intent.putExtra("INCIDENT_TYPE", activeType);
+            startFadeActivity(intent);
+            finish();
+            return;
+        }
+
         String email = sp.getString("email", "");
         boolean remember = sp.getBoolean("remember", false);
 
@@ -76,9 +93,14 @@ public class SplashActivity extends BaseActivity {
             // Logged out -> Login Screen
             intent = new Intent(this, LoginActivity.class);
         } else {
-            // Authenticated -> Dashboard
-            intent = new Intent(this, DashboardActivity.class);
-            intent.putExtra("USER_NAME", sp.getString("name", "User"));
+            // Authenticated
+            boolean safetyDone = sp.getBoolean("safety_check_done", false);
+            if (!safetyDone) {
+                intent = new Intent(this, SafetyCheckActivity.class);
+            } else {
+                intent = new Intent(this, DashboardActivity.class);
+                intent.putExtra("USER_NAME", sp.getString("name", "User"));
+            }
         }
 
         startFadeActivity(intent);

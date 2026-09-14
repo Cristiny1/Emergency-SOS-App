@@ -35,12 +35,11 @@ public class AlertsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alerts);
 
-        setupEdgeToEdge();
         initViews();
         setupRetrofit();
         
         fetchAlerts();
-        NavigationHelper.setup(this, R.id.nav_notifications);
+        setupNavigation(R.id.nav_notifications);
     }
 
     private void initViews() {

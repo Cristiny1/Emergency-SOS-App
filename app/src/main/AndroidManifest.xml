@@ -15,7 +15,13 @@
     <!-- Vibration -->
     <uses-permission android:name="android.permission.VIBRATE" />
 
+    <!-- Audio Recording for Danger Reports -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/logo"
         android:roundIcon="@mipmap/logo"
@@ -36,6 +42,10 @@
 
         <activity
             android:name=".WelcomeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".SafetyCheckActivity"
             android:exported="false" />
 
         <!-- Main screens -->
@@ -137,6 +147,22 @@
             android:name=".CalendarActivity"
             android:exported="false"
             android:launchMode="singleTop" />
+
+        <service
+            android:name=".SafetySensorService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name=".EmergencyWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/emergency_widget_info" />
+        </receiver>
 
 <!--        &lt;!&ndash; Google Maps API Key &ndash;&gt;-->
 <!--        <meta-data-->

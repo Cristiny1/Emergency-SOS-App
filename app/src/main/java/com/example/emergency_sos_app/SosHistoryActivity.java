@@ -25,9 +25,8 @@ public class SosHistoryActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sos_history);
 
-        setupEdgeToEdge();
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-        NavigationHelper.setup(this, 0); // Not in bottom nav
+        setupNavigation(0); // Not in bottom nav
 
         loadHistory();
     }
