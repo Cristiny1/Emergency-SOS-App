@@ -225,7 +225,7 @@ public class OtpVerificationActivity extends BaseActivity {
         editor.putBoolean("remember", true); // Auto login after signup
         editor.apply();
 
-        Toast.makeText(this, "Verification Successful!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.verification_successful, Toast.LENGTH_LONG).show();
 
         Intent intent = new Intent(OtpVerificationActivity.this, DashboardActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

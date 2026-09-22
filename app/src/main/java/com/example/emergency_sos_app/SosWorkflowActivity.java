@@ -105,7 +105,7 @@ public class SosWorkflowActivity extends BaseActivity {
 
     private void applyLowPowerMode() {
         if (currentState == State.TRACKING || currentState == State.ROUTING) {
-            Toast.makeText(this, "Low Battery: Emergency Power Saving Active", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.low_battery_warning, Toast.LENGTH_LONG).show();
             if (isMapLoaded && mapWebView != null) {
                 mapWebView.evaluateJavascript("stopRadar()", null);
             }
@@ -151,7 +151,7 @@ public class SosWorkflowActivity extends BaseActivity {
                 @Override
                 public void handleOnBackPressed() {
                     if (currentState == State.ROUTING || currentState == State.TRACKING) {
-                        Toast.makeText(SosWorkflowActivity.this, "Emergency is active. Use Cancel button to exit.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SosWorkflowActivity.this, R.string.emergency_active_exit_warning, Toast.LENGTH_SHORT).show();
                     } else {
                         setEnabled(false);
                         getOnBackPressedDispatcher().onBackPressed();
@@ -167,7 +167,7 @@ public class SosWorkflowActivity extends BaseActivity {
         } catch (Throwable e) {
             Log.e("Workflow", "Fatal crash in onCreate", e);
             String detail = e.getMessage() != null ? e.getMessage() : e.getClass().getSimpleName();
-            Toast.makeText(this, "SOS Workflow Error: " + detail, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.workflow_error_prefix, detail), Toast.LENGTH_LONG).show();
             finish();
         }
     }

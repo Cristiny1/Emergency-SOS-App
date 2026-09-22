@@ -75,7 +75,7 @@ public class AlertsActivity extends BaseActivity {
                     alerts.addAll(response.body().results);
                     adapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(AlertsActivity.this, "No active safety alerts", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AlertsActivity.this, R.string.no_active_alerts, Toast.LENGTH_SHORT).show();
                     loadMockAlerts();
                 }
             }

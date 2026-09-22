@@ -77,7 +77,7 @@ public class SosHistoryActivity extends BaseActivity {
             btnDelete.setOnClickListener(v -> {
                 HistoryManager.deleteEvent(this, event.timestamp);
                 loadHistory();
-                Toast.makeText(this, "Event deleted", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.event_deleted, Toast.LENGTH_SHORT).show();
             });
 
             container.addView(item);

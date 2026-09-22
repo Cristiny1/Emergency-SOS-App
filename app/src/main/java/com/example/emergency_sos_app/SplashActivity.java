@@ -9,10 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
+import android.widget.TextView;
 
 /**
  * Professional Splash Screen that handles initial routing and pre-loading.
- * Features a dynamic logo spin and grow animation sequence.
+ * Features an intelligent routing system based on user account status.
  */
 public class SplashActivity extends BaseActivity {
 
@@ -23,43 +24,39 @@ public class SplashActivity extends BaseActivity {
 
         View logo = findViewById(R.id.ivSplashLogo);
         View tagline = findViewById(R.id.layoutSplashTagline);
+        TextView tvStatus = findViewById(R.id.tvSplashStatus);
 
         // Pre-initialize background systems
-        TranslationManager.getInstance().initialize(this);
         SocketManager.getInstance().connect(null);
 
         // --- ANIMATION SEQUENCE ---
 
-        // 1. Initial State: Small and Invisible
+        // 1. Initial State
         logo.setScaleX(0.1f);
         logo.setScaleY(0.1f);
         logo.setAlpha(0f);
 
-        // 2. Rotation Animation (Spin round) - Professional faster entry
-        logo.animate()
-                .rotation(720f)
-                .setDuration(800)
-                .setInterpolator(new AccelerateDecelerateInterpolator())
-                .start();
-
-        // 3. Grow and Fade-In Animation - Rapid pop-in
+        // 2. Main Logo Animation
         logo.animate()
                 .scaleX(1.0f)
                 .scaleY(1.0f)
                 .alpha(1.0f)
-                .setDuration(800)
-                .setStartDelay(100) // Minimal delay
+                .setDuration(2000)
                 .setInterpolator(new OvershootInterpolator(1.2f))
                 .withEndAction(() -> {
-                    // 4. Reveal Tagline
+                    // 3. Reveal Tagline and Status
                     if (tagline != null) {
                         tagline.setVisibility(View.VISIBLE);
                         tagline.setAlpha(0f);
-                        tagline.animate().alpha(1.0f).setDuration(300).start();
+                        tagline.animate().alpha(1.0f).setDuration(500).start();
                     }
                     
-                    // Reduced delay for instant transition
-                    new Handler(Looper.getMainLooper()).postDelayed(this::performRouting, 400);
+                    if (tvStatus != null) {
+                        tvStatus.animate().alpha(1.0f).setDuration(800).start();
+                    }
+                    
+                    // Route after system "initialization"
+                    new Handler(Looper.getMainLooper()).postDelayed(this::performRouting, 1500);
                 })
                 .start();
     }
@@ -67,40 +64,33 @@ public class SplashActivity extends BaseActivity {
     private void performRouting() {
         SharedPreferences sp = getSharedPreferences("sos_profile_prefs", MODE_PRIVATE);
         
-        // --- EMERGENCY PERSISTENCE CHECK ---
+        // --- 1. EMERGENCY PERSISTENCE ---
         boolean isSosActive = sp.getBoolean("is_sos_active", false);
         if (isSosActive) {
-            String activeId = sp.getString("active_sos_id", null);
-            String activeType = sp.getString("active_sos_type", "MEDICAL");
-            
-            Log.d("Splash", "Emergency mode persist: " + activeId);
             Intent intent = new Intent(this, SosWorkflowActivity.class);
-            intent.putExtra("SOS_ID", activeId);
-            intent.putExtra("INCIDENT_TYPE", activeType);
+            intent.putExtra("SOS_ID", sp.getString("active_sos_id", null));
+            intent.putExtra("INCIDENT_TYPE", sp.getString("active_sos_type", "MEDICAL"));
             startFadeActivity(intent);
             finish();
             return;
         }
 
-        String email = sp.getString("email", "");
+        // --- 2. INTELLIGENT ROUTING ---
+        boolean hasAccount = sp.getBoolean("has_account", false);
         boolean remember = sp.getBoolean("remember", false);
+        String email = sp.getString("email", "");
 
         Intent intent;
-        if (email.isEmpty()) {
-            // New User -> Welcome Screen
+        if (!hasAccount || email.isEmpty()) {
+            // BRAND NEW USER -> Welcome Screen (Tutorial)
             intent = new Intent(this, WelcomeActivity.class);
         } else if (!remember) {
-            // Logged out -> Login Screen
+            // HAS ACCOUNT BUT LOGGED OUT -> Direct to Login
             intent = new Intent(this, LoginActivity.class);
         } else {
-            // Authenticated
-            boolean safetyDone = sp.getBoolean("safety_check_done", false);
-            if (!safetyDone) {
-                intent = new Intent(this, SafetyCheckActivity.class);
-            } else {
-                intent = new Intent(this, DashboardActivity.class);
-                intent.putExtra("USER_NAME", sp.getString("name", "User"));
-            }
+            // AUTHENTICATED -> Dashboard
+            intent = new Intent(this, DashboardActivity.class);
+            intent.putExtra("USER_NAME", sp.getString("name", "User"));
         }
 
         startFadeActivity(intent);

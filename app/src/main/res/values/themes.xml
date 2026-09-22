@@ -32,22 +32,22 @@
     </style>
 
     <style name="App.BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="android:layout_height">62dp</item>
-        <item name="itemIconTint">@color/nav_item_color</item>
-        <item name="itemTextColor">@color/nav_item_color</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="itemIconTint">@color/nav_item_selector</item>
+        <item name="itemTextColor">@color/nav_item_selector</item>
         <item name="itemRippleColor">@android:color/transparent</item>
         <item name="labelVisibilityMode">labeled</item>
         <item name="itemHorizontalTranslationEnabled">false</item>
         <item name="itemTextAppearanceActive">@style/NavText.Active</item>
         <item name="itemTextAppearanceInactive">@style/NavText.Inactive</item>
         <item name="background">@drawable/bg_floating_menu</item>
-        <item name="elevation">4dp</item>
+        <item name="elevation">8dp</item>
     </style>
 
     <style name="NavText.Active" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">11sp</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/text_dark</item>
+        <item name="android:textColor">@color/primary</item>
     </style>
 
     <style name="NavText.Inactive" parent="TextAppearance.MaterialComponents.Caption">

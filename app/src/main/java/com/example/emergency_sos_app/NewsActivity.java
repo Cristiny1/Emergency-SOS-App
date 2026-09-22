@@ -85,7 +85,7 @@ public class NewsActivity extends BaseActivity {
                     
                     adapter.notifyDataSetChanged();
                 } else {
-                    Toast.makeText(NewsActivity.this, "Failed to load news", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(NewsActivity.this, R.string.failed_load_news, Toast.LENGTH_SHORT).show();
                     loadMockData(); // Fallback if API key is invalid or quota reached
                 }
             }
@@ -93,7 +93,7 @@ public class NewsActivity extends BaseActivity {
             @Override
             public void onFailure(@NonNull Call<NewsModel.Response> call, @NonNull Throwable t) {
                 swipeRefresh.setRefreshing(false);
-                Toast.makeText(NewsActivity.this, "Network Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NewsActivity.this, R.string.network_error, Toast.LENGTH_SHORT).show();
                 loadMockData();
             }
         });

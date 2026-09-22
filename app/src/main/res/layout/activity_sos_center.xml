@@ -1,55 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#1A1A2E"
+    android:background="@color/text_dark"
     android:orientation="vertical"
-    android:padding="20dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_circle_white"
-            android:backgroundTint="#2E2E4E"
-            android:padding="10dp"
-            android:rotation="180"
-            android:src="@drawable/ic_chevron_right"
-            app:tint="@color/white"
-            xmlns:app="http://schemas.android.com/apk/res-auto" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="SOS CENTER MONITORING"
-            android:textColor="#E94560"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+    android:padding="24dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="Real-time Emergency Console"
-        android:textColor="#959595"
-        android:textSize="12sp" />
-
-    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        app:cardBackgroundColor="#16213E"
+        android:text="@string/sos_center_monitoring"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="@string/realtime_console"
+        android:textColor="@color/text_gray"
+        android:textSize="14sp"
+        android:gravity="center" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="24dp"
+        android:background="@color/border_gray"
+        android:alpha="0.3" />
+
+    <!-- Alert Box -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="#2A1A1A"
         app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+        app:strokeColor="@color/sos_red"
+        app:strokeWidth="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -57,60 +47,41 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:background="@drawable/bg_circle_white"
-                    android:backgroundTint="#E94560" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="ACTIVE SOS ALERT"
-                    android:textColor="#E94560"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="#2E2E4E" />
-
             <TextView
-                android:id="@+id/tvCenterUser"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/active_sos_alert"
+                android:textColor="@color/sos_red"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1" />
+
+            <TextView
+                android:id="@+id/tvActiveUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:text="User: Alex Johnson"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvCenterType"
+                android:id="@+id/tvActiveType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="Type: Medical Emergency"
-                android:textColor="#E94560"
+                android:textColor="@color/severity_yellow"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/tvCenterLocation"
+                android:id="@+id/tvActiveLocation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:text="Location: 12.3456, 103.5678\nDistrict 5, Phnom Penh"
-                android:textColor="#C0C0C0"
+                android:textColor="@color/text_gray"
                 android:textSize="13sp" />
 
             <LinearLayout
@@ -120,64 +91,57 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/btnCenterAssign"
+                    android:id="@+id/btnAssign"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:backgroundTint="#0F3460"
-                    android:text="Assign Team"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white" />
+                    android:text="@string/assign_team"
+                    android:backgroundTint="@color/primary"
+                    android:textAllCaps="false" />
 
                 <Button
-                    android:id="@+id/btnCenterResolve"
+                    android:id="@+id/btnResolve"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:backgroundTint="#228B22"
-                    android:text="Resolve Case"
-                    android:textAllCaps="false"
-                    android:textColor="@color/white" />
+                    android:text="@string/resolve_case"
+                    android:backgroundTint="@color/green_verified"
+                    android:textAllCaps="false" />
             </LinearLayout>
+
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Operation Logs"
+        android:text="@string/operation_logs"
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold" />
 
-    <ScrollView
+    <TextView
+        android:id="@+id/tvLogs"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="12dp"
-        android:background="#0D0D1F"
-        android:padding="12dp">
-
-        <TextView
-            android:id="@+id/tvCenterLogs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="monospace"
-            android:text="[12:15:02] Monitoring system started...\n[12:22:45] Server connection stable."
-            android:textColor="#00FF41"
-            android:textSize="12sp" />
-    </ScrollView>
+        android:layout_marginTop="8dp"
+        android:background="#121212"
+        android:padding="12dp"
+        android:text="[12:15:02] Monitoring system started...\n[12:22:45] Server connection stable."
+        android:textColor="#00FF00"
+        android:fontFamily="monospace"
+        android:textSize="12sp" />
 
     <Button
-        android:id="@+id/btnCenterClose"
+        android:id="@+id/btnClose"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@android:color/transparent"
-        android:text="Close Console"
-        android:textAllCaps="false"
-        android:textColor="#959595" />
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/close_console"
+        android:backgroundTint="#333333"
+        android:textAllCaps="false" />
 
 </LinearLayout>

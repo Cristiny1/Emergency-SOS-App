@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="16dp"
-            android:text="English"
+            android:text="@string/lang_english"
             android:textColor="@color/black"
             android:textSize="16sp" />
 
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="16dp"
-            android:text="ខ្មែរ (Khmer)"
+            android:text="@string/lang_khmer"
             android:textColor="@color/black"
             android:textSize="16sp" />
 

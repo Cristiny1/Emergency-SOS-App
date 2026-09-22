@@ -95,7 +95,7 @@ public class CalendarActivity extends BaseActivity {
             btnDelete.setOnClickListener(v -> {
                 CalendarManager.deleteEvent(this, selectedDateStr, index);
                 loadEvents();
-                Toast.makeText(this, "Reminder removed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.reminder_removed, Toast.LENGTH_SHORT).show();
             });
 
             eventContainer.addView(item);

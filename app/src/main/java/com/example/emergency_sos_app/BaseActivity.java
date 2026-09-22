@@ -53,10 +53,14 @@ public class BaseActivity extends AppCompatActivity {
     /** Professional activity refresh without the standard "recreate" flash */
     public void smoothRefresh() {
         Intent intent = getIntent();
-        finish();
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        // Use CLEAR_TOP and NO_ANIMATION to ensure a clean restart of the activity stack
+        // if needed, or just recreate the current one.
+        // For singleTop activities, we force a new instance by clearing the task 
+        // to ensure language/theme changes are applied and the app doesn't just close.
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        finish();
     }
 
     /**

@@ -133,7 +133,7 @@ public class CitizenReportActivity extends BaseActivity {
                         layoutVideoHint.setVisibility(View.GONE);
                         ivVideoPreview.setVisibility(View.VISIBLE);
                         ivVideoPreview.setImageResource(R.drawable.hp); // Placeholder icon for video present
-                        Toast.makeText(this, "Video captured successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.video_captured_success, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -196,14 +196,14 @@ public class CitizenReportActivity extends BaseActivity {
                     Toast.makeText(CitizenReportActivity.this, R.string.report_submitted_center, Toast.LENGTH_LONG).show();
                     finish();
                 } else {
-                    Toast.makeText(CitizenReportActivity.this, "Submission failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CitizenReportActivity.this, R.string.submission_failed, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<Void>> call, Throwable t) {
                 setSubmittingState(false);
-                Toast.makeText(CitizenReportActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(CitizenReportActivity.this, R.string.network_error, Toast.LENGTH_SHORT).show();
             }
         });
     }

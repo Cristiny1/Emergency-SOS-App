@@ -55,14 +55,30 @@
                     app:layout_constraintStart_toEndOf="@id/btnMenu"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/my_location_label"
-                        android:textColor="@color/text_gray"
-                        android:textSize="11sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.05" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:id="@+id/vGuardianPulse"
+                            android:layout_width="8dp"
+                            android:layout_height="8dp"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/bg_circle_white"
+                            android:backgroundTint="@color/green_verified" />
+
+                        <TextView
+                            android:id="@+id/tvGuardianStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/system_connected"
+                            android:textColor="@color/text_gray"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.05" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -115,6 +131,7 @@
                     android:contentDescription="@string/cd_profile_header"
                     android:focusable="true"
                     android:src="@drawable/ic_personal"
+                    android:transitionName="profile_photo"
                     app:civ_border_color="@color/fb_bg_gray"
                     app:civ_border_width="1.5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -369,7 +386,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:layout_marginStart="12dp"
-                            android:text="Silent Rescue Mode"
+                            android:text="@string/silent_rescue_mode"
                             android:textColor="@color/text_dark"
                             android:textSize="13sp"
                             android:textStyle="bold" />
@@ -814,15 +831,6 @@
                             android:textAllCaps="false"
                             android:textColor="@color/white"
                             android:visibility="gone" />
-
-                        <Button
-                            android:id="@+id/btnOpenChatbot"
-                            android:layout_width="match_parent"
-                            android:layout_height="48dp"
-                            android:backgroundTint="@color/passapp_orange"
-                            android:text="@string/open_chatbot"
-                            android:textAllCaps="false"
-                            android:textColor="@color/white" />
                     </LinearLayout>
 
                     <View

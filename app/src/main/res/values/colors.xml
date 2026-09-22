@@ -34,4 +34,6 @@
     <color name="passapp_green">#A8D582</color>
     <color name="passapp_gray">#4A4A4A</color>
     <color name="severity_yellow">#FFD600</color>
+
+    <color name="nav_item_color">#4A4A4A</color>
 </resources>

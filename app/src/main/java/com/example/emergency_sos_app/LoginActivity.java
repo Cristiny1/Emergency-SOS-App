@@ -61,10 +61,10 @@ public class LoginActivity extends BaseActivity {
         });
 
         btnGoogleCircle.setOnClickListener(v ->
-                Toast.makeText(this, "Google Sign In coming soon.", Toast.LENGTH_SHORT).show());
+                Toast.makeText(this, R.string.google_sign_in_coming, Toast.LENGTH_SHORT).show());
 
         btnFacebookCircle.setOnClickListener(v ->
-                Toast.makeText(this, "Facebook Sign In coming soon.", Toast.LENGTH_SHORT).show());
+                Toast.makeText(this, R.string.facebook_sign_in_coming, Toast.LENGTH_SHORT).show());
     }
 
 //    private void attemptLogin() {
@@ -157,6 +157,7 @@ public class LoginActivity extends BaseActivity {
         if (email.equals(savedEmail) && password.equals(savedPassword)) {
 
             SharedPreferences.Editor editor = sp.edit();
+            editor.putBoolean("has_account", true); // Set account flag on successful login
 
             if (cbRememberMe.isChecked()) {
                 editor.putBoolean("remember", true);

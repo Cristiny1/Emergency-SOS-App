@@ -29,7 +29,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="EMERGENCY SOS"
+            android:text="@string/emergency_sos_title"
             android:textColor="@color/text_dark"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -39,9 +39,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Smart Safety Solution"
+            android:text="@string/smart_safety_solution"
             android:textColor="@color/text_gray"
             android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvSplashStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/initializing_system"
+            android:textColor="@color/primary"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:alpha="0" />
     </LinearLayout>
 
 </RelativeLayout>

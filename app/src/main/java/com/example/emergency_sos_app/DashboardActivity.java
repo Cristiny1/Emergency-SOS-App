@@ -59,7 +59,8 @@ public class DashboardActivity extends BaseActivity {
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
 
-    private TextView tvDynamicGreeting, tvGlanceBlood, tvGlanceAllergies, tvGlanceContact, tvCurrentAddress, tvDashboardClock;
+    private TextView tvDynamicGreeting, tvGlanceBlood, tvGlanceAllergies, tvGlanceContact, tvCurrentAddress, tvDashboardClock, tvGuardianStatus;
+    private View vGuardianPulse;
     private Vibrator vibrator;
     private FusedLocationProviderClient fusedLocationClient;
     private LocationCallback locationCallback;
@@ -105,8 +106,12 @@ public class DashboardActivity extends BaseActivity {
             drawerLayout.openDrawer(GravityCompat.START);
         });
 
-        // Profile Header
-        findViewById(R.id.btnProfileHeader).setOnClickListener(v -> startFadeActivity(new Intent(this, ProfileActivity.class)));
+        // Profile Header with Transition
+        findViewById(R.id.btnProfileHeader).setOnClickListener(v -> {
+            Intent intent = new Intent(this, AccountDetailActivity.class);
+            androidx.core.app.ActivityOptionsCompat options = androidx.core.app.ActivityOptionsCompat.makeSceneTransitionAnimation(this, v, "profile_photo");
+            startActivity(intent, options.toBundle());
+        });
 
         // Language Toggle
         ImageView flagButton = findViewById(R.id.btn_language_flag);
@@ -116,7 +121,7 @@ public class DashboardActivity extends BaseActivity {
         }
 
         // Chatbot Link
-        findViewById(R.id.btnOpenChatbot).setOnClickListener(v -> startFadeActivity(new Intent(this, ChatbotActivity.class)));
+        //findViewById(R.id.btnOpenChatbot).setOnClickListener(v -> startFadeActivity(new Intent(this, ChatbotActivity.class)));
 
         handleIntent(getIntent());
     }
@@ -155,6 +160,8 @@ public class DashboardActivity extends BaseActivity {
         tvGlanceContact = findViewById(R.id.tvGlanceContact);
         tvCurrentAddress = findViewById(R.id.tvCurrentAddress);
         tvDashboardClock = findViewById(R.id.tvDashboardClock);
+        tvGuardianStatus = findViewById(R.id.tvGuardianStatus);
+        vGuardianPulse = findViewById(R.id.vGuardianPulse);
 
         final TextView tvSosHint = findViewById(R.id.tvSosHint);
         final View btnSos = findViewById(R.id.btnSos);
@@ -229,6 +236,8 @@ public class DashboardActivity extends BaseActivity {
                 pendingIntent = new Intent(this, SosHistoryActivity.class);
             } else if (id == R.id.nav_drawer_contacts) {
                 pendingIntent = new Intent(this, EmergencyDirectoryActivity.class);
+            } else if (id == R.id.nav_drawer_account) {
+                pendingIntent = new Intent(this, AccountDetailActivity.class);
             } else if (id == R.id.nav_drawer_medical) {
                 pendingIntent = new Intent(this, ProfileActivity.class);
             } else if (id == R.id.nav_drawer_settings) {
@@ -271,10 +280,38 @@ public class DashboardActivity extends BaseActivity {
         
         if (tvName != null) tvName.setText(savedName);
         if (ivHeaderProfile != null) {
+            String photoPath = prefs.getString("profile_photo_path", null);
+            if (photoPath != null) {
+                java.io.File file = new java.io.File(photoPath);
+                if (file.exists()) {
+                    ivHeaderProfile.setImageURI(Uri.fromFile(file));
+                } else {
+                    ivHeaderProfile.setImageResource(R.drawable.ic_personal);
+                }
+            } else {
+                ivHeaderProfile.setImageResource(R.drawable.ic_personal);
+            }
+
             ivHeaderProfile.setOnClickListener(v -> {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 pendingIntent = new Intent(this, ProfileActivity.class);
             });
+        }
+
+        // Also update Main Header Profile
+        ImageView ivMainProfile = findViewById(R.id.btnProfileHeader);
+        if (ivMainProfile != null) {
+            String photoPath = prefs.getString("profile_photo_path", null);
+            if (photoPath != null) {
+                java.io.File file = new java.io.File(photoPath);
+                if (file.exists()) {
+                    ivMainProfile.setImageURI(Uri.fromFile(file));
+                } else {
+                    ivMainProfile.setImageResource(R.drawable.ic_personal);
+                }
+            } else {
+                ivMainProfile.setImageResource(R.drawable.ic_personal);
+            }
         }
     }
 
@@ -482,23 +519,46 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void setupSocketStatusIndicator() {
-        TextView tvStatus = findViewById(R.id.tvServiceStatus);
-        View vStatusDot = findViewById(R.id.vServiceStatusDot);
         SocketManager socketManager = SocketManager.getInstance();
 
         socketManager.on(io.socket.client.Socket.EVENT_CONNECT, args -> runOnUiThread(() -> {
-            if (tvStatus == null || isFinishing() || isDestroyed()) return;
-            tvStatus.setText(R.string.status_online);
-            tvStatus.setTextColor(getColor(R.color.green_verified));
-            if (vStatusDot != null) vStatusDot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.green_verified)));
+            if (tvGuardianStatus == null || isFinishing() || isDestroyed()) return;
+            tvGuardianStatus.setText(R.string.system_connected);
+            tvGuardianStatus.setTextColor(getColor(R.color.green_verified));
+            if (vGuardianPulse != null) {
+                vGuardianPulse.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.green_verified)));
+                startGuardianPulse();
+            }
         }));
 
         socketManager.on(io.socket.client.Socket.EVENT_CONNECT_ERROR, args -> runOnUiThread(() -> {
-            if (tvStatus == null || isFinishing() || isDestroyed()) return;
-            tvStatus.setText(R.string.status_offline);
-            tvStatus.setTextColor(getColor(R.color.sos_red));
-            if (vStatusDot != null) vStatusDot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.sos_red)));
+            if (tvGuardianStatus == null || isFinishing() || isDestroyed()) return;
+            tvGuardianStatus.setText(R.string.system_offline);
+            tvGuardianStatus.setTextColor(getColor(R.color.sos_red));
+            if (vGuardianPulse != null) {
+                vGuardianPulse.setBackgroundTintList(android.content.res.ColorStateList.valueOf(getColor(R.color.sos_red)));
+                vGuardianPulse.clearAnimation();
+            }
         }));
+
+        // Initial state
+        if (socketManager.isConnected()) {
+            tvGuardianStatus.setText(R.string.system_connected);
+            startGuardianPulse();
+        } else {
+            tvGuardianStatus.setText(R.string.system_offline);
+        }
+    }
+
+    private void startGuardianPulse() {
+        if (vGuardianPulse == null) return;
+        ObjectAnimator pulse = ObjectAnimator.ofPropertyValuesHolder(vGuardianPulse,
+                PropertyValuesHolder.ofFloat(View.ALPHA, 1.0f, 0.4f)
+        );
+        pulse.setDuration(1000);
+        pulse.setRepeatMode(ValueAnimator.REVERSE);
+        pulse.setRepeatCount(ValueAnimator.INFINITE);
+        pulse.start();
     }
 
     private void updateGreeting() {
@@ -660,7 +720,8 @@ public class DashboardActivity extends BaseActivity {
                     Log.d("SOS", "Repository Status changed to: " + status);
                     if (status == SosStatus.PENDING) {
                         runOnUiThread(() -> {
-                            Toast.makeText(DashboardActivity.this, isSilent ? "Silent Signal Broadcasting..." : "Emergency Signal Broadcasting...", Toast.LENGTH_SHORT).show();
+                            String msg = isSilent ? getString(R.string.silent_signal_broadcasting) : getString(R.string.emergency_signal_broadcasting);
+                            Toast.makeText(DashboardActivity.this, msg, Toast.LENGTH_SHORT).show();
                         });
                         
                         // Persistent Emergency Mode
@@ -677,7 +738,7 @@ public class DashboardActivity extends BaseActivity {
 
                 @Override
                 public void onError(String message) {
-                    runOnUiThread(() -> Toast.makeText(DashboardActivity.this, "SOS Failed: " + message, Toast.LENGTH_LONG).show());
+                    runOnUiThread(() -> Toast.makeText(DashboardActivity.this, getString(R.string.sos_failed_msg, message), Toast.LENGTH_LONG).show());
                 }
             });
 
@@ -692,7 +753,7 @@ public class DashboardActivity extends BaseActivity {
             startWorkflow(type, sosId, isSilent);
         } catch (Exception e) {
             Log.e("SOS", "Error emitting SOS", e);
-            Toast.makeText(this, "Emergency signal error. Please call 117/118 directly.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.emergency_signal_error, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -709,7 +770,7 @@ public class DashboardActivity extends BaseActivity {
             safetyLink);
             
         // Simulation of SMS broadcast
-        Toast.makeText(this, "Family Circle Notified via SMS.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.family_notified_sms, Toast.LENGTH_SHORT).show();
     }
 
     private void startWorkflow(String type, String sosId, boolean isSilent) {

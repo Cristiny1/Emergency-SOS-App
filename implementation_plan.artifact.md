@@ -1,41 +1,31 @@
-# Implementation Plan - Final "Smart City SOS" Completion
+# Implementation Plan - Fix Signup Step 1 Crash
 
-Final phase to reach 100% completion of all proposed features, including high-end intelligence and media capabilities.
+Resolve the crash occurring when entering the Signup flow by restoring missing view components in the Step 1 layout.
 
 ## User Review Required
 
 > [!IMPORTANT]
-> **Video Evidence**: Capturing video will require the `CAMERA` permission and will increase the report size. I will implement a compressed recording to save bandwidth.
+> **Crash Analysis**: The app is crashing because `SignupStep1Fragment.java` attempts to set an `OnClickListener` on `btnChangePhoto`, but this button (and the entire photo picker UI) is missing from `fragment_signup_step1.xml`.
 >
-> **AI Voice Output**: The app will use the system's default Text-to-Speech (TTS) engine. Users can mute this at any time using the on-screen volume controls.
+> **Missing UI**: I will restore the profile image circle and the camera action button to the layout.
 
 ## Proposed Changes
 
-### 🤖 1. AI Voice Assistant (Full I/O)
-- **Voice Output (TTS)**: Integrate `android.speech.tts.TextToSpeech` into [ChatbotActivity.java](file:///C:/Users/ASUS/AndroidStudioProjects/EmergencySOSApp/app/src/main/java/com/example/emergency_sos_app/ChatbotActivity.java). The AI will now "read out" its safety guidance automatically.
-- **Toggle**: Add a small speaker icon to the chat UI to enable/disable auto-reading.
+### 👤 1. Restore Photo Picker UI
+- **[MODIFY] [fragment_signup_step1.xml](file:///C:/Users/ASUS/AndroidStudioProjects/EmergencySOSApp/app/src/main/res/layout/fragment_signup_step1.xml)**:
+    - Add `CircleImageView` (ivSignupProfile) inside the Photo Section `FrameLayout`.
+    - Add `MaterialCardView` (btnChangePhoto) with the camera icon.
+    - Restore the background halo for a premium feel.
 
-### ⚠️ 2. Danger Reporting: Video Evidence
-- **Video Capture**: Implement a `VideoPickerLauncher` in [CitizenReportActivity.java](file:///C:/Users/ASUS/AndroidStudioProjects/EmergencySOSApp/app/src/main/java/com/example/emergency_sos_app/CitizenReportActivity.java) using `ActivityResultContracts.CaptureVideo`.
-- **UI Update**: Add a "Record Video" button and a small video preview thumbnail.
-
-### 🎙️ 3. Danger Reporting: Voice Description
-- **Real Audio Capture**: Replace the placeholder in [CitizenReportActivity.java](file:///C:/Users/ASUS/AndroidStudioProjects/EmergencySOSApp/app/src/main/java/com/example/emergency_sos_app/CitizenReportActivity.java) with actual `MediaRecorder` logic to save a voice memo of the danger.
-
-### 🛡️ 4. Low-Battery Emergency Mode
-- **Energy Saver**: Implement a `BatteryReceiver`. If the battery level falls below 15% during an active SOS, the app will:
-    - Reduce GPS update frequency.
-    - Dim the map intensity.
-    - Disable the radar animation to conserve power for the final rescue broadcast.
-
-### 🎨 5. Final UI/UX Consistency & Polish
-- **Animations**: Add "Entrance" animations to Dashboard cards using `LayoutTransition`.
-- **Iconography**: Final sweep to ensure all icons have appropriate `contentDescription` for accessibility.
+### 🧪 2. Verification
+- Rebuild the app and verify that clicking "Get Started" now opens the Signup screen without closing the app.
 
 ## Verification Plan
 
 ### Manual Verification
-1. **TTS Test**: Ask the AI "What should I do in a fire?". Verify the phone's speaker reads out the instructions.
-2. **Video Test**: Record a 5-second video in the Report screen. Verify it shows in the preview and "hasVideo" is true in the payload.
-3. **Battery Test (Simulation)**: Use emulator controls to set battery to 10% during SOS. Verify the "Power Saving Active" toast appears and animations stop.
-4. **End-to-End**: Run a full cycle (Report -> SOS -> Chat -> Finish) to ensure zero crashes and perfect speed.
+1. **Launch App**: Open the app and wait for the Splash screen to finish.
+2. **Navigate**: Click "Get Started" on the Welcome screen.
+3. **Verify**:
+    - App stays open.
+    - Signup Step 1 is displayed.
+    - Profile photo placeholder and camera button are visible.

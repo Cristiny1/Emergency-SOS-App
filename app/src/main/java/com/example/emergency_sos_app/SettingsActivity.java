@@ -3,15 +3,21 @@ package com.example.emergency_sos_app;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Switch;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import java.io.File;
 
 public class SettingsActivity extends BaseActivity {
 
@@ -32,38 +38,85 @@ public class SettingsActivity extends BaseActivity {
         TextView tvUserName = findViewById(R.id.tvUserName);
         TextView tvUserEmail = findViewById(R.id.tvUserEmail);
         TextView tvLang = findViewById(R.id.tvCurrentLanguage);
-        Switch switchNotifications = findViewById(R.id.switchNotifications);
-        Switch switchSimulation = findViewById(R.id.switchSimulation);
+        ImageView ivProfile = findViewById(R.id.ivSettingsProfile);
+        SwitchMaterial switchNotifications = findViewById(R.id.switchNotifications);
+        SwitchMaterial switchSimulation = findViewById(R.id.switchSimulation);
         Button btnLogout = findViewById(R.id.btnLogout);
 
+        // Populate User Info
         tvUserName.setText(prefs.getString("name", "Guest"));
         tvUserEmail.setText(prefs.getString("email", "not signed in"));
+
+        if (ivProfile != null) {
+            String photoPath = prefs.getString("profile_photo_path", null);
+            if (photoPath != null) {
+                File file = new File(photoPath);
+                if (file.exists()) ivProfile.setImageURI(Uri.fromFile(file));
+            }
+        }
         
+        // Language Display
         String lang = LanguageManager.getLanguage(this);
         tvLang.setText(LanguageManager.LANG_KHMER.equals(lang) ? "ភាសាខ្មែរ" : "English");
 
+        // Toggle States
         switchNotifications.setChecked(prefs.getBoolean("notifications_enabled", true));
         switchSimulation.setChecked(prefs.getBoolean("simulation_mode", false));
 
-        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        // Listeners
+        findViewById(R.id.btnBack).setOnClickListener(v -> {
+            playClickFeedback();
+            finish();
+        });
         
-        findViewById(R.id.rowLanguage).setOnClickListener(v -> LanguagePickerDialog.show(this));
+        findViewById(R.id.cardAccount).setOnClickListener(v -> {
+            playClickFeedback();
+            startFadeActivity(new Intent(this, AccountDetailActivity.class));
+        });
 
-        switchNotifications.setOnCheckedChangeListener((v, checked) -> 
-                prefs.edit().putBoolean("notifications_enabled", checked).apply());
+        findViewById(R.id.rowLanguage).setOnClickListener(v -> {
+            playClickFeedback();
+            LanguagePickerDialog.show(this);
+        });
 
-        switchSimulation.setOnCheckedChangeListener((v, checked) -> 
-                prefs.edit().putBoolean("simulation_mode", checked).apply());
+        findViewById(R.id.rowNotifications).setOnClickListener(v -> {
+            switchNotifications.setChecked(!switchNotifications.isChecked());
+        });
 
-        findViewById(R.id.rowPrivacy).setOnClickListener(v -> navigateToDetail("privacy"));
-        findViewById(R.id.rowHelp).setOnClickListener(v -> navigateToDetail("help"));
+        switchNotifications.setOnCheckedChangeListener((v, checked) -> {
+            playClickFeedback();
+            prefs.edit().putBoolean("notifications_enabled", checked).apply();
+        });
+
+        findViewById(R.id.rowSimulation).setOnClickListener(v -> {
+            switchSimulation.setChecked(!switchSimulation.isChecked());
+        });
+
+        switchSimulation.setOnCheckedChangeListener((v, checked) -> {
+            playClickFeedback();
+            prefs.edit().putBoolean("simulation_mode", checked).apply();
+            String msg = checked ? getString(R.string.simulation_mode_enabled) : getString(R.string.realtime_mode_active);
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        });
+
+        findViewById(R.id.rowPrivacy).setOnClickListener(v -> {
+            playClickFeedback();
+            navigateToDetail("privacy");
+        });
+
+        findViewById(R.id.rowHelp).setOnClickListener(v -> {
+            playClickFeedback();
+            navigateToDetail("help");
+        });
 
         findViewById(R.id.rowClearHistory).setOnClickListener(v -> {
+            playClickFeedback();
             HistoryManager.clear(this);
-            Toast.makeText(this, "Emergency history cleared", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.event_deleted, Toast.LENGTH_SHORT).show();
         });
 
         btnLogout.setOnClickListener(v -> {
+            playClickFeedback();
             prefs.edit().putBoolean("remember", false).apply();
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -76,7 +129,9 @@ public class SettingsActivity extends BaseActivity {
         View header = findViewById(R.id.settingsHeader);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(android.R.id.content), (v, insets) -> {
             int top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
-            if (header != null) header.setPadding(header.getPaddingLeft(), top + (int)(16 * getResources().getDisplayMetrics().density), header.getPaddingRight(), (int)(16 * getResources().getDisplayMetrics().density));
+            if (header != null) {
+                header.setPadding(header.getPaddingLeft(), top, header.getPaddingRight(), header.getPaddingBottom());
+            }
             return WindowInsetsCompat.CONSUMED;
         });
     }

@@ -76,6 +76,14 @@
             android:exported="false" />
 
         <activity
+            android:name=".AccountDetailActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ProfileEditActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".OtpVerificationActivity"
             android:exported="false" />
 

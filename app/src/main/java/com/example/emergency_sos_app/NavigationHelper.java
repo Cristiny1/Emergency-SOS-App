@@ -28,10 +28,9 @@ public class NavigationHelper {
             }
 
             if (id == currentId) {
-                // If user clicks the current tab, refresh the screen
-                if (activity instanceof BaseActivity) {
-                    ((BaseActivity) activity).smoothRefresh();
-                }
+                // If user clicks the current tab, we usually do nothing or scroll to top.
+                // We avoid calling smoothRefresh() here because for singleTop activities 
+                // like Dashboard, it can cause the app to close.
                 return true;
             }
 
