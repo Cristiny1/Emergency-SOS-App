@@ -10,32 +10,40 @@ import android.content.SharedPreferences;
 public class RepositoryProvider {
 
     private static SosRepository sosRepository;
+    private static Boolean repositorySimulationMode;
+
+    /**
+     * Creates the correct repository instance based on the current mode.
+     * This avoids stale cached instances when the user toggles simulation mode.
+     */
+    public static SosRepository createRepositoryForMode(boolean isSimulation) {
+        return isSimulation ? new MockSosRepository() : new ApiSosRepository();
+    }
 
     /**
      * Retrieves the correct repository based on user settings (Simulation Mode).
      */
-    public static SosRepository getSosRepository(Context context) {
-        SharedPreferences prefs = context.getSharedPreferences("sos_profile_prefs", Context.MODE_PRIVATE);
+    public static synchronized SosRepository getSosRepository(Context context) {
+        if (context == null) {
+            return getSosRepository();
+        }
+
+        Context appContext = context.getApplicationContext();
+        SharedPreferences prefs = appContext.getSharedPreferences("sos_profile_prefs", Context.MODE_PRIVATE);
         boolean isSimulation = prefs.getBoolean("simulation_mode", false);
 
-        if (isSimulation) {
-            // Force Mock for demonstration/testing
-            if (!(sosRepository instanceof MockSosRepository)) {
-                sosRepository = new MockSosRepository();
-            }
-        } else {
-            // Return Real API for production use
-            if (!(sosRepository instanceof ApiSosRepository)) {
-                sosRepository = new ApiSosRepository();
-            }
+        if (sosRepository == null || repositorySimulationMode == null || repositorySimulationMode != isSimulation) {
+            sosRepository = createRepositoryForMode(isSimulation);
+            repositorySimulationMode = isSimulation;
         }
         return sosRepository;
     }
-    
+
     // Legacy support
-    public static SosRepository getSosRepository() {
+    public static synchronized SosRepository getSosRepository() {
         if (sosRepository == null) {
             sosRepository = new MockSosRepository();
+            repositorySimulationMode = true;
         }
         return sosRepository;
     }

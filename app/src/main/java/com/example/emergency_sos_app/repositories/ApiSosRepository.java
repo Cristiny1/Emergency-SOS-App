@@ -77,13 +77,20 @@ public class ApiSosRepository implements SosRepository {
                     if (event != null) {
                         Log.d(TAG, "Authoritative status for " + sosId + ": " + event.getStatus());
                         callback.onStatusChanged(event.getStatus());
+                    } else {
+                        callback.onError("SOS status was empty.");
                     }
+                } else if (response.body() != null && response.body().message != null) {
+                    callback.onError(response.body().message);
+                } else {
+                    callback.onError("Unable to read SOS status: " + response.code());
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<SosEvent>> call, Throwable t) {
                 Log.w(TAG, "getSosStatus authoritative fetch failed", t);
+                callback.onError("Connection failed. Signal will retry.");
             }
         });
     }

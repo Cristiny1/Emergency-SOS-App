@@ -70,6 +70,7 @@ public class SplashActivity extends BaseActivity {
             Intent intent = new Intent(this, SosWorkflowActivity.class);
             intent.putExtra("SOS_ID", sp.getString("active_sos_id", null));
             intent.putExtra("INCIDENT_TYPE", sp.getString("active_sos_type", "MEDICAL"));
+            intent.putExtra("IS_SILENT", sp.getBoolean("active_sos_silent", false));
             startFadeActivity(intent);
             finish();
             return;

@@ -9,8 +9,10 @@
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@color/white"
+        android:paddingVertical="18dp"
+        android:paddingHorizontal="20dp"
         android:elevation="4dp">
 
         <ImageView

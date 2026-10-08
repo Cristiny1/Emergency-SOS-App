@@ -31,6 +31,8 @@ import androidx.biometric.BiometricManager;
 import androidx.biometric.BiometricPrompt;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.emergency_sos_app.models.SosEvent;
 import com.example.emergency_sos_app.models.SosStatus;
@@ -59,12 +61,11 @@ public class SosWorkflowActivity extends BaseActivity {
     private enum State { LOCATION, ROUTING, TRACKING, COMPLETED }
     private State currentState = State.LOCATION;
 
-    private LinearLayout phaseLocation, phaseTracking, statusTimeline;
+    private LinearLayout statusTimeline;
     private View responderCard;
     private TextView tvCurrentStatus, tvLocationText, tvResponderName, tvResponderId, tvEta, tvHeaderTitle;
     private ProgressBar pbRouting;
-    private Spinner spinnerVictims;
-    private Button btnConfirmLocation, btnCancelSos, btnMuteSiren;
+    private Button btnCancelSos, btnMuteSiren;
     private ImageView btnBack, btnCallResponder;
     private View vAlertOverlay;
 
@@ -85,6 +86,7 @@ public class SosWorkflowActivity extends BaseActivity {
     private int cancelCountdown = 10;
     private String sosId;
     private SosStatus currentRepositoryStatus = SosStatus.IDLE;
+    private Runnable statusPollRunnable;
     
     private String incidentType = "MEDICAL";
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -126,6 +128,9 @@ public class SosWorkflowActivity extends BaseActivity {
             if (incidentType == null) incidentType = "MEDICAL";
             
             isSilentMode = getIntent().getBooleanExtra("IS_SILENT", false);
+
+            userLat = getIntent().getDoubleExtra("USER_LAT", userLat);
+            userLng = getIntent().getDoubleExtra("USER_LNG", userLng);
             
             sosId = getIntent().getStringExtra("SOS_ID");
             if (sosId != null) {
@@ -135,6 +140,7 @@ public class SosWorkflowActivity extends BaseActivity {
 
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
             initViews();
+            setupWindowInsets();
             setupWebView();
 
             alertManager = new SosAlertManager(this);
@@ -162,6 +168,7 @@ public class SosWorkflowActivity extends BaseActivity {
             registerReceiver(batteryReceiver, new android.content.IntentFilter(Intent.ACTION_BATTERY_CHANGED));
 
             if (sosId != null) {
+                activateExistingSos();
                 handler.postDelayed(this::observeSosStatus, 500);
             }
         } catch (Throwable e) {
@@ -173,12 +180,24 @@ public class SosWorkflowActivity extends BaseActivity {
     }
 
     private void setupListeners() {
-        if (btnConfirmLocation != null) btnConfirmLocation.setOnClickListener(v -> startSosWorkflow());
         if (btnCancelSos != null) btnCancelSos.setOnClickListener(v -> attemptCancelEmergency());
         if (btnBack != null) btnBack.setOnClickListener(v -> finish());
+        if (btnCallResponder != null) btnCallResponder.setOnClickListener(v -> callResponder());
         
         View btnCenterMap = findViewById(R.id.btnCenterMap);
         if (btnCenterMap != null) btnCenterMap.setOnClickListener(v -> updateMapLocation());
+
+        View btnZoomIn = findViewById(R.id.btnZoomIn);
+        if (btnZoomIn != null) btnZoomIn.setOnClickListener(v -> zoomMap("zoomInMap()"));
+
+        View btnZoomOut = findViewById(R.id.btnZoomOut);
+        if (btnZoomOut != null) btnZoomOut.setOnClickListener(v -> zoomMap("zoomOutMap()"));
+    }
+
+    private void zoomMap(String javascript) {
+        if (isMapLoaded && mapWebView != null) {
+            mapWebView.evaluateJavascript(javascript, null);
+        }
     }
 
     private void observeSosStatus() {
@@ -191,14 +210,34 @@ public class SosWorkflowActivity extends BaseActivity {
                 handler.post(() -> {
                     Log.d("Workflow", "Repository Status changed to: " + status);
                     handleStatusUpdate(status);
+                    scheduleStatusPoll(status);
                 });
             }
 
             @Override
             public void onError(String message) {
                 Log.e("Workflow", "Repository error: " + message);
+                scheduleStatusPoll(currentRepositoryStatus);
             }
         });
+    }
+
+    private void scheduleStatusPoll(SosStatus status) {
+        if (status == SosStatus.CANCELLED || status == SosStatus.FAILED ||
+                status == SosStatus.RESOLVED || isFinishing() || isDestroyed()) return;
+        if (statusPollRunnable != null) handler.removeCallbacks(statusPollRunnable);
+        statusPollRunnable = this::observeSosStatus;
+        handler.postDelayed(statusPollRunnable, 5000);
+    }
+
+    private void activateExistingSos() {
+        if (alertManager != null) alertManager.startSiren(isSilentMode);
+        if (alertManager != null) {
+            String userName = getSharedPreferences("sos_profile_prefs", MODE_PRIVATE)
+                    .getString("name", "User");
+            alertManager.showCenterAlert(userName, incidentType);
+        }
+        if (isMapLoaded && mapWebView != null) mapWebView.evaluateJavascript("startRadar()", null);
     }
 
     private void handleStatusUpdate(SosStatus status) {
@@ -240,6 +279,7 @@ public class SosWorkflowActivity extends BaseActivity {
                 .putBoolean("is_sos_active", false)
                 .remove("active_sos_id")
                 .remove("active_sos_type")
+                .remove("active_sos_silent")
                 .apply();
     }
 
@@ -325,6 +365,7 @@ public class SosWorkflowActivity extends BaseActivity {
             public void onPageFinished(WebView view, String url) {
                 isMapLoaded = true;
                 updateMapLocation();
+                mapWebView.evaluateJavascript("hideZoomControls()", null);
                 if (currentState == State.ROUTING || currentState == State.TRACKING) {
                     mapWebView.evaluateJavascript("startRadar()", null);
                 }
@@ -412,11 +453,6 @@ public class SosWorkflowActivity extends BaseActivity {
                             }
                         }
                         
-                        if (btnConfirmLocation != null && currentState == State.LOCATION) {
-                            btnConfirmLocation.setEnabled(true);
-                            btnConfirmLocation.setText(R.string.send_sos_signal);
-                            btnConfirmLocation.setAlpha(1.0f);
-                        }
                     }
                 }
             };
@@ -434,8 +470,6 @@ public class SosWorkflowActivity extends BaseActivity {
     }
 
     private void initViews() {
-        phaseLocation = findViewById(R.id.phaseLocation);
-        phaseTracking = findViewById(R.id.phaseTracking);
         responderCard = findViewById(R.id.responderCard);
         statusTimeline = findViewById(R.id.statusTimeline);
 
@@ -447,15 +481,13 @@ public class SosWorkflowActivity extends BaseActivity {
         tvHeaderTitle = findViewById(R.id.tvHeaderTitle);
 
         pbRouting = findViewById(R.id.pbRouting);
-        spinnerVictims = findViewById(R.id.spinnerVictims);
-        btnConfirmLocation = findViewById(R.id.btnConfirmLocation);
         btnCancelSos = findViewById(R.id.btnCancelSos);
         btnBack = findViewById(R.id.btnBack);
         btnCallResponder = findViewById(R.id.btnCallResponder);
         btnMuteSiren = findViewById(R.id.btnMuteSiren);
         vAlertOverlay = findViewById(R.id.vAlertOverlay);
 
-        View bottomSheet = findViewById(R.id.bottomSheet);
+        View bottomSheet = findViewById(R.id.bottomSheetContent);
         if (bottomSheet != null) {
             bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         }
@@ -463,11 +495,39 @@ public class SosWorkflowActivity extends BaseActivity {
         if (btnMuteSiren != null) btnMuteSiren.setOnClickListener(v -> toggleMute());
     }
 
+    private void setupWindowInsets() {
+        View topBar = findViewById(R.id.topBar);
+        View bottomSheetContent = findViewById(R.id.bottomSheetContent);
+        View root = findViewById(android.R.id.content);
+        if (root == null) return;
+
+        final int topPadding = topBar != null ? topBar.getPaddingTop() : 0;
+        final int bottomPadding = bottomSheetContent != null ? bottomSheetContent.getPaddingBottom() : 0;
+        ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
+            int statusBar = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top;
+            int navigationBar = insets.getInsets(WindowInsetsCompat.Type.navigationBars()).bottom;
+
+            if (topBar != null) {
+                topBar.setPadding(topBar.getPaddingLeft(), topPadding + statusBar,
+                        topBar.getPaddingRight(), topBar.getPaddingBottom());
+            }
+            if (bottomSheetContent != null) {
+                bottomSheetContent.setPadding(bottomSheetContent.getPaddingLeft(),
+                        bottomSheetContent.getPaddingTop(), bottomSheetContent.getPaddingRight(),
+                        bottomPadding + navigationBar);
+            }
+            return insets;
+        });
+        ViewCompat.requestApplyInsets(root);
+    }
+
     private void setupSocketListeners() {
         socketManager.on("status_update", args -> {
             if (args.length > 0) {
                 try {
                     JSONObject data = (JSONObject) args[0];
+                    String eventId = data.optString("sosId", data.optString("id", ""));
+                    if (!eventId.isEmpty() && !eventId.equals(sosId)) return;
                     String statusStr = data.getString("status");
                     SosStatus status = SosStatus.valueOf(statusStr.toUpperCase().trim());
                     handler.post(() -> handleStatusUpdate(status));
@@ -562,8 +622,6 @@ public class SosWorkflowActivity extends BaseActivity {
     }
 
     private void updateUI() {
-        if (phaseLocation != null) phaseLocation.setVisibility(currentState == State.LOCATION ? View.VISIBLE : View.GONE);
-        if (phaseTracking != null) phaseTracking.setVisibility(currentState != State.LOCATION ? View.VISIBLE : View.GONE);
         if (vAlertOverlay != null) vAlertOverlay.setVisibility(currentState != State.LOCATION && currentState != State.COMPLETED ? View.VISIBLE : View.GONE);
 
         if (currentState == State.ROUTING) {
@@ -686,7 +744,18 @@ public class SosWorkflowActivity extends BaseActivity {
         }
     }
 
-    @Override protected void onResume() { super.onResume(); }
+    @Override protected void onResume() {
+        super.onResume();
+        if (fusedLocationClient != null && locationCallback != null &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED) {
+            LocationRequest locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 5000)
+                    .setMinUpdateDistanceMeters(2)
+                    .build();
+            fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
+        }
+        if (sosId != null) observeSosStatus();
+    }
     @Override protected void onPause() {
         super.onPause();
         if (fusedLocationClient != null && locationCallback != null) {

@@ -94,8 +94,8 @@
     <string name="delete_account_label">លុបគណនី</string>
     <string name="manage_identity_desc">គ្រប់គ្រងអត្តសញ្ញាណ និងសុវត្ថិភាពរបស់អ្នក</string>
     <string name="profile_updated_success">បានធ្វើបច្ចុប្បន្នភាពប្រវត្តិរូបដោយជោគជ័យ</string>
-    <string name="delete_account_confirm">តើអ្នកប្រាកដថាចង់លុបគណនីរបស់អ្នកមែនទេ?</string>
-    <string name="account_deleted_success">បានលុបគណនីដោយជោគជ័យ</string>
+    <string name="delete_account_confirm">សកម្មភាពនេះនឹងលុបជាអចិន្ត្រៃយ៍នូវប្រវត្តិរូបក្នុងកម្មវិធី រូបថតដែលបានរក្សាទុក សមាជិកគ្រួសារ ប្រវត្តិ SOS ព្រឹត្តិការណ៍ប្រតិទិន ឃ្លាំងបកប្រែ និងថូខិនចូលគណនីពីឧបករណ៍នេះ។ កម្មវិធីនេះមិនអាចលុបគណនី ឬទិន្នន័យដែលរក្សាទុកលើម៉ាស៊ីនមេបានទេ។ តើបន្តឬទេ?</string>
+    <string name="account_deleted_success">បានលុបទិន្នន័យក្នុងកម្មវិធី។ ទិន្នន័យគណនីលើម៉ាស៊ីនមេមិនត្រូវបានលុបទេ។</string>
     <string name="unspecified">មិនបានបញ្ជាក់</string>
     <string name="default_province">សៀមរាប</string>
     <string name="default_country">កម្ពុជា</string>
@@ -176,6 +176,8 @@
 
     <!-- វដ្តការងារ SOS និងការតាមដាន -->
     <string name="active_sos_header">SOS កំពុងដំណើរការ</string>
+    <string name="zoom_in">ពង្រីក</string>
+    <string name="zoom_out">បង្រួម</string>
     <string name="rescue_on_the_way">ក្រុមជួយសង្គ្រោះកំពុងមកដល់!</string>
     <string name="emergency_assisted_closed">អាសន្នត្រូវបានជួយ និងបិទរួចរាល់</string>
     <string name="return_to_dashboard">ត្រឡប់ទៅផ្ទាំងបញ្ជាវិញ</string>
@@ -345,9 +347,10 @@
     <string name="settings_title">ការកំណត់</string>
     <string name="account_label">គណនី</string>
     <string name="app_preferences">ការកំណត់កម្មវិធី</string>
-    <string name="realtime_notifications">ការជូនដំណឹងពេលវេលាពិត</string>
+    <string name="realtime_notifications">ការជូនដំណឹងអំពីស្ថានភាព SOS</string>
+    <string name="realtime_notifications_desc">បង្ហាញស្ថានភាព SOS សកម្មក្នុងផ្ទាំងជូនដំណឹង</string>
     <string name="simulation_mode">របៀបសាកល្បង</string>
-    <string name="simulation_mode_desc">សាកល្បងគ្រាអាសន្នសម្រាប់ការសាកល្បង</string>
+    <string name="simulation_mode_desc">ប្រើទិន្នន័យសាកល្បង មិនផ្ញើសំណើសង្គ្រោះពិតទេ</string>
     <string name="activate_sos_btn">ធ្វើឱ្យ SOS សកម្ម</string>
     <string name="call_emergency_ai">ហៅទៅកាន់ AI អាសន្ន</string>
     <string name="news_category_placeholder">ប្រភេទ</string>
@@ -377,6 +380,23 @@
     <string name="phone_not_registered">លេខទូរស័ព្ទមិនត្រូវបានចុះឈ្មោះទេ</string>
     <string name="email_not_registered">អ៊ីមែលមិនត្រូវបានចុះឈ្មោះទេ</string>
     <string name="privacy_security">ឯកជនភាព និងសុវត្ថិភាព</string>
+    <string name="privacy_intro">ទំព័រនេះពិពណ៌នាអំពីទិន្នន័យ និងសិទ្ធិដែលកំណែបច្ចុប្បន្នរបស់កម្មវិធីប្រើ។ ការគ្រប់គ្រងព័ត៌មានដែលផ្ញើទៅសេវាកម្មដែលបានកំណត់រចនាសម្ព័ន្ធ អាស្រ័យលើសេវាកម្មនោះ និងគោលការណ៍ឯកជនភាពរបស់វា។ កម្មវិធីនេះមិនធានាការអ៊ិនគ្រីប ការលុបទិន្នន័យ ឬការបញ្ជូនទៅសេវាសង្គ្រោះបន្ទាន់ទេ។</string>
+    <string name="privacy_data_title">ព័ត៌មានដែលរក្សាទុកលើឧបករណ៍នេះ</string>
+    <string name="privacy_data_detail">កម្មវិធីរក្សាទុកព័ត៌មានប្រវត្តិរូប និងការត្រៀមសង្គ្រោះបន្ទាន់ក្នុងការកំណត់ឯកជនរបស់កម្មវិធី រួមមានឈ្មោះ ព័ត៌មានទំនាក់ទំនង កំណត់ត្រាសុខភាព និងទីតាំងរូបថតប្រវត្តិរូប។ ប្រវត្តិ SOS ក៏ត្រូវបានរក្សាទុកក្នុងឧបករណ៍ និងកំណត់ត្រឹមព្រឹត្តិការណ៍ថ្មីៗបំផុត ៥០ ដែលមានប្រភេទ ព័ត៌មានទីតាំង និងម៉ោង។ ការសម្អាតប្រវត្តិលុបតែបញ្ជីព្រឹត្តិការណ៍ក្នុងឧបករណ៍នេះប៉ុណ្ណោះ មិនលុបប្រវត្តិរូប ឬព័ត៌មានដែលបានផ្ញើទៅម៉ាស៊ីនមេទេ។ ការចាកចេញមិនលុបព័ត៌មានប្រវត្តិរូបដែលបានរក្សាទុកក្នុងឧបករណ៍ទេ។ មុខងារលុបគណនីក្នុងកម្មវិធីបច្ចុប្បន្នលុបតែការកំណត់ប្រវត្តិរូបលើឧបករណ៍នេះ មិនបញ្ជាក់ការលុបពីម៉ាស៊ីនមេ មិនសម្អាតប្រវត្តិ SOS និងមិនលុបថូខិនផ្ទៀងផ្ទាត់ដែលបានរក្សាទុកទេ។</string>
+    <string name="privacy_permissions_title">សិទ្ធិរបស់ Android</string>
+    <string name="privacy_network_title">បណ្តាញ និងការចែករំលែក</string>
+    <string name="privacy_network_detail">នៅពេលភ្ជាប់ទៅម៉ាស៊ីនមេ កម្មវិធីអាចផ្ញើព័ត៌មានគណនី របាយការណ៍ និង SOS ដែលត្រូវការសម្រាប់មុខងារទាំងនោះ។ ទីតាំងត្រូវបានប្រើដើម្បីបង្ហាញទីតាំង និងគាំទ្រដំណើរការ SOS ឬតាមដាន។ ភស្តុតាងរបាយការណ៍អាចមានរូបថត វីដេអូ ឬសំឡេងដែលអ្នកជ្រើសថត។ គម្រោងនេះមិនទាន់មានមុខងារនាំចេញទិន្នន័យ ឬលុបគណនីពេញលេញក្នុងកម្មវិធីទេ។ សូមពិនិត្យគោលការណ៍របស់អ្នកគ្រប់គ្រងម៉ាស៊ីនមេ មុនប្រើទិន្នន័យផ្ទាល់ខ្លួនពិត។</string>
+    <string name="manage_app_permissions">គ្រប់គ្រងសិទ្ធិក្នុងការកំណត់ Android</string>
+    <string name="permission_status_format">%1$s៖ %2$s</string>
+    <string name="permission_location">ទីតាំង (ផ្ទាំងដើម ផែនទី SOS)</string>
+    <string name="permission_camera">កាមេរ៉ា (ភស្តុតាងរបាយការណ៍)</string>
+    <string name="permission_microphone">មីក្រូហ្វូន (សំឡេងរបាយការណ៍ និងជំនួយការ)</string>
+    <string name="permission_notifications">ការជូនដំណឹង (ស្ថានភាព SOS)</string>
+    <string name="permission_allowed">បានអនុញ្ញាត</string>
+    <string name="permission_not_allowed">មិនបានអនុញ្ញាត</string>
+    <string name="clear_history_title">សម្អាតប្រវត្តិ SOS ឬ?</string>
+    <string name="clear_history_message">វានឹងលុបបញ្ជីព្រឹត្តិការណ៍ SOS ដែលរក្សាទុកក្នុងឧបករណ៍នេះ។ វាមិនលុបទិន្នន័យប្រវត្តិរូប ឬព័ត៌មានដែលបានផ្ញើទៅសេវាកម្មទេ។</string>
+    <string name="history_cleared">បានសម្អាតប្រវត្តិ SOS</string>
     <string name="help_support">ជំនួយ និងការគាំទ្រ</string>
     <string name="emergency_directory_title">បញ្ជីលេខទូរស័ព្ទអាសន្ន</string>
     <string name="password_reset_success">ពាក្យសម្ងាត់ត្រូវបានកំណត់ឡើងវិញ</string>

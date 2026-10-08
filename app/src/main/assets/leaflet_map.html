@@ -191,6 +191,19 @@ function setLocation(lat, lng, label) {
     map.panTo(position);
 }
 
+function hideZoomControls() {
+    initMap();
+    map.zoomControl.remove();
+}
+
+function zoomInMap() {
+    if (map) map.zoomIn();
+}
+
+function zoomOutMap() {
+    if (map) map.zoomOut();
+}
+
 function startRadar() {
     initMap();
     if (!radarMarker && userMarker) {

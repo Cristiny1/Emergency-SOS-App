@@ -5,17 +5,16 @@
     android:layout_height="match_parent"
     android:background="@color/background">
 
-    <!-- Header -->
     <LinearLayout
         android:id="@+id/profileHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="14dp"
         android:background="@color/white"
         android:elevation="4dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="18dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -23,93 +22,230 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="10dp"
-            android:src="@drawable/ic_chevron_right"
-            android:rotation="180"
-            app:tint="@color/text_dark"
-            android:contentDescription="@string/back"
             android:clickable="true"
-            android:focusable="true"/>
+            android:contentDescription="@string/back"
+            android:focusable="true"
+            android:padding="10dp"
+            android:rotation="180"
+            android:src="@drawable/ic_chevron_right"
+            app:tint="@color/text_dark" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
+            android:layout_weight="1"
             android:text="@string/profile_title"
             android:textColor="@color/text_dark"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#FDECEC"
+            app:cardCornerRadius="999dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="0dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp"
+                android:text="@string/status_online"
+                android:textColor="@color/green_verified"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
+        android:fillViewport="true"
         android:paddingBottom="24dp"
-        app:layout_constraintTop_toBottomOf="@id/profileHeader"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigation">
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintTop_toBottomOf="@id/profileHeader">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="16dp"
+            android:paddingHorizontal="20dp"
             android:paddingTop="20dp">
 
-            <!-- Profile Photo Area -->
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="32dp">
-
-                <!-- Background Halo -->
-                <View
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:layout_gravity="center"
-                    android:background="@drawable/bg_profile_halo" />
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/ivProfile"
-                    android:layout_width="110dp"
-                    android:layout_height="110dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_personal"
-                    android:transitionName="profile_photo"
-                    app:civ_border_color="@color/white"
-                    app:civ_border_width="4dp" />
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/btnEditPhoto"
-                    android:layout_width="38dp"
-                    android:layout_height="38dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_margin="8dp"
-                    app:cardBackgroundColor="@color/primary"
-                    app:cardCornerRadius="19dp"
-                    app:cardElevation="6dp"
-                    app:strokeWidth="0dp"
-                    android:clickable="true"
-                    android:focusable="true">
-
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_camera"
-                        android:contentDescription="@string/change_photo_desc"
-                        app:tint="@color/white" />
-                </com.google.android.material.card.MaterialCardView>
-            </FrameLayout>
-
-            <!-- Menu List -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="2dp"
+                android:layout_marginBottom="20dp"
                 app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="28dp"
+                app:cardElevation="3dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <FrameLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginBottom="18dp">
+
+                        <View
+                            android:layout_width="160dp"
+                            android:layout_height="160dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/bg_profile_halo" />
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/ivProfile"
+                            android:layout_width="116dp"
+                            android:layout_height="116dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_personal"
+                            android:transitionName="profile_photo"
+                            app:civ_border_color="@color/white"
+                            app:civ_border_width="4dp" />
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/btnEditPhoto"
+                            android:layout_width="42dp"
+                            android:layout_height="42dp"
+                            android:layout_gravity="bottom|end"
+                            android:layout_margin="10dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:cardBackgroundColor="@color/primary"
+                            app:cardCornerRadius="21dp"
+                            app:cardElevation="6dp"
+                            app:strokeWidth="0dp">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:contentDescription="@string/change_photo_desc"
+                                android:src="@drawable/ic_camera"
+                                app:tint="@color/white" />
+                        </com.google.android.material.card.MaterialCardView>
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvProfileName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/profile_title"
+                            android:textColor="@color/text_dark"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvProfileEmail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/default_contact"
+                            android:textColor="@color/text_gray"
+                            android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="18dp"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="#F4F7FF"
+                            app:cardCornerRadius="18dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="0dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="14dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/dashboard_blood_label"
+                                    android:textColor="@color/text_gray"
+                                    android:textSize="11sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="@string/default_blood_group"
+                                    android:textColor="@color/sos_red"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="#F0FFF5"
+                            app:cardCornerRadius="18dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="0dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:padding="14dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/dashboard_allergies_label"
+                                    android:textColor="@color/text_gray"
+                                    android:textSize="11sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="4dp"
+                                    android:text="@string/default_allergies"
+                                    android:textColor="@color/green_verified"
+                                    android:textSize="15sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="26dp"
+                app:cardElevation="2dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -117,18 +253,26 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- Personal Information -->
                     <LinearLayout
                         android:id="@+id/rowPersonalInfo"
                         style="@style/ProfileMenuItem">
-                        <ImageView style="@style/ProfileMenuIcon" android:src="@drawable/ic_personal" android:importantForAccessibility="no" />
+                        <ImageView
+                            style="@style/ProfileMenuIcon"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_personal" />
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
-                            <TextView style="@style/ProfileMenuText" android:text="@string/personal_info" android:layout_marginStart="0dp" />
+
+                            <TextView
+                                style="@style/ProfileMenuText"
+                                android:layout_marginStart="0dp"
+                                android:text="@string/personal_info" />
+
                             <TextView
                                 android:id="@+id/tvSummaryPersonal"
                                 android:layout_width="wrap_content"
@@ -137,23 +281,34 @@
                                 android:textColor="@color/text_gray"
                                 android:textSize="12sp" />
                         </LinearLayout>
-                        <ImageView style="@style/ProfileMenuChevron" android:importantForAccessibility="no" />
+
+                        <ImageView
+                            style="@style/ProfileMenuChevron"
+                            android:importantForAccessibility="no" />
                     </LinearLayout>
 
                     <View style="@style/ProfileMenuDivider" />
 
-                    <!-- Location Information -->
                     <LinearLayout
                         android:id="@+id/rowLocationInfo"
                         style="@style/ProfileMenuItem">
-                        <ImageView style="@style/ProfileMenuIcon" android:src="@drawable/ic_location" android:importantForAccessibility="no" />
+                        <ImageView
+                            style="@style/ProfileMenuIcon"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_location" />
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_weight="1"
                             android:orientation="vertical">
-                            <TextView style="@style/ProfileMenuText" android:text="@string/location_information_label" android:layout_marginStart="0dp" />
+
+                            <TextView
+                                style="@style/ProfileMenuText"
+                                android:layout_marginStart="0dp"
+                                android:text="@string/location_information_label" />
+
                             <TextView
                                 android:id="@+id/tvSummaryLocation"
                                 android:layout_width="wrap_content"
@@ -162,23 +317,34 @@
                                 android:textColor="@color/text_gray"
                                 android:textSize="12sp" />
                         </LinearLayout>
-                        <ImageView style="@style/ProfileMenuChevron" android:importantForAccessibility="no" />
+
+                        <ImageView
+                            style="@style/ProfileMenuChevron"
+                            android:importantForAccessibility="no" />
                     </LinearLayout>
 
                     <View style="@style/ProfileMenuDivider" />
 
-                    <!-- Family Circle -->
                     <LinearLayout
                         android:id="@+id/rowFamilyCircle"
                         style="@style/ProfileMenuItem">
-                        <ImageView style="@style/ProfileMenuIcon" android:src="@drawable/ic_alert_family" android:importantForAccessibility="no" />
+                        <ImageView
+                            style="@style/ProfileMenuIcon"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_alert_family" />
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:layout_marginStart="16dp"
+                            android:layout_weight="1"
                             android:orientation="vertical">
-                            <TextView style="@style/ProfileMenuText" android:text="@string/family_circle_label" android:layout_marginStart="0dp" />
+
+                            <TextView
+                                style="@style/ProfileMenuText"
+                                android:layout_marginStart="0dp"
+                                android:text="@string/family_circle_label" />
+
                             <TextView
                                 android:id="@+id/tvSummaryFamily"
                                 android:layout_width="wrap_content"
@@ -187,23 +353,34 @@
                                 android:textColor="@color/text_gray"
                                 android:textSize="12sp" />
                         </LinearLayout>
-                        <ImageView style="@style/ProfileMenuChevron" android:importantForAccessibility="no" />
+
+                        <ImageView
+                            style="@style/ProfileMenuChevron"
+                            android:importantForAccessibility="no" />
                     </LinearLayout>
 
                     <View style="@style/ProfileMenuDivider" />
 
-                    <!-- Safety Information -->
                     <LinearLayout
                         android:id="@+id/rowSafetyInfo"
                         style="@style/ProfileMenuItem">
-                        <ImageView style="@style/ProfileMenuIcon" android:src="@drawable/ic_sos_shield" android:importantForAccessibility="no" />
+                        <ImageView
+                            style="@style/ProfileMenuIcon"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_sos_shield" />
+
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:layout_marginStart="16dp"
+                            android:layout_weight="1"
                             android:orientation="vertical">
-                            <TextView style="@style/ProfileMenuText" android:text="@string/section_safety_information" android:layout_marginStart="0dp" />
+
+                            <TextView
+                                style="@style/ProfileMenuText"
+                                android:layout_marginStart="0dp"
+                                android:text="@string/section_safety_information" />
+
                             <TextView
                                 android:id="@+id/tvSummarySafety"
                                 android:layout_width="wrap_content"
@@ -212,50 +389,80 @@
                                 android:textColor="@color/text_gray"
                                 android:textSize="12sp" />
                         </LinearLayout>
-                        <ImageView style="@style/ProfileMenuChevron" android:importantForAccessibility="no" />
+
+                        <ImageView
+                            style="@style/ProfileMenuChevron"
+                            android:importantForAccessibility="no" />
                     </LinearLayout>
 
                     <View style="@style/ProfileMenuDivider" />
 
-                    <!-- Account & Security -->
                     <LinearLayout
                         android:id="@+id/rowAccountSecurity"
                         style="@style/ProfileMenuItem">
-                        <ImageView style="@style/ProfileMenuIcon" android:src="@drawable/ic_lock" android:importantForAccessibility="no" />
-                        <TextView style="@style/ProfileMenuText" android:text="@string/account_security_label" />
-                        <ImageView style="@style/ProfileMenuChevron" android:importantForAccessibility="no" />
+                        <ImageView
+                            style="@style/ProfileMenuIcon"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_lock" />
+
+                        <TextView
+                            style="@style/ProfileMenuText"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/account_security_label" />
+
+                        <ImageView
+                            style="@style/ProfileMenuChevron"
+                            android:importantForAccessibility="no" />
                     </LinearLayout>
 
                     <View style="@style/ProfileMenuDivider" />
 
-                    <!-- Language -->
                     <LinearLayout
                         android:id="@+id/rowLanguage"
                         style="@style/ProfileMenuItem">
-                        <ImageView style="@style/ProfileMenuIcon" android:src="@drawable/ic_language" android:importantForAccessibility="no" />
-                        <TextView style="@style/ProfileMenuText" android:text="@string/language_label" />
-                        <ImageView style="@style/ProfileMenuChevron" android:importantForAccessibility="no" />
+                        <ImageView
+                            style="@style/ProfileMenuIcon"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_language" />
+
+                        <TextView
+                            style="@style/ProfileMenuText"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/language_label" />
+
+                        <ImageView
+                            style="@style/ProfileMenuChevron"
+                            android:importantForAccessibility="no" />
                     </LinearLayout>
 
                     <View style="@style/ProfileMenuDivider" />
 
-                    <!-- Privacy Settings -->
                     <LinearLayout
                         android:id="@+id/rowPrivacySettings"
                         style="@style/ProfileMenuItem">
-                        <ImageView style="@style/ProfileMenuIcon" android:src="@drawable/ic_privacy" android:importantForAccessibility="no" />
-                        <TextView style="@style/ProfileMenuText" android:text="@string/privacy_settings_label" />
-                        <ImageView style="@style/ProfileMenuChevron" android:importantForAccessibility="no" />
-                    </LinearLayout>
+                        <ImageView
+                            style="@style/ProfileMenuIcon"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_privacy" />
 
+                        <TextView
+                            style="@style/ProfileMenuText"
+                            android:layout_marginStart="16dp"
+                            android:layout_weight="1"
+                            android:text="@string/privacy_settings_label" />
+
+                        <ImageView
+                            style="@style/ProfileMenuChevron"
+                            android:importantForAccessibility="no" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Bottom Navigation placeholder -->
             <View
                 android:layout_width="match_parent"
                 android:layout_height="24dp" />
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -263,11 +470,10 @@
         android:id="@+id/bottomNavigation"
         style="@style/App.BottomNavigation"
         android:layout_width="match_parent"
-        android:background="@drawable/bg_bottom_nav"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_margin="16dp"
-        app:menu="@menu/bottom_nav_menu"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:background="@drawable/bg_bottom_nav"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

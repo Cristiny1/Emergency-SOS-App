@@ -6,12 +6,14 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.app.NotificationManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
@@ -86,6 +88,10 @@ public class SettingsActivity extends BaseActivity {
         switchNotifications.setOnCheckedChangeListener((v, checked) -> {
             playClickFeedback();
             prefs.edit().putBoolean("notifications_enabled", checked).apply();
+            if (!checked) {
+                NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                if (notificationManager != null) notificationManager.cancel(101);
+            }
         });
 
         findViewById(R.id.rowSimulation).setOnClickListener(v -> {
@@ -111,8 +117,15 @@ public class SettingsActivity extends BaseActivity {
 
         findViewById(R.id.rowClearHistory).setOnClickListener(v -> {
             playClickFeedback();
-            HistoryManager.clear(this);
-            Toast.makeText(this, R.string.event_deleted, Toast.LENGTH_SHORT).show();
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.clear_history_title)
+                    .setMessage(R.string.clear_history_message)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.clear_history, (dialog, which) -> {
+                        HistoryManager.clear(this);
+                        Toast.makeText(this, R.string.history_cleared, Toast.LENGTH_SHORT).show();
+                    })
+                    .show();
         });
 
         btnLogout.setOnClickListener(v -> {

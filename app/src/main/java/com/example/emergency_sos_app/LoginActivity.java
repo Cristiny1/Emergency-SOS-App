@@ -10,6 +10,19 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.emergency_sos_app.models.ApiResponse;
+import com.example.emergency_sos_app.models.LoginData;
+import com.example.emergency_sos_app.models.LoginRequest;
+import com.example.emergency_sos_app.network.RetrofitClient;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import com.example.emergency_sos_app.models.ApiResponse;
 import com.example.emergency_sos_app.models.LoginData;
 import com.example.emergency_sos_app.models.LoginRequest;
@@ -148,34 +161,80 @@ public class LoginActivity extends BaseActivity {
             return;
         }
 
-        SharedPreferences sp = getSharedPreferences("sos_profile_prefs", MODE_PRIVATE);
+        RetrofitClient.getApiService().login(new LoginRequest(email, password)).enqueue(new Callback<ApiResponse<LoginData>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<LoginData>> call, Response<ApiResponse<LoginData>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().success && response.body().data != null) {
+                    LoginData data = response.body().data;
+                    RetrofitClient.saveToken(data.token, data.refreshToken);
+                    saveSession(data.user != null ? data.user.fullName : "User", email, cbRememberMe.isChecked(), true);
+                    Toast.makeText(LoginActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+                    intent.putExtra("USER_NAME", data.user != null ? data.user.fullName : "User");
+                    startFadeActivity(intent);
+                    finish();
+                    return;
+                }
 
-        String savedEmail = sp.getString("email", "admin@gmail.com");
-        String savedPassword = sp.getString("password", "123456");
-        String savedName = sp.getString("name", "Admin");
-
-        if (email.equals(savedEmail) && password.equals(savedPassword)) {
-
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putBoolean("has_account", true); // Set account flag on successful login
-
-            if (cbRememberMe.isChecked()) {
-                editor.putBoolean("remember", true);
-            } else {
-                editor.putBoolean("remember", false);
+                fallbackToLocalLogin(email, password);
             }
 
-            editor.apply();
+            @Override
+            public void onFailure(Call<ApiResponse<LoginData>> call, Throwable t) {
+                fallbackToLocalLogin(email, password);
+            }
+        });
+    }
 
+    private void fallbackToLocalLogin(String email, String password) {
+        SharedPreferences sp = getSharedPreferences("sos_profile_prefs", MODE_PRIVATE);
+        String savedEmail = sp.getString("email", "admin@gmail.com");
+        String savedPassword = sp.getString("password", "");
+        String savedName = sp.getString("name", "Admin");
+        String hashedInputPassword = hashPassword(password);
+        boolean passwordMatches = password.equals(savedPassword) || hashedInputPassword.equals(savedPassword);
+
+        if (email.equals(savedEmail) && passwordMatches) {
+            saveSession(savedName, email, cbRememberMe.isChecked(), true);
             Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show();
-
             Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
             intent.putExtra("USER_NAME", savedName);
             startFadeActivity(intent);
             finish();
-
         } else {
             Toast.makeText(this, R.string.invalid_credentials, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void saveSession(String name, String email, boolean remember, boolean hasAccount) {
+        SharedPreferences sp = getSharedPreferences("sos_profile_prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("name", name);
+        editor.putString("email", email);
+        editor.putBoolean("remember", remember);
+        editor.putBoolean("has_account", hasAccount);
+        editor.apply();
+    }
+
+    private String hashPassword(String password) {
+        if (password == null || password.isEmpty()) {
+            return "";
+        }
+
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hex = new StringBuilder();
+            for (byte b : hash) {
+                String hexValue = Integer.toHexString(0xff & b);
+                if (hexValue.length() == 1) {
+                    hex.append('0');
+                }
+                hex.append(hexValue);
+            }
+            return hex.toString();
+        } catch (NoSuchAlgorithmException e) {
+            return password;
         }
     }
 }

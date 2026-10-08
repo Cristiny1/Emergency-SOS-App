@@ -94,8 +94,8 @@
     <string name="delete_account_label">Delete Account</string>
     <string name="manage_identity_desc">Manage your identity and security</string>
     <string name="profile_updated_success">Profile Updated Successfully</string>
-    <string name="delete_account_confirm">Are you sure you want to delete your account?</string>
-    <string name="account_deleted_success">Account Deleted Successfully</string>
+    <string name="delete_account_confirm">This permanently removes local app data including your profile, saved photo, family contacts, SOS history, calendar entries, cached translations, and sign-in tokens from this device. This app cannot delete an account or data stored by a remote backend. Continue?</string>
+    <string name="account_deleted_success">Local app data was removed. Remote account data was not deleted.</string>
     <string name="unspecified">Unspecified</string>
     <string name="default_province">Siem Reap</string>
     <string name="default_country">Cambodia</string>
@@ -176,6 +176,8 @@
 
     <!-- SOS Workflow & Tracking -->
     <string name="active_sos_header">ACTIVE SOS</string>
+    <string name="zoom_in">Zoom in</string>
+    <string name="zoom_out">Zoom out</string>
     <string name="rescue_on_the_way">Rescue is on the way!</string>
     <string name="emergency_assisted_closed">Emergency Assisted &amp; Closed</string>
     <string name="return_to_dashboard">RETURN TO DASHBOARD</string>
@@ -351,9 +353,10 @@
     <string name="settings_title">Settings</string>
     <string name="account_label">Account</string>
     <string name="app_preferences">App Preferences</string>
-    <string name="realtime_notifications">Real-time Notifications</string>
+    <string name="realtime_notifications">SOS Status Notifications</string>
+    <string name="realtime_notifications_desc">Show active SOS status in the notification shade</string>
     <string name="simulation_mode">Simulation Mode</string>
-    <string name="simulation_mode_desc">Simulate emergency for testing</string>
+    <string name="simulation_mode_desc">Use demo data; do not send a real emergency request</string>
     <string name="activate_sos_btn">Activate SOS</string>
     <string name="call_emergency_ai">Call Emergency AI</string>
     <string name="news_category_placeholder">Category</string>
@@ -383,6 +386,23 @@
     <string name="phone_not_registered">Phone number not registered</string>
     <string name="email_not_registered">Email not registered</string>
     <string name="privacy_security">Privacy &amp; Security</string>
+    <string name="privacy_intro">This page describes the data and permissions used by the current app build. Actual handling of information sent to a configured service depends on that service and its privacy terms. Do not treat this app as a guarantee of encryption, deletion, or emergency-service delivery.</string>
+    <string name="privacy_data_title">Information stored on this device</string>
+    <string name="privacy_data_detail">The app saves profile and emergency-readiness details in private app preferences, including your name, contact details, medical notes, and profile-photo path. SOS history is also stored locally and limited to the most recent 50 events, including event type, location text, and time. Clearing history removes that local event list only; it does not delete your profile or records already sent to a server. Sign out does not erase locally saved profile information. The in-app Delete Account action currently clears profile preferences on this device; it does not confirm deletion from a backend, clear SOS history, or clear saved authentication tokens.</string>
+    <string name="privacy_permissions_title">Android permissions</string>
+    <string name="privacy_network_title">Network and sharing</string>
+    <string name="privacy_network_detail">When connected to a backend, the app can send account, report, and SOS information required by those features. Location is used to show your position and support SOS or tracking workflows. Report evidence may include photos, video, or audio that you choose to capture. This project does not include a complete in-app data export or account-erasure flow. Review the backend operator’s policy before using real personal data.</string>
+    <string name="manage_app_permissions">Manage permissions in Android settings</string>
+    <string name="permission_status_format">%1$s: %2$s</string>
+    <string name="permission_location">Location (dashboard, maps, SOS)</string>
+    <string name="permission_camera">Camera (report evidence)</string>
+    <string name="permission_microphone">Microphone (voice evidence and assistant)</string>
+    <string name="permission_notifications">Notifications (SOS status)</string>
+    <string name="permission_allowed">Allowed</string>
+    <string name="permission_not_allowed">Not allowed</string>
+    <string name="clear_history_title">Clear SOS history?</string>
+    <string name="clear_history_message">This removes the SOS event list saved on this device. It does not remove your profile data or information already sent to a service.</string>
+    <string name="history_cleared">SOS history cleared</string>
     <string name="help_support">Help &amp; Support</string>
     <string name="emergency_directory_title">Emergency Directory</string>
     <string name="password_reset_success">Password reset successfully</string>

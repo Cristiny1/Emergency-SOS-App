@@ -17,17 +17,19 @@
             android:id="@+id/topBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="0dp"
-            app:cardElevation="4dp"
-            app:shapeAppearanceOverlay="@style/ShapeAppearance.HeaderRoundedBottom">
+            app:cardElevation="2dp"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.HeaderRoundedBottom"
+            app:strokeColor="#EEF2F7"
+            app:strokeWidth="1dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/topBarContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="12dp">
+                android:paddingHorizontal="18dp"
+                android:paddingVertical="14dp">
 
                 <ImageView
                     android:id="@+id/btnMenu"
@@ -49,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:paddingHorizontal="8dp"
+                    android:paddingHorizontal="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/btn_language_flag"
                     app:layout_constraintStart_toEndOf="@id/btnMenu"
@@ -74,7 +76,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/system_connected"
-                            android:textColor="@color/text_gray"
+                            android:textColor="@color/text_dark"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.05" />
@@ -110,8 +112,8 @@
 
                 <ImageView
                     android:id="@+id/btn_language_flag"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_marginEnd="12dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
@@ -125,14 +127,14 @@
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/btnProfileHeader"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
                     android:clickable="true"
                     android:contentDescription="@string/cd_profile_header"
                     android:focusable="true"
                     android:src="@drawable/ic_personal"
                     android:transitionName="profile_photo"
-                    app:civ_border_color="@color/fb_bg_gray"
+                    app:civ_border_color="#EEF2F7"
                     app:civ_border_width="1.5dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -142,16 +144,21 @@
         </com.google.android.material.card.MaterialCardView>
 
         <!-- Main Dashboard Content -->
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/bottomNavigation"
             android:layout_below="@id/topBar"
-            android:gravity="top|center_horizontal"
-            android:orientation="vertical"
+            android:fillViewport="true"
             android:paddingHorizontal="24dp"
             android:paddingTop="15dp"
             android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|center_horizontal"
+            android:orientation="vertical">
 
             <!-- Report Status Card -->
             <com.google.android.material.card.MaterialCardView
@@ -215,7 +222,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="8dp"
                                 android:text="@string/report_status_pending"
-                                android:textColor="@color/text_gray"
+                                android:textColor="@color/text_dark"
                                 android:textSize="12sp" />
                         </LinearLayout>
                     </LinearLayout>
@@ -226,7 +233,7 @@
                         android:layout_height="24dp"
                         android:rotation="45"
                         android:src="@drawable/ic_check"
-                        app:tint="@color/text_gray" />
+                        app:tint="@color/text_dark" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -241,7 +248,7 @@
                 android:letterSpacing="0.08"
                 android:text="Monday, Aug 12, 2024 12:00 PM"
                 android:textAllCaps="true"
-                android:textColor="@color/text_gray"
+                android:textColor="@color/text_dark"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -261,29 +268,29 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="@string/dashboard_placeholder_subtitle"
-                android:textColor="@color/text_gray"
+                android:textColor="@color/text_dark"
                 android:textSize="14sp"
                 android:gravity="center" />
 
             <!-- Pulsing SOS Button Container -->
             <FrameLayout
                 android:id="@+id/btnSosContainer"
-                android:layout_width="280dp"
-                android:layout_height="280dp"
+                android:layout_width="240dp"
+                android:layout_height="240dp"
                 android:layout_marginTop="24dp">
 
                 <View
                     android:id="@+id/pulseRing1"
-                    android:layout_width="240dp"
-                    android:layout_height="240dp"
+                    android:layout_width="210dp"
+                    android:layout_height="210dp"
                     android:layout_gravity="center"
                     android:background="@drawable/bg_circle_white"
                     android:backgroundTint="@color/sos_pulse_red" />
 
                 <View
                     android:id="@+id/pulseRing2"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
                     android:layout_gravity="center"
                     android:background="@drawable/bg_circle_white"
                     android:backgroundTint="@color/sos_pulse_red" />
@@ -291,19 +298,19 @@
                 <!-- Progress Indicator for Hold-to-SOS -->
                 <com.google.android.material.progressindicator.CircularProgressIndicator
                     android:id="@+id/sosProgressIndicator"
-                    android:layout_width="180dp"
-                    android:layout_height="180dp"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
                     android:layout_gravity="center"
                     android:visibility="invisible"
                     app:indicatorColor="@color/sos_red"
-                    app:indicatorSize="180dp"
+                    app:indicatorSize="160dp"
                     app:trackColor="#20FF0000"
                     app:trackThickness="8dp" />
 
                 <FrameLayout
                     android:id="@+id/btnSos"
-                    android:layout_width="160dp"
-                    android:layout_height="160dp"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
                     android:layout_gravity="center"
                     android:background="@drawable/bg_sos_button_premium"
                     android:clickable="true"
@@ -317,7 +324,7 @@
                         android:layout_gravity="center"
                         android:text="@string/sos_button_text"
                         android:textColor="@color/white"
-                        android:textSize="36sp"
+                        android:textSize="32sp"
                         android:textStyle="bold" />
                 </FrameLayout>
             </FrameLayout>
@@ -335,6 +342,7 @@
                 android:textAllCaps="true"
                 android:elevation="2dp" />
         </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <!-- Bottom Actions Floating Hub -->
         <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -348,7 +356,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_medical_card"
-                android:elevation="20dp"
+                android:elevation="18dp"
                 app:behavior_peekHeight="160dp"
                 app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
@@ -404,7 +412,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:alignmentMode="alignMargins"
-                        android:columnCount="3">
+                        android:columnCount="3"
+                        android:useDefaultMargins="true">
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/cardFamily"
@@ -631,7 +640,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/nearest_assistance_header"
-                            android:textColor="@color/text_gray"
+                            android:textColor="@color/text_dark"
                             android:textSize="11sp"
                             android:textStyle="bold"
                             android:letterSpacing="0.05" />
@@ -731,7 +740,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/dashboard_blood_label"
-                                android:textColor="@color/text_gray"
+                                android:textColor="@color/text_dark"
                                 android:textSize="11sp" />
 
                             <TextView
@@ -753,7 +762,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/dashboard_allergies_label"
-                                android:textColor="@color/text_gray"
+                                android:textColor="@color/text_dark"
                                 android:textSize="11sp" />
 
                             <TextView
@@ -785,7 +794,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/dashboard_unit_status"
-                                android:textColor="@color/text_gray"
+                                android:textColor="@color/text_dark"
                                 android:textSize="11sp" />
 
                             <LinearLayout

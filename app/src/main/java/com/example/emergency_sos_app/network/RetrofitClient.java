@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
+
+import com.example.emergency_sos_app.BuildConfig;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
@@ -22,15 +24,25 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
 
-    private static final String BASE_URL = "http://10.0.2.2:5000/api/";
+    private static final String DEFAULT_BASE_URL = "http://10.0.2.2:5000/api/";
 
     private static Retrofit retrofit;
     private static SosApiService apiService;
     private static SharedPreferences sharedPreferences;
 
     public static void init(Context context) {
-        sharedPreferences = context.getSharedPreferences("auth", Context.MODE_PRIVATE);
+        if (context == null) return;
+        Context appContext = context.getApplicationContext();
+        sharedPreferences = appContext.getSharedPreferences("auth", Context.MODE_PRIVATE);
         createRetrofitClient();
+    }
+
+    private static String getBaseUrl() {
+        String configuredUrl = BuildConfig.API_BASE_URL;
+        if (configuredUrl != null && !configuredUrl.trim().isEmpty()) {
+            return configuredUrl;
+        }
+        return DEFAULT_BASE_URL;
     }
 
     private static void createRetrofitClient() {
@@ -46,7 +58,7 @@ public class RetrofitClient {
         Gson gson = new GsonBuilder().setLenient().create();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
+                .baseUrl(getBaseUrl())
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
@@ -62,6 +74,7 @@ public class RetrofitClient {
     }
 
     public static void saveToken(String accessToken, String refreshToken) {
+        if (sharedPreferences == null) return;
         sharedPreferences.edit()
                 .putString("access_token", accessToken)
                 .putString("refresh_token", refreshToken)
@@ -69,14 +82,15 @@ public class RetrofitClient {
     }
 
     public static String getAccessToken() {
-        return sharedPreferences.getString("access_token", null);
+        return sharedPreferences != null ? sharedPreferences.getString("access_token", null) : null;
     }
 
     public static String getRefreshToken() {
-        return sharedPreferences.getString("refresh_token", null);
+        return sharedPreferences != null ? sharedPreferences.getString("refresh_token", null) : null;
     }
 
     public static void clearTokens() {
+        if (sharedPreferences == null) return;
         sharedPreferences.edit()
                 .remove("access_token")
                 .remove("refresh_token")

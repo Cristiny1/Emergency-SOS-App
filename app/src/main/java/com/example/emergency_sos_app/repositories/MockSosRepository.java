@@ -12,9 +12,16 @@ import com.example.emergency_sos_app.models.SosStatus;
  */
 public class MockSosRepository implements SosRepository {
 
-    private final Handler handler = new Handler(Looper.getMainLooper());
+    private Handler handler;
     private SosEvent lastEvent;
     private SosCallback activeCallback;
+
+    private Handler getHandler() {
+        if (handler == null) {
+            handler = new Handler(Looper.getMainLooper());
+        }
+        return handler;
+    }
 
     @Override
     public void createSos(SosEvent sos, SosCallback callback) {
@@ -27,6 +34,8 @@ public class MockSosRepository implements SosRepository {
     }
 
     private void simulateProgression() {
+        Handler handler = getHandler();
+
         // Step 1: Pending (Local)
         updateStatus(SosStatus.PENDING);
 
@@ -64,7 +73,7 @@ public class MockSosRepository implements SosRepository {
         if (activeCallback != null) {
             try {
                 // Ensure UI notifications happen on the main thread if coming from handler
-                handler.post(() -> activeCallback.onStatusChanged(status));
+                getHandler().post(() -> activeCallback.onStatusChanged(status));
             } catch (Exception e) {
                 Log.e("MockRepo", "Callback notification error: " + e.getMessage());
             }
@@ -75,7 +84,7 @@ public class MockSosRepository implements SosRepository {
     public void cancelSos(String sosId, SosCallback callback) {
         Log.d("MockRepo", "Cancelling SOS: " + sosId);
         this.activeCallback = callback;
-        handler.removeCallbacksAndMessages(null); // Stop any pending mock updates
+        getHandler().removeCallbacksAndMessages(null); // Stop any pending mock updates
         updateStatus(SosStatus.CANCELLED);
     }
 

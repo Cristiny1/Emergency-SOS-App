@@ -6,6 +6,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.emergency_sos_app.models.ApiResponse;
+import com.example.emergency_sos_app.models.LoginData;
+import com.example.emergency_sos_app.network.RetrofitClient;
+
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -127,25 +141,85 @@ public class SignupActivity extends BaseActivity {
     private void completeSignup() {
         playClickFeedback();
 
-        // Save all data to SharedPreferences
+        String email = viewModel.email.getValue() != null ? viewModel.email.getValue().trim() : "";
+        String password = viewModel.password.getValue() != null ? viewModel.password.getValue() : "";
+        String fullName = viewModel.fullName.getValue() != null ? viewModel.fullName.getValue().trim() : "";
+
+        Map<String, String> payload = new HashMap<>();
+        payload.put("email", email);
+        payload.put("password", password);
+        payload.put("fullName", fullName);
+
+        RetrofitClient.getApiService().register(payload).enqueue(new Callback<ApiResponse<LoginData>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<LoginData>> call, Response<ApiResponse<LoginData>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().success && response.body().data != null) {
+                    LoginData data = response.body().data;
+                    RetrofitClient.saveToken(data.token, data.refreshToken);
+                    saveLocalProfile(data.user != null ? data.user.fullName : fullName, email, password);
+                    Toast.makeText(SignupActivity.this, R.string.account_created_success, Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(SignupActivity.this, DashboardActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
+                    return;
+                }
+
+                saveLocalProfile(fullName, email, password);
+                Toast.makeText(SignupActivity.this, R.string.account_created_success, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(SignupActivity.this, DashboardActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<LoginData>> call, Throwable t) {
+                saveLocalProfile(fullName, email, password);
+                Toast.makeText(SignupActivity.this, R.string.account_created_success, Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(SignupActivity.this, DashboardActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+    }
+
+    private void saveLocalProfile(String fullName, String email, String password) {
+        String hashedPassword = hashPassword(password);
         getSharedPreferences("sos_profile_prefs", MODE_PRIVATE).edit()
-                .putString("name", viewModel.fullName.getValue())
+                .putString("name", fullName)
                 .putString("username", viewModel.username.getValue())
                 .putString("dob", viewModel.dob.getValue())
                 .putString("gender", viewModel.gender.getValue())
-                .putString("email", viewModel.email.getValue())
+                .putString("email", email)
                 .putString("phone", viewModel.phone.getValue())
-                .putString("password", viewModel.password.getValue()) // In real app, never save plain text
+                .putString("password", hashedPassword)
                 .putBoolean("remember", true)
                 .putBoolean("has_account", true)
                 .apply();
+    }
 
-        Toast.makeText(this, R.string.account_created_success, Toast.LENGTH_LONG).show();
+    private String hashPassword(String password) {
+        if (password == null || password.isEmpty()) {
+            return "";
+        }
 
-        Intent intent = new Intent(this, DashboardActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            StringBuilder hex = new StringBuilder();
+            for (byte b : hash) {
+                String hexValue = Integer.toHexString(0xff & b);
+                if (hexValue.length() == 1) {
+                    hex.append('0');
+                }
+                hex.append(hexValue);
+            }
+            return hex.toString();
+        } catch (NoSuchAlgorithmException e) {
+            return password;
+        }
     }
 
     private static class SignupAdapter extends FragmentStateAdapter {

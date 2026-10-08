@@ -3,6 +3,8 @@ package com.example.emergency_sos_app;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
+import com.example.emergency_sos_app.network.RetrofitClient;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -26,6 +29,8 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AccountDetailActivity extends BaseActivity {
 
@@ -40,6 +45,7 @@ public class AccountDetailActivity extends BaseActivity {
     private com.google.android.material.card.MaterialCardView btnChangePhoto;
 
     private ActivityResultLauncher<String> photoPickerLauncher;
+    private final ExecutorService imageIoExecutor = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +109,12 @@ public class AccountDetailActivity extends BaseActivity {
         spinnerGender.setAdapter(adapter);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        imageIoExecutor.shutdownNow();
+    }
+
     private void setupDatePicker() {
         etDob.setOnClickListener(v -> {
             if (!isEditMode) return;
@@ -159,14 +171,54 @@ public class AccountDetailActivity extends BaseActivity {
                 new ActivityResultContracts.GetContent(),
                 uri -> {
                     if (uri == null) return;
-                    File savedFile = copyImageToInternalStorage(uri);
-                    if (savedFile != null) {
-                        ivAccountProfile.setImageURI(Uri.fromFile(savedFile));
+
+                    imageIoExecutor.execute(() -> {
+                        File savedFile = copyImageToInternalStorage(uri);
+                        if (savedFile == null) return;
+
                         prefs.edit().putString("profile_photo_path", savedFile.getAbsolutePath()).apply();
-                        vibrate(40);
-                    }
+
+                        Bitmap bitmap = decodeBitmapFromFile(savedFile);
+                        runOnUiThread(() -> {
+                            if (bitmap != null) {
+                                ivAccountProfile.setImageBitmap(bitmap);
+                            } else {
+                                ivAccountProfile.setImageResource(R.drawable.ic_personal_white);
+                            }
+                            vibrate(40);
+                        });
+                    });
                 }
         );
+    }
+
+    private Bitmap decodeBitmapFromFile(File photoFile) {
+        try {
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(photoFile.getAbsolutePath(), options);
+            options.inSampleSize = calculateInSampleSize(options, 512, 512);
+            options.inJustDecodeBounds = false;
+            return BitmapFactory.decodeFile(photoFile.getAbsolutePath(), options);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        int inSampleSize = 1;
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
     }
 
     private File copyImageToInternalStorage(Uri sourceUri) {
@@ -203,7 +255,18 @@ public class AccountDetailActivity extends BaseActivity {
         String photoPath = prefs.getString("profile_photo_path", null);
         if (photoPath != null) {
             File photoFile = new File(photoPath);
-            if (photoFile.exists()) ivAccountProfile.setImageURI(Uri.fromFile(photoFile));
+            if (photoFile.exists()) {
+                imageIoExecutor.execute(() -> {
+                    Bitmap bitmap = decodeBitmapFromFile(photoFile);
+                    runOnUiThread(() -> {
+                        if (bitmap != null) {
+                            ivAccountProfile.setImageBitmap(bitmap);
+                        } else {
+                            ivAccountProfile.setImageResource(R.drawable.ic_personal_white);
+                        }
+                    });
+                });
+            }
         } else {
             ivAccountProfile.setImageResource(R.drawable.ic_personal_white);
         }
@@ -241,7 +304,7 @@ public class AccountDetailActivity extends BaseActivity {
                 .setTitle(R.string.delete_account_label)
                 .setMessage(R.string.delete_account_confirm)
                 .setPositiveButton(R.string.delete, (dialog, which) -> {
-                    prefs.edit().clear().apply();
+                    clearLocalAccountData();
                     Toast.makeText(this, R.string.account_deleted_success, Toast.LENGTH_SHORT).show();
                     
                     Intent intent = new Intent(this, LoginActivity.class);
@@ -251,5 +314,27 @@ public class AccountDetailActivity extends BaseActivity {
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
+    }
+
+    private void clearLocalAccountData() {
+        String photoPath = prefs.getString("profile_photo_path", null);
+        prefs.edit().clear().apply();
+
+        getSharedPreferences("sos_history_prefs", MODE_PRIVATE).edit().clear().apply();
+        getSharedPreferences("family_circle_prefs", MODE_PRIVATE).edit().clear().apply();
+        getSharedPreferences("safety_calendar_prefs", MODE_PRIVATE).edit().clear().apply();
+        getSharedPreferences("translation_cache_prefs", MODE_PRIVATE).edit().clear().apply();
+        RetrofitClient.clearTokens();
+
+        if (photoPath != null) {
+            File photoFile = new File(photoPath);
+            if (photoFile.isFile()) photoFile.delete();
+        }
+
+        android.app.NotificationManager notificationManager = getSystemService(android.app.NotificationManager.class);
+        if (notificationManager != null) {
+            notificationManager.cancel(101);
+            notificationManager.cancel(202);
+        }
     }
 }

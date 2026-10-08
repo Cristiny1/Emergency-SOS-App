@@ -11,8 +11,9 @@
         android:layout_height="wrap_content"
         android:minHeight="?attr/actionBarSize"
         android:background="@color/white"
+        android:paddingVertical="18dp"
         android:elevation="4dp"
-        android:paddingHorizontal="16dp">
+        android:paddingHorizontal="20dp">
 
         <ImageView
             android:id="@+id/btnBack"

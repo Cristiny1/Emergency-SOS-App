@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="14dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="18dp"
         android:background="@color/white"
         android:elevation="4dp">
 
@@ -228,14 +228,28 @@
                             app:tint="@color/text_secondary"
                             android:importantForAccessibility="no" />
 
-                        <TextView
+                        <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="14dp"
                             android:layout_weight="1"
-                            android:text="@string/realtime_notifications"
-                            android:textColor="@color/text_dark"
-                            android:textSize="14sp" />
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/realtime_notifications"
+                                android:textColor="@color/text_dark"
+                                android:textSize="14sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="@string/realtime_notifications_desc"
+                                android:textColor="@color/text_gray"
+                                android:textSize="12sp" />
+                        </LinearLayout>
 
                         <com.google.android.material.switchmaterial.SwitchMaterial
                             android:id="@+id/switchNotifications"

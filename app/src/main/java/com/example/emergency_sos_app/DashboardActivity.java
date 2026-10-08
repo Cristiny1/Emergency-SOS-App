@@ -67,10 +67,16 @@ public class DashboardActivity extends BaseActivity {
     private DrawerLayout drawerLayout;
     private double currentLat = 11.5564, currentLng = 104.9282;
 
+    private static final long ADDRESS_UPDATE_DEBOUNCE_MS = 1500L;
+    private static final double ADDRESS_UPDATE_DISTANCE_METERS = 0.0003d;
+
     private final Handler sosHoldHandler = new Handler(Looper.getMainLooper());
     private final Handler clockHandler = new Handler(Looper.getMainLooper());
     private boolean isSosHolding = false;
     private Intent pendingIntent;
+    private long lastAddressUpdateAt = 0L;
+    private double lastGeocodeLat = Double.NaN;
+    private double lastGeocodeLng = Double.NaN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -371,12 +377,14 @@ public class DashboardActivity extends BaseActivity {
                         tvCurrentAddress.setTextColor(color);
                     } else {
                         tvCurrentAddress.setTextColor(getColor(R.color.text_dark));
-                        updateAddress(currentLat, currentLng);
-                        
+                        if (shouldRefreshAddress(currentLat, currentLng)) {
+                            updateAddress(currentLat, currentLng);
+                        }
+
                         // Show authoritative GPS Status
                         String statusMsg = getString(R.string.gps_status_label, accuracyStatus, accuracy);
                         Log.d("GPS", statusMsg);
-                        
+
                         // Optionally show on UI if needed, for now address bar + Log
                         String current = tvCurrentAddress.getText().toString();
                         if (!current.contains("(")) {
@@ -438,7 +446,21 @@ public class DashboardActivity extends BaseActivity {
         }
     }
 
+    private boolean shouldRefreshAddress(double lat, double lng) {
+        long now = System.currentTimeMillis();
+        if (Double.isNaN(lastGeocodeLat) || Double.isNaN(lastGeocodeLng)) {
+            return true;
+        }
+
+        double distanceDelta = Math.hypot(lat - lastGeocodeLat, lng - lastGeocodeLng);
+        return distanceDelta >= ADDRESS_UPDATE_DISTANCE_METERS || (now - lastAddressUpdateAt) >= ADDRESS_UPDATE_DEBOUNCE_MS;
+    }
+
     private void updateAddress(double lat, double lng) {
+        lastGeocodeLat = lat;
+        lastGeocodeLng = lng;
+        lastAddressUpdateAt = System.currentTimeMillis();
+
         // Update Proximity Info
         ProximityManager.Facility nearestPolice = ProximityManager.getNearest(lat, lng, "POLICE");
         ProximityManager.Facility nearestHospital = ProximityManager.getNearest(lat, lng, "MEDICAL");
@@ -462,7 +484,7 @@ public class DashboardActivity extends BaseActivity {
                 if (addresses != null && !addresses.isEmpty()) {
                     Address addr = addresses.get(0);
                     String fullAddress = addr.getAddressLine(0);
-                    
+
                     if (fullAddress != null) {
                         resolvedAddress = fullAddress;
                         if (!resolvedAddress.toLowerCase().contains("cambodia")) {
@@ -471,7 +493,6 @@ public class DashboardActivity extends BaseActivity {
                     }
                 }
             } catch (Exception e) {
-                // Fallback to raw coordinates if Geocoder (Internet) fails
                 resolvedAddress = String.format(Locale.getDefault(), "Lat: %.4f, Lng: %.4f", lat, lng);
             }
 
@@ -713,6 +734,13 @@ public class DashboardActivity extends BaseActivity {
             com.google.android.material.switchmaterial.SwitchMaterial switchSilent = findViewById(R.id.switchSilentMode);
             final boolean isSilent = switchSilent != null && switchSilent.isChecked();
 
+            // Persist before dispatch so a process death cannot lose the active incident.
+            prefs.edit().putBoolean("is_sos_active", true)
+                       .putString("active_sos_id", sosId)
+                       .putString("active_sos_type", type)
+                       .putBoolean("active_sos_silent", isSilent)
+                       .apply();
+
             // Use Repository to trigger SOS
             RepositoryProvider.getSosRepository(this).createSos(event, new SosRepository.SosCallback() {
                 @Override
@@ -724,13 +752,6 @@ public class DashboardActivity extends BaseActivity {
                             Toast.makeText(DashboardActivity.this, msg, Toast.LENGTH_SHORT).show();
                         });
                         
-                        // Persistent Emergency Mode
-                        prefs.edit().putBoolean("is_sos_active", true)
-                                   .putString("active_sos_id", sosId)
-                                   .putString("active_sos_type", type)
-                                   .putBoolean("active_sos_silent", isSilent)
-                                   .apply();
-                        
                         // Notify Family Circle (Simulation)
                         notifyFamilyCircle(type, sosId);
                     }
@@ -738,6 +759,11 @@ public class DashboardActivity extends BaseActivity {
 
                 @Override
                 public void onError(String message) {
+                    prefs.edit().putBoolean("is_sos_active", false)
+                               .remove("active_sos_id")
+                               .remove("active_sos_type")
+                               .remove("active_sos_silent")
+                               .apply();
                     runOnUiThread(() -> Toast.makeText(DashboardActivity.this, getString(R.string.sos_failed_msg, message), Toast.LENGTH_LONG).show());
                 }
             });
@@ -750,7 +776,7 @@ public class DashboardActivity extends BaseActivity {
             HistoryManager.saveEvent(this, type, address);
 
             // Move to Workflow Screen
-            startWorkflow(type, sosId, isSilent);
+            startWorkflow(type, sosId, isSilent, currentLat, currentLng);
         } catch (Exception e) {
             Log.e("SOS", "Error emitting SOS", e);
             Toast.makeText(this, R.string.emergency_signal_error, Toast.LENGTH_LONG).show();
@@ -773,12 +799,14 @@ public class DashboardActivity extends BaseActivity {
         Toast.makeText(this, R.string.family_notified_sms, Toast.LENGTH_SHORT).show();
     }
 
-    private void startWorkflow(String type, String sosId, boolean isSilent) {
+    private void startWorkflow(String type, String sosId, boolean isSilent, double latitude, double longitude) {
         Log.d("Dashboard", "Launching Workflow for ID: " + sosId);
         Intent intent = new Intent(this, SosWorkflowActivity.class);
         intent.putExtra("INCIDENT_TYPE", type);
         intent.putExtra("SOS_ID", sosId);
         intent.putExtra("IS_SILENT", isSilent);
+        intent.putExtra("USER_LAT", latitude);
+        intent.putExtra("USER_LNG", longitude);
         startFadeActivity(intent);
     }
 

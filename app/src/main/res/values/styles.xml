@@ -6,7 +6,7 @@
     <style name="MedicalId.SectionHeader">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/text_gray</item>
+        <item name="android:textColor">@color/text_dark</item>
         <item name="android:textSize">11sp</item>
         <item name="android:letterSpacing">0.1</item>
         <item name="android:textStyle">bold</item>
@@ -56,7 +56,7 @@
     <style name="MedicalId.CardLabel">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/text_gray</item>
+        <item name="android:textColor">@color/text_dark</item>
         <item name="android:textSize">12sp</item>
     </style>
 
@@ -91,7 +91,7 @@
     <style name="ProfileMenuIcon">
         <item name="android:layout_width">22dp</item>
         <item name="android:layout_height">22dp</item>
-        <item name="android:tint">#9CA3AF</item>
+        <item name="android:tint">#4B5563</item>
     </style>
 
     <style name="ProfileMenuText">

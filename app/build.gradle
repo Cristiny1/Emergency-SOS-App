@@ -7,6 +7,10 @@ android {
     namespace 'com.example.emergency_sos_app'
     compileSdk 36
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId "com.example.emergency_sos_app"
         minSdk 26
@@ -14,6 +18,7 @@ android {
         targetSdk 36
         versionCode 1
         versionName "1.0"
+        buildConfigField "String", "API_BASE_URL", '"http://10.0.2.2:5000/api/"'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

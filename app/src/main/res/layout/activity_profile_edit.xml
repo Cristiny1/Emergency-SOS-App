@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="14dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="18dp"
         android:background="@color/white"
         android:elevation="4dp"
         app:layout_constraintTop_toTopOf="parent">

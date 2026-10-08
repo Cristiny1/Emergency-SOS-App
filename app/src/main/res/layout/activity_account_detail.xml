@@ -3,172 +3,192 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background">
+    android:background="#F3F4F8">
 
-    <!-- Top Bar -->
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="4dp"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="14dp"
+        android:background="#F9FAFB"
+        android:orientation="vertical"
+        android:paddingHorizontal="18dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="10dp"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="10dp"
-            android:rotation="180"
-            android:src="@drawable/ic_chevron_right"
-            android:contentDescription="@string/back"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/text_dark" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:text="@string/account_details_title"
-            android:textColor="@color/text_dark"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/btnBack"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginTop="2dp"
+            android:text="10:37"
+            android:textColor="#1F2430"
+            android:textSize="13sp"
+            android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/btnSave"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:padding="8dp"
-            android:text="@string/edit_label"
-            android:textColor="@color/primary"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:drawablePadding="6dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginTop="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:contentDescription="@string/back"
+                android:focusable="true"
+                android:padding="8dp"
+                android:rotation="180"
+                android:src="@drawable/ic_chevron_right"
+                app:tint="#1F2430" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="1"
+                android:text="@string/account_details_title"
+                android:textColor="#1F2430"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_circle_white"
+                android:clickable="true"
+                android:drawablePadding="6dp"
+                android:focusable="true"
+                android:gravity="center"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="8dp"
+                android:text="@string/edit_label"
+                android:textColor="#4F46E5"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:fillViewport="true"
+        android:paddingHorizontal="18dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerLayout">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp">
+            android:orientation="vertical">
 
-            <!-- Photo Section -->
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="32dp">
+                android:layout_marginBottom="22dp">
+
+                <View
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_profile_halo" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/ivAccountProfile"
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_width="118dp"
+                    android:layout_height="118dp"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_personal"
                     android:transitionName="profile_photo"
-                    app:civ_border_color="@color/white"
+                    app:civ_border_color="#FFFFFF"
                     app:civ_border_width="4dp" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/btnChangePhoto"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="38dp"
+                    android:layout_height="38dp"
                     android:layout_gravity="bottom|end"
-                    android:layout_margin="2dp"
-                    app:cardBackgroundColor="@color/primary"
-                    app:cardCornerRadius="18dp"
-                    app:cardElevation="4dp"
+                    android:layout_margin="10dp"
+                    app:cardBackgroundColor="#5B5CE6"
+                    app:cardCornerRadius="19dp"
+                    app:cardElevation="6dp"
                     app:strokeWidth="0dp">
 
                     <ImageView
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_camera"
                         android:contentDescription="@string/change_photo_label"
+                        android:src="@drawable/ic_camera"
                         app:tint="@color/white" />
                 </com.google.android.material.card.MaterialCardView>
             </FrameLayout>
 
-            <!-- Info Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="10dp"
                 android:text="@string/personal_info_header"
-                android:textColor="@color/text_gray"
-                android:textSize="12sp"
-                android:textStyle="bold"
                 android:textAllCaps="true"
-                android:letterSpacing="0.05" />
+                android:textColor="#2C2B2B"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="1dp"
-                app:cardBackgroundColor="@color/white"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="14dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/full_name_label"
-                        android:textColor="@color/text_gray"
+                        android:textColor="#2C2B2B"
                         android:textSize="12sp" />
 
                     <EditText
                         android:id="@+id/etFullName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:autofillHints="name"
                         android:background="@null"
                         android:hint="@string/enter_name"
                         android:inputType="textPersonName"
-                        android:paddingVertical="8dp"
-                        android:textColor="@color/text_dark"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="10dp"
+                        android:textColor="#2C2B2B"
                         android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:autofillHints="name" />
+                        android:textStyle="bold" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginVertical="8dp"
-                        android:background="#F0F2F5" />
+                        android:background="#EEF1F5" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:text="@string/username_label"
-                        android:textColor="@color/text_gray"
+                        android:textColor="#2C2B2B"
                         android:textSize="12sp" />
 
                     <EditText
@@ -178,20 +198,21 @@
                         android:background="@null"
                         android:hint="@string/create_username_hint"
                         android:inputType="text"
-                        android:paddingVertical="8dp"
-                        android:textColor="@color/text_dark"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="10dp"
+                        android:textColor="#2C2B2B"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginVertical="8dp"
-                        android:background="#F0F2F5" />
+                        android:background="#EEF1F5" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -204,7 +225,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/dob_label"
-                                android:textColor="@color/text_gray"
+                                android:textColor="#2C2B2B"
                                 android:textSize="12sp" />
 
                             <EditText
@@ -212,12 +233,13 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:background="@null"
-                                android:hint="@string/dob_hint"
-                                android:inputType="none"
                                 android:clickable="true"
                                 android:focusable="false"
-                                android:paddingVertical="8dp"
-                                android:textColor="@color/text_dark"
+                                android:hint="@string/dob_hint"
+                                android:inputType="none"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="10dp"
+                                android:textColor="#2C2B2B"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -226,8 +248,7 @@
                             android:layout_width="1dp"
                             android:layout_height="match_parent"
                             android:layout_marginHorizontal="12dp"
-                            android:layout_marginVertical="4dp"
-                            android:background="#F0F2F5" />
+                            android:background="#EEF1F5" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -239,93 +260,94 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/gender_label"
-                                android:textColor="@color/text_gray"
+                                android:textColor="#2C2B2B"
                                 android:textSize="12sp" />
 
                             <Spinner
                                 android:id="@+id/spinnerGender"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
                                 android:background="@null"
-                                android:paddingVertical="4dp" />
+                                android:textColor="#2C2B2B"
+                                android:paddingTop="8dp"
+                                android:paddingBottom="10dp" />
                         </LinearLayout>
                     </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginVertical="8dp"
-                        android:background="#F0F2F5" />
+                        android:background="#EEF1F5" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:text="@string/email_label"
-                        android:textColor="@color/text_gray"
+                        android:textColor="#2C2B2B"
                         android:textSize="12sp" />
 
                     <EditText
                         android:id="@+id/etEmail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:autofillHints="emailAddress"
                         android:background="@null"
                         android:hint="@string/enter_email"
                         android:inputType="textEmailAddress"
-                        android:paddingVertical="8dp"
-                        android:textColor="@color/text_dark"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="10dp"
+                        android:textColor="#2C2B2B"
                         android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:autofillHints="emailAddress" />
+                        android:textStyle="bold" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginVertical="8dp"
-                        android:background="#F0F2F5" />
+                        android:background="#EEF1F5" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:text="@string/phone_label"
-                        android:textColor="@color/text_gray"
+                        android:textColor="#2C2B2B"
                         android:textSize="12sp" />
 
                     <EditText
                         android:id="@+id/etPhone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:autofillHints="phoneNumber"
                         android:background="@null"
                         android:hint="@string/enter_phone"
                         android:inputType="phone"
-                        android:paddingVertical="8dp"
-                        android:textColor="@color/text_dark"
+                        android:paddingTop="8dp"
+                        android:paddingBottom="10dp"
+                        android:textColor="#2C2B2B"
                         android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:autofillHints="phoneNumber" />
-
+                        android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Security Section -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="10dp"
                 android:text="@string/security_settings_header"
-                android:textColor="@color/text_gray"
-                android:textSize="12sp"
-                android:textStyle="bold"
                 android:textAllCaps="true"
-                android:letterSpacing="0.05" />
+                android:textColor="#7A8192"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.08" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="1dp"
-                app:cardBackgroundColor="@color/white"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -344,11 +366,11 @@
                         android:padding="16dp">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_lock"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:importantForAccessibility="no"
-                            app:tint="@color/text_gray" />
+                            android:src="@drawable/ic_lock"
+                            app:tint="#6B7280" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -356,23 +378,23 @@
                             android:layout_marginStart="14dp"
                             android:layout_weight="1"
                             android:text="@string/change_password_label"
-                            android:textColor="@color/text_dark"
+                            android:textColor="#1F2430"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_chevron_right"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
                             android:importantForAccessibility="no"
-                            app:tint="@color/text_gray" />
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="#A0A8B8" />
                     </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:layout_marginStart="50dp"
-                        android:background="#F0F2F5" />
+                        android:layout_marginStart="52dp"
+                        android:background="#EEF1F5" />
 
                     <LinearLayout
                         android:id="@+id/rowDeleteAccount"
@@ -385,11 +407,11 @@
                         android:padding="16dp">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_delete"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
                             android:importantForAccessibility="no"
-                            app:tint="@color/sos_red" />
+                            android:src="@drawable/ic_delete"
+                            app:tint="#E53935" />
 
                         <TextView
                             android:layout_width="0dp"
@@ -397,23 +419,21 @@
                             android:layout_marginStart="14dp"
                             android:layout_weight="1"
                             android:text="@string/delete_account_label"
-                            android:textColor="@color/sos_red"
+                            android:textColor="#E53935"
                             android:textSize="15sp"
                             android:textStyle="bold" />
                     </LinearLayout>
-
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="18dp"
                 android:gravity="center"
                 android:text="@string/manage_identity_desc"
-                android:textColor="@color/text_gray"
+                android:textColor="#7A8192"
                 android:textSize="11sp" />
-
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

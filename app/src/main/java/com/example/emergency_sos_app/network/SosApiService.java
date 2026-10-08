@@ -23,6 +23,9 @@ public interface SosApiService {
     @POST("login")
     Call<ApiResponse<LoginData>> login(@Body LoginRequest request);
 
+    @POST("register")
+    Call<ApiResponse<LoginData>> register(@Body Map<String, String> request);
+
     @POST("sos")
     Call<ApiResponse<Void>> createSos(@Body CreateSosRequest request);
 

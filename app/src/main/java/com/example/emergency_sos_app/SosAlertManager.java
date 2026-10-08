@@ -106,6 +106,11 @@ public class SosAlertManager {
     }
 
     public void showUserStatusNotification(String status) {
+        if (!context.getSharedPreferences("sos_profile_prefs", Context.MODE_PRIVATE)
+                .getBoolean("notifications_enabled", true)) {
+            return;
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (androidx.core.content.ContextCompat.checkSelfPermission(context, android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
                 return;
