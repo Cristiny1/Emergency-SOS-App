@@ -41,7 +41,7 @@ public class SplashActivity extends BaseActivity {
                 .scaleX(1.0f)
                 .scaleY(1.0f)
                 .alpha(1.0f)
-                .setDuration(2000)
+                .setDuration(3000)
                 .setInterpolator(new OvershootInterpolator(1.2f))
                 .withEndAction(() -> {
                     // 3. Reveal Tagline and Status

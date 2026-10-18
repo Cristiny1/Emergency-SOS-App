@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:paddingVertical="18dp"
+        android:layout_marginTop="20dp"
         android:paddingHorizontal="20dp"
         android:elevation="4dp">
 
