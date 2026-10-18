@@ -585,7 +585,14 @@ public class DashboardActivity extends BaseActivity {
     private void updateGreeting() {
         SharedPreferences prefs = getSharedPreferences("sos_profile_prefs", MODE_PRIVATE);
         String name = prefs.getString("name", "User");
-        tvDynamicGreeting.setText(getString(R.string.dashboard_greeting, name));
+        String role = RoleManager.getSelectedRole(this);
+        String displayRole = RoleManager.getDisplayLabel(this, role);
+
+        if (role != null && !role.trim().isEmpty() && !RoleManager.ROLE_USER.equals(role)) {
+            tvDynamicGreeting.setText(getString(R.string.dashboard_greeting_with_role, name, displayRole));
+        } else {
+            tvDynamicGreeting.setText(getString(R.string.dashboard_greeting, name));
+        }
     }
 
     // language picker

@@ -109,6 +109,7 @@
                 android:layout_height="58dp"
                 android:elevation="4dp"
                 android:insetTop="0dp"
+                android:paddingBottom="10dp"
                 android:insetBottom="0dp"
                 android:text="@string/next_label"
                 android:textAllCaps="false"

@@ -57,7 +57,14 @@ public class LoginActivity extends BaseActivity {
 
         // Auto Login
         if (sp.getBoolean("remember", false)) {
-            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+            Intent intent;
+            if (RoleManager.hasResponderAccess(this)) {
+                intent = new Intent(LoginActivity.this, ResponderDashboardActivity.class);
+            } else {
+                intent = RoleManager.hasSelectedRole(this)
+                        ? new Intent(LoginActivity.this, DashboardActivity.class)
+                        : new Intent(LoginActivity.this, RoleSelectionActivity.class);
+            }
             intent.putExtra("USER_NAME", sp.getString("name", "User"));
             startActivity(intent);
             finish();
@@ -167,12 +174,10 @@ public class LoginActivity extends BaseActivity {
                 if (response.isSuccessful() && response.body() != null && response.body().success && response.body().data != null) {
                     LoginData data = response.body().data;
                     RetrofitClient.saveToken(data.token, data.refreshToken);
+                    RoleManager.setAuthenticatedRole(LoginActivity.this, data.user != null ? data.user.role : null);
                     saveSession(data.user != null ? data.user.fullName : "User", email, cbRememberMe.isChecked(), true);
                     Toast.makeText(LoginActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-                    intent.putExtra("USER_NAME", data.user != null ? data.user.fullName : "User");
-                    startFadeActivity(intent);
-                    finish();
+                    navigateAfterLogin(data.user != null ? data.user.fullName : "User");
                     return;
                 }
 
@@ -197,10 +202,7 @@ public class LoginActivity extends BaseActivity {
         if (email.equals(savedEmail) && passwordMatches) {
             saveSession(savedName, email, cbRememberMe.isChecked(), true);
             Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
-            intent.putExtra("USER_NAME", savedName);
-            startFadeActivity(intent);
-            finish();
+            navigateAfterLogin(savedName);
         } else {
             Toast.makeText(this, R.string.invalid_credentials, Toast.LENGTH_SHORT).show();
         }
@@ -214,6 +216,20 @@ public class LoginActivity extends BaseActivity {
         editor.putBoolean("remember", remember);
         editor.putBoolean("has_account", hasAccount);
         editor.apply();
+    }
+
+    private void navigateAfterLogin(String name) {
+        Intent intent;
+        if (RoleManager.hasResponderAccess(this)) {
+            intent = new Intent(LoginActivity.this, ResponderDashboardActivity.class);
+        } else {
+            intent = RoleManager.hasSelectedRole(this)
+                    ? new Intent(LoginActivity.this, DashboardActivity.class)
+                    : new Intent(LoginActivity.this, RoleSelectionActivity.class);
+        }
+        intent.putExtra("USER_NAME", name);
+        startFadeActivity(intent);
+        finish();
     }
 
     private String hashPassword(String password) {

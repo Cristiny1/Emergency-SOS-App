@@ -65,6 +65,26 @@
     <string name="switch_language">Switch Language</string>
     <string name="low_battery_warning">Low Battery: Emergency Power Saving Active</string>
     <string name="dashboard_greeting">Hello, %1$s</string>
+    <string name="role_user_label">Citizen / Tourist</string>
+    <string name="role_user_desc">Use this Android app to request emergency help, share your location, and manage personal safety details.</string>
+    <string name="role_emergency_responder_label">Responder / Emergency Personnel</string>
+    <string name="role_emergency_responder_desc">Responders use the dedicated Responder App or an authorized mobile dashboard.</string>
+    <string name="role_admin_label">Emergency Operations / Admin</string>
+    <string name="role_admin_desc">Operations staff and administrators use the separate web dashboard to manage incidents and coordinate responses.</string>
+    <string name="role_selection_title">Choose your app mode</string>
+    <string name="role_selection_subtitle">Select the group that best describes how you use Emergency SOS.</string>
+    <string name="role_selection_access_notice">This Android app is for citizens and tourists. Operations/Admin and Responder access is provided through their separate platforms.</string>
+    <string name="role_continue_as_citizen">Continue as Citizen / Tourist</string>
+    <string name="responder_dashboard_title">Responder dashboard</string>
+    <string name="responder_dashboard_subtitle">Emergency response workspace</string>
+    <string name="responder_connection_online">Connected to emergency services</string>
+    <string name="responder_connection_offline">Not connected to emergency services</string>
+    <string name="responder_check_connection">Check connection</string>
+    <string name="responder_incidents_title">Incident queue</string>
+    <string name="responder_incidents_empty">No incident feed is configured for this app yet.</string>
+    <string name="responder_backend_notice">Incident listing, accepting assignments, and status updates require responder API support from your emergency operations backend.</string>
+    <string name="responder_access_denied">Responder access is available only to accounts authorized by emergency operations.</string>
+    <string name="responder_connection_checking">Checking emergency services connection…</string>
     <string name="emergency_sos_title">EMERGENCY SOS</string>
     <string name="smart_safety_solution">Smart Safety Solution</string>
     <string name="dashboard_placeholder_subtitle_text">Are you in an emergency?</string>
@@ -328,13 +348,6 @@
     <string name="gps_unavailable">GPS Unavailable</string>
 
     <!-- Miscellaneous -->
-    <string name="emergency_call_title">Emergency Call</string>
-    <string name="emergency_call_message">Call %1$s services immediately?</string>
-    <string name="call_now">Call Now</string>
-    <string name="google_sign_in_coming">Google Sign In coming soon.</string>
-    <string name="facebook_sign_in_coming">Facebook Sign In coming soon.</string>
-    <string name="failed_load_news">Failed to load news</string>
-    <string name="verification_successful">Verification Successful!</string>
     <string name="at_symbol" translatable="false">AT</string>
     <string name="official_news">Official News</string>
     <string name="reset_success">Profile reset successfully</string>
@@ -447,4 +460,11 @@
     </string-array>
 
     <string name="or_divider">Or</string>
+    <string name="responder_backend_title">Backend Connection</string>
+    <string name="responder_overview_title">Emergency Overview</string>
+    <string name="responder_active_incidents">Active SOS</string>
+    <string name="responder_assigned_incidents">Assigned</string>
+    <string name="responder_resolved_incidents">Resolved</string>
+    <string name="responder_incidents_subtitle">Monitor and manage SOS alerts</string>
+    <string name="responder_refresh">Refresh</string>
 </resources>

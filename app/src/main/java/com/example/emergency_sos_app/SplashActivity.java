@@ -88,6 +88,11 @@ public class SplashActivity extends BaseActivity {
         } else if (!remember) {
             // HAS ACCOUNT BUT LOGGED OUT -> Direct to Login
             intent = new Intent(this, LoginActivity.class);
+        } else if (RoleManager.hasResponderAccess(this)) {
+            intent = new Intent(this, ResponderDashboardActivity.class);
+        } else if (!RoleManager.hasSelectedRole(this)) {
+            // AUTHENTICATED BUT ROLE NOT CHOSEN YET -> Role selection screen
+            intent = new Intent(this, RoleSelectionActivity.class);
         } else {
             // AUTHENTICATED -> Dashboard
             intent = new Intent(this, DashboardActivity.class);

@@ -55,6 +55,14 @@
             android:launchMode="singleTop" />
 
         <activity
+            android:name=".RoleSelectionActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ResponderDashboardActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
 
@@ -180,4 +188,3 @@
     </application>
 
 </manifest>
-

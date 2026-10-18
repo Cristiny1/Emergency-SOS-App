@@ -158,31 +158,30 @@ public class SignupActivity extends BaseActivity {
                     RetrofitClient.saveToken(data.token, data.refreshToken);
                     saveLocalProfile(data.user != null ? data.user.fullName : fullName, email, password);
                     Toast.makeText(SignupActivity.this, R.string.account_created_success, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(SignupActivity.this, DashboardActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
+                    navigateToRoleSelection(fullName);
                     return;
                 }
 
                 saveLocalProfile(fullName, email, password);
                 Toast.makeText(SignupActivity.this, R.string.account_created_success, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(SignupActivity.this, DashboardActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
+                navigateToRoleSelection(fullName);
             }
 
             @Override
             public void onFailure(Call<ApiResponse<LoginData>> call, Throwable t) {
                 saveLocalProfile(fullName, email, password);
                 Toast.makeText(SignupActivity.this, R.string.account_created_success, Toast.LENGTH_LONG).show();
-                Intent intent = new Intent(SignupActivity.this, DashboardActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
+                navigateToRoleSelection(fullName);
             }
         });
+    }
+
+    private void navigateToRoleSelection(String fullName) {
+        Intent intent = new Intent(this, RoleSelectionActivity.class);
+        intent.putExtra("USER_NAME", fullName);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void saveLocalProfile(String fullName, String email, String password) {

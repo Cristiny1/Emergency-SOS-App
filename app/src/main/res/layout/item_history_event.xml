@@ -1,77 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="12dp"
-    app:cardCornerRadius="16dp"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="6dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="18dp"
     app:cardElevation="2dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="#F0F2F5">
+    app:strokeColor="#E9EDF3"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/white"
         android:gravity="center_vertical"
-        android:padding="16dp">
+        android:padding="14dp">
 
-        <ImageView
-            android:id="@+id/ivHistoryIcon"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+        <!-- SOS Type Icon -->
+        <FrameLayout
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             android:background="@drawable/bg_circle_white"
-            android:backgroundTint="#F0F2F5"
-            android:padding="10dp"
-            android:src="@drawable/ic_medical" />
+            android:backgroundTint="#FFF0F0">
 
+            <ImageView
+                android:id="@+id/ivHistoryIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_medical"
+                app:tint="#E53935"
+                android:contentDescription="SOS type icon" />
+
+        </FrameLayout>
+
+        <!-- History Information -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="14dp"
+            android:layout_marginEnd="8dp"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvHistoryType"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Medical SOS"
+                android:textColor="#172B4D"
+                android:textSize="15sp"
                 android:textStyle="bold"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/tvHistoryLocation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="@string/my_location_label"
-                android:textColor="@color/text_dark"
-                android:ellipsize="end"
                 android:maxLines="1"
-                android:textSize="13sp" />
+                android:ellipsize="end" />
 
+            <!-- Location -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:src="@drawable/ic_location"
+                    app:tint="#7B8798"
+                    android:contentDescription="Location" />
+
+                <TextView
+                    android:id="@+id/tvHistoryLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/my_location_label"
+                    android:textColor="#667085"
+                    android:textSize="12sp"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
+
+            </LinearLayout>
+
+            <!-- Time -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:src="@drawable/ic_history"
+                    app:tint="#98A2B3"
+                    android:contentDescription="Time" />
+
+                <TextView
+                    android:id="@+id/tvHistoryTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="@string/time_label"
+                    android:textColor="#98A2B3"
+                    android:textSize="11sp" />
+
+            </LinearLayout>
+
+            <!-- Status Badge -->
             <TextView
-                android:id="@+id/tvHistoryTime"
+                android:id="@+id/tvHistoryStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="@string/time_label"
-                android:textColor="@color/text_gray"
-                android:textSize="11sp" />
+                android:layout_marginTop="9dp"
+                android:background="@drawable/bg_status_resolved"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:text="Resolved"
+                android:textColor="#16803D"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
+        <!-- Delete Button -->
         <ImageView
             android:id="@+id/btnDeleteEvent"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="8dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:padding="8dp"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:padding="10dp"
+            android:background="@drawable/bg_delete_button"
             android:src="@drawable/ic_delete"
-            app:tint="@color/text_gray"
-            android:contentDescription="Delete" />
+            app:tint="#D14343"
+            android:clickable="true"
+            android:focusable="true"
+            android:contentDescription="Delete history" />
 
     </LinearLayout>
+
 </com.google.android.material.card.MaterialCardView>

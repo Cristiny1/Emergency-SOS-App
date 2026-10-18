@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#6C63FF</color>
+    <color name="primary1">#6C63FF</color>
     <color name="primary_dark">#5A52E0</color>
     <color name="sos_red">#E53935</color>
     <color name="background">#F4F6FA</color>
@@ -36,4 +36,7 @@
     <color name="severity_yellow">#FFD600</color>
 
     <color name="nav_item_color">#4A4A4A</color>
+
+    <color name="primary">#1769E0</color>
+    <color name="restricted">#C45B24</color>
 </resources>

@@ -83,7 +83,7 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:gravity="center_vertical"
@@ -97,11 +97,12 @@
 
                         <TextView
                             android:id="@+id/tvCurrentAddress"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
+                            android:layout_weight="1"
                             android:ellipsize="end"
-                            android:maxLines="3"
+                            android:maxLines="1"
                             android:text="@string/detecting_location"
                             android:textColor="@color/text_dark"
                             android:textSize="13sp"
@@ -150,9 +151,10 @@
             android:layout_above="@id/bottomNavigation"
             android:layout_below="@id/topBar"
             android:fillViewport="true"
-            android:paddingHorizontal="24dp"
+            android:clipToPadding="false"
+            android:paddingHorizontal="20dp"
             android:paddingTop="15dp"
-            android:paddingBottom="24dp">
+            android:paddingBottom="200dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -165,7 +167,7 @@
                 android:id="@+id/cardReportStatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="32dp"
+                android:layout_marginBottom="16dp"
                 android:visibility="gone"
                 app:cardBackgroundColor="@color/white"
                 app:cardCornerRadius="16dp"
@@ -249,7 +251,7 @@
                 android:text="Monday, Aug 12, 2024 12:00 PM"
                 android:textAllCaps="true"
                 android:textColor="@color/text_dark"
-                android:textSize="15sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -268,7 +270,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="@string/dashboard_placeholder_subtitle"
-                android:textColor="@color/text_dark"
+                android:textColor="@color/text_gray"
                 android:textSize="14sp"
                 android:gravity="center" />
 
@@ -277,7 +279,7 @@
                 android:id="@+id/btnSosContainer"
                 android:layout_width="240dp"
                 android:layout_height="240dp"
-                android:layout_marginTop="24dp">
+                android:layout_marginTop="18dp">
 
                 <View
                     android:id="@+id/pulseRing1"
@@ -333,7 +335,7 @@
                 android:id="@+id/tvSosHint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:letterSpacing="0.12"
                 android:text="@string/hold_to_request_assistance"
                 android:textColor="@color/sos_red"
